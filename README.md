@@ -2,8 +2,15 @@
 
 Two apps for the medical tourism business of Santos King Tours & Travels Pvt. Ltd.:
 
-1. **`public-site/`** — Patient-facing marketing site ([santos.care](https://santos.care))
-2. **`santocare-ops/`** — Internal operations dashboard ([ops.santos.care](https://ops.santos.care))
+1. **`public-site/`** — Patient-facing marketing site
+   - **Production:** https://santos-care-web.vercel.app
+   - **Future domain:** santos.care
+2. **`santocare-ops/`** — Internal operations dashboard
+   - **Production:** https://santos-care.vercel.app
+   - **Future domain:** ops.santos.care
+
+**GitHub:** https://github.com/santosnexus/santos.care
+**Vercel team:** santos-nexus
 
 ---
 
