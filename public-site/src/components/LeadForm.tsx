@@ -29,8 +29,9 @@ export default function LeadForm({ treatmentInterest, source = "WEBSITE", classN
     setError("");
 
     try {
-      const opsHubUrl = process.env.NEXT_PUBLIC_OPS_HUB_URL || "https://ops.santos.care";
-      const res = await fetch(`${opsHubUrl}/api/leads/capture`, {
+      // Same-origin proxy (set up in src/app/api/leads/capture/route.ts)
+      // Forwards to ops hub internally — no CORS issues
+      const res = await fetch("/api/leads/capture", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
