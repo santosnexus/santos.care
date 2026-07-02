@@ -11,8 +11,10 @@ Track ongoing improvements to the Heal India platform. Items are prioritized by 
 - ✅ **Public site built** — All 24 routes returning 200 (8 static + 8 treatments + 6 countries + 10 blog)
 - ✅ **Ops Hub connected to Prisma** — All API routes use `lib/db.ts` store with mock/Prisma fallback
 - ✅ **Session-based auth** — JWT cookies via jose; backward compat with Basic Auth
-- ✅ **Lead capture** — Public form posts to `/api/leads/capture`
+- ✅ **Lead capture** — Public form posts to `/api/leads/capture` (same-origin proxy)
 - ✅ **Database schema** — 11 Prisma entities ready for Supabase
+- ✅ **Supabase connected** — Real PostgreSQL DB live in production (japan region), all 12 tables created, demo data seeded, end-to-end lead flow verified
+- ✅ **MERN migration plan** — Comprehensive 1400-line learning reference at `MERN_MIGRATION.md`
 
 ## P1 — High Priority (this week)
 
