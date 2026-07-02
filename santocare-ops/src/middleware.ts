@@ -22,11 +22,15 @@ function checkBasicAuth(authHeader: string | null): boolean {
   if (!authHeader) return false;
   const [scheme, encoded] = authHeader.split(" ");
   if (scheme !== "Basic" || !encoded) return false;
-  const decoded = atob(encoded);
-  const i = decoded.indexOf(":");
-  const user = decoded.slice(0, i);
-  const pass = decoded.slice(i + 1);
-  return user === AUTH_USER && pass === AUTH_PASS;
+  try {
+    const decoded = atob(encoded);
+    const i = decoded.indexOf(":");
+    const user = decoded.slice(0, i);
+    const pass = decoded.slice(i + 1);
+    return user === AUTH_USER && pass === AUTH_PASS;
+  } catch {
+    return false;
+  }
 }
 
 async function checkSessionAuth(req: NextRequest): Promise<{ valid: boolean; tenantId?: string }> {
@@ -71,26 +75,15 @@ export async function middleware(req: NextRequest) {
     return response;
   }
 
-  // API routes return 401 JSON, page routes show login page
+  // API routes return 401 JSON
   if (pathname.startsWith("/api/")) {
-    return new NextResponse(
-      JSON.stringify({ error: "Authentication required" }),
-      {
-        status: 401,
-        headers: {
-          "Content-Type": "application/json",
-          "WWW-Authenticate": 'Basic realm="SantoCare Ops", charset="UTF-8"',
-        },
-      }
-    );
+    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
   }
 
-  return new NextResponse("Authentication required", {
-    status: 401,
-    headers: {
-      "WWW-Authenticate": 'Basic realm="SantoCare Ops", charset="UTF-8"',
-    },
-  });
+  // Page routes: redirect to login (no WWW-Authenticate header to avoid browser native dialog)
+  const loginUrl = new URL("/login", req.url);
+  loginUrl.searchParams.set("from", pathname);
+  return NextResponse.redirect(loginUrl);
 }
 
 export const config = {
