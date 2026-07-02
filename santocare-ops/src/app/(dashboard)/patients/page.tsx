@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -275,9 +276,16 @@ export default function PatientsPage() {
                     </TableCell>
                     <TableCell>{patient.inquiryDate}</TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
+                      <div className="flex items-center gap-1">
+                        <Link href={`/patients/${patient.id}`} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+                          <Button variant="ghost" size="sm" title="Open full detail page">
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
+                        </Link>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

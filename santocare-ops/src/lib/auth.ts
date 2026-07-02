@@ -72,15 +72,31 @@ export async function authenticate(email: string, password: string): Promise<Ses
   const user = await store.users.findByEmail(email);
   if (!user) return null;
 
-  // For demo mode, accept any password matching the user email
-  // For production with database, compare against hashed password stored in DB
-  // (we'll need to add passwordHash field to the User model)
-  if (process.env.NODE_ENV === "production" && (user as any).passwordHash) {
-    const ok = await verifyPassword(password, (user as any).passwordHash);
+  // Check if user is active
+  if ((user as any).isActive === false) return null;
+
+  // Check password: prefer real bcrypt hash from DB
+  const passwordHash = (user as any).passwordHash;
+  if (passwordHash) {
+    const ok = await verifyPassword(password, passwordHash);
     if (!ok) return null;
   } else {
-    // Demo mode: simple check - password is "demo" for all users
+    // No hash set (mock mode or new user) — fall back to a hardcoded default
+    // for backward compatibility with the seeded demo data
     if (password !== "demo" && password !== "He@lInd!a2026") return null;
+  }
+
+  // Update lastActiveAt (fire and forget)
+  if (process.env.DATABASE_URL) {
+    try {
+      const { prisma } = await import("@/lib/db");
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { lastActiveAt: new Date() },
+      });
+    } catch (err) {
+      // ignore
+    }
   }
 
   return {

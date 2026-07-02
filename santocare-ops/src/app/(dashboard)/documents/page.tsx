@@ -81,6 +81,64 @@ export default function DocumentsPage() {
   const [newDocTitle, setNewDocTitle] = React.useState("");
   const [newDocCategory, setNewDocCategory] = React.useState("");
   const [newDocDescription, setNewDocDescription] = React.useState("");
+  const [uploading, setUploading] = React.useState(false);
+
+  // Load real documents from API
+  const loadDocuments = React.useCallback(async () => {
+    try {
+      const res = await fetch("/api/documents", {
+        headers: { Authorization: "Basic " + btoa("santos:He@lInd!a2026") },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const mapped = (data.documents || []).map((d: any) => ({
+          id: d.id,
+          title: d.title,
+          category: d.category,
+          size: d.size ? `${Math.round(d.size / 1024)}KB` : "?",
+          uploadDate: d.createdAt?.split("T")[0] || "",
+          type: (d.fileType?.includes("pdf") ? "PDF" : d.fileType?.includes("md") ? "MD" : "DOCX") as Document["type"],
+        }));
+        if (mapped.length > 0) setDocuments(mapped);
+      }
+    } catch (err) {
+      console.error("Failed to load documents:", err);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    loadDocuments();
+  }, [loadDocuments]);
+
+  const uploadFile = async (file: File) => {
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("title", newDocTitle || file.name);
+      formData.append("category", newDocCategory || "Operations Manual");
+      const res = await fetch("/api/documents/upload", {
+        method: "POST",
+        headers: { Authorization: "Basic " + btoa("santos:He@lInd!a2026") },
+        body: formData,
+      });
+      if (res.ok) {
+        await loadDocuments();
+        setUploadModalOpen(false);
+        setNewDocTitle("");
+        setNewDocCategory("");
+        setNewDocDescription("");
+      } else {
+        const err = await res.json();
+        alert(err.error || "Upload failed");
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const filteredDocuments = documents.filter((doc) => {
     const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -103,41 +161,13 @@ export default function DocumentsPage() {
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      const extension = file.name.split(".").pop()?.toUpperCase() || "MD";
-      const newDoc: Document = {
-        id: String(documents.length + 1),
-        title: file.name,
-        category: newDocCategory || "Operations Manual",
-        size: `${Math.round(file.size / 1024)}KB`,
-        uploadDate: new Date().toISOString().split("T")[0],
-        type: extension as Document["type"],
-      };
-      setDocuments([...documents, newDoc]);
-      setUploadModalOpen(false);
-      setNewDocTitle("");
-      setNewDocCategory("");
-      setNewDocDescription("");
+      uploadFile(e.dataTransfer.files[0]);
     }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const extension = file.name.split(".").pop()?.toUpperCase() || "MD";
-      const newDoc: Document = {
-        id: String(documents.length + 1),
-        title: file.name,
-        category: newDocCategory || "Operations Manual",
-        size: `${Math.round(file.size / 1024)}KB`,
-        uploadDate: new Date().toISOString().split("T")[0],
-        type: extension as Document["type"],
-      };
-      setDocuments([...documents, newDoc]);
-      setUploadModalOpen(false);
-      setNewDocTitle("");
-      setNewDocCategory("");
-      setNewDocDescription("");
+      uploadFile(e.target.files[0]);
     }
   };
 

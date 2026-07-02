@@ -358,6 +358,8 @@ export const mockUsers = [
     phone: null,
     role: "ADMIN",
     avatar: null,
+    passwordHash: null,
+    isActive: true,
     createdAt: "2026-01-01T00:00:00.000Z",
   },
   {
@@ -367,6 +369,8 @@ export const mockUsers = [
     phone: "+91 999 111 2222",
     role: "COORDINATOR",
     avatar: null,
+    passwordHash: null,
+    isActive: true,
     createdAt: "2026-01-15T00:00:00.000Z",
   },
   {
@@ -376,6 +380,8 @@ export const mockUsers = [
     phone: "+91 999 333 4444",
     role: "COORDINATOR",
     avatar: null,
+    passwordHash: null,
+    isActive: true,
     createdAt: "2026-02-01T00:00:00.000Z",
   },
 ];

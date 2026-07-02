@@ -17,11 +17,13 @@ import {
   Briefcase,
   Menu,
   X,
+  UserPlus,
 } from "lucide-react";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/patients", label: "Patients", icon: Users },
+  { href: "/leads", label: "Leads", icon: UserPlus },
   { href: "/tasks", label: "Tasks", icon: CheckSquare },
   { href: "/partners", label: "Partners", icon: Building2 },
   { href: "/marketing", label: "Marketing", icon: TrendingUp },
