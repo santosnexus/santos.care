@@ -12,6 +12,7 @@ const SESSION_DURATION_HOURS = 24;
 
 export interface SessionUser {
   id: string;
+  tenantId: string;
   email: string;
   name: string;
   role: Role;
@@ -31,7 +32,7 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 }
 
 export async function createSessionToken(user: SessionUser): Promise<string> {
-  return new SignJWT({ user })
+  return new SignJWT({ user, tenantId: user.tenantId })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${SESSION_DURATION_HOURS}h`)
@@ -68,9 +69,12 @@ export function clearSessionCookie() {
   cookies().delete(COOKIE_NAME);
 }
 
-export async function authenticate(email: string, password: string): Promise<SessionUser | null> {
+export async function authenticate(email: string, password: string, tenantId: string = "santos"): Promise<SessionUser | null> {
   const user = await store.users.findByEmail(email);
   if (!user) return null;
+
+  // Check if user belongs to the given tenant
+  if (user.tenantId !== tenantId) return null;
 
   // Check if user is active
   if ((user as any).isActive === false) return null;
@@ -91,7 +95,7 @@ export async function authenticate(email: string, password: string): Promise<Ses
     try {
       const { prisma } = await import("@/lib/db");
       await prisma.user.update({
-        where: { id: user.id },
+        where: { id: user.id, tenantId },
         data: { lastActiveAt: new Date() },
       });
     } catch (err) {
@@ -101,6 +105,7 @@ export async function authenticate(email: string, password: string): Promise<Ses
 
   return {
     id: user.id,
+    tenantId: user.tenantId,
     email: user.email,
     name: user.name,
     role: user.role as Role,

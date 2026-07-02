@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySessionToken } from "@/lib/auth";
+import { tenantResolver, Tenant } from "@/lib/tenant";
 
 const AUTH_USER = process.env.OPS_AUTH_USER || "santos";
 const AUTH_PASS = process.env.OPS_AUTH_PASS || "He@lInd!a2026";
@@ -28,30 +29,46 @@ function checkBasicAuth(authHeader: string | null): boolean {
   return user === AUTH_USER && pass === AUTH_PASS;
 }
 
-async function checkSessionAuth(req: NextRequest): Promise<boolean> {
+async function checkSessionAuth(req: NextRequest): Promise<{ valid: boolean; tenantId?: string }> {
   const token = req.cookies.get(COOKIE_NAME)?.value;
-  if (!token) return false;
+  if (!token) return { valid: false };
   const session = await verifySessionToken(token);
-  return !!session;
+  if (!session) return { valid: false };
+  return { valid: true, tenantId: session.user?.tenantId };
 }
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  // Tenant resolution
+  const allTenants = [
+    { id: "santos", slug: "santos", name: "Santos Care", domain: null, plan: "STARTER" as const, status: "ACTIVE" as const },
+  ];
+
+  const tenant = await tenantResolver(req, allTenants);
 
   if (isPublicPath(pathname)) {
     return NextResponse.next();
   }
 
   // Try session-based auth first
-  const hasSession = await checkSessionAuth(req);
-  if (hasSession) {
-    return NextResponse.next();
+  const sessionAuth = await checkSessionAuth(req);
+  if (sessionAuth.valid) {
+    const response = NextResponse.next();
+    // Inject tenant ID into request headers for API routes
+    const tenantId = tenant?.id || sessionAuth.tenantId || "santos";
+    response.headers.set("x-tenant-id", tenantId);
+    return response;
   }
 
   // Fall back to Basic Auth (for legacy compatibility)
   const hasBasicAuth = checkBasicAuth(req.headers.get("authorization"));
   if (hasBasicAuth) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+    // Inject default tenant for Basic Auth users
+    const tenantId = tenant?.id || "santos";
+    response.headers.set("x-tenant-id", tenantId);
+    return response;
   }
 
   // API routes return 401 JSON, page routes show login page

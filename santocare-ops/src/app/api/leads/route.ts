@@ -1,13 +1,21 @@
 import { NextResponse } from "next/server";
 import { store, isMockMode } from "@/lib/db";
 
+async function getTenantId(request: Request): Promise<string | undefined> {
+  const { searchParams } = new URL(request.url);
+  const tenantId = searchParams.get("tenantId") || request.headers.get("x-tenant-id");
+  return tenantId || undefined;
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
     const source = searchParams.get("source");
+    const tenantId = await getTenantId(request);
 
-    let leads = await store.leads.list();
+    let leads = await store.leads.list(tenantId);
+
     if (status) leads = leads.filter((l: any) => l.status === status);
     if (source) leads = leads.filter((l: any) => l.source === source);
 
@@ -22,7 +30,10 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    const tenantId = body.tenantId || "santos";
+
     const newLead = {
+      tenantId,
       source: body.source || "WEBSITE",
       campaign: body.campaign,
       name: body.name,

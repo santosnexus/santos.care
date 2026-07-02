@@ -2,6 +2,12 @@ import { NextResponse } from "next/server";
 import { store, isMockMode } from "@/lib/db";
 import { generateRefNumber } from "@/lib/utils";
 
+async function getTenantId(request: Request): Promise<string | undefined> {
+  const { searchParams } = new URL(request.url);
+  const tenantId = searchParams.get("tenantId") || request.headers.get("x-tenant-id");
+  return tenantId || undefined;
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -9,8 +15,9 @@ export async function GET(request: Request) {
     const country = searchParams.get("country");
     const coordinatorId = searchParams.get("coordinatorId");
     const search = searchParams.get("search")?.toLowerCase();
+    const tenantId = await getTenantId(request);
 
-    let patients = await store.patients.list();
+    let patients = await store.patients.list(tenantId);
 
     if (stage) patients = patients.filter((p: any) => p.stage === stage);
     if (country) patients = patients.filter((p: any) => p.country === country);
@@ -39,7 +46,10 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    const tenantId = body.tenantId || "santos";
+
     const newPatient = {
+      tenantId,
       referenceNumber: body.referenceNumber || generateRefNumber(),
       name: body.name,
       country: body.country,

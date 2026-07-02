@@ -18,28 +18,61 @@ import {
   Menu,
   X,
   UserPlus,
+  Receipt,
+  MessageSquare,
+  FileSpreadsheet,
 } from "lucide-react";
 
-const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/patients", label: "Patients", icon: Users },
-  { href: "/leads", label: "Leads", icon: UserPlus },
-  { href: "/tasks", label: "Tasks", icon: CheckSquare },
-  { href: "/partners", label: "Partners", icon: Building2 },
-  { href: "/marketing", label: "Marketing", icon: TrendingUp },
-  { href: "/documents", label: "Documents", icon: FileText },
-  { href: "/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/roadmap", label: "90-Day Roadmap", icon: Target },
-  { href: "/settings", label: "Settings", icon: Settings },
+const allNavItems = [
+  { href: "/", label: "Dashboard", icon: LayoutDashboard, permission: null },
+  { href: "/patients", label: "Patients", icon: Users, permission: "patient:read" },
+  { href: "/leads", label: "Leads", icon: UserPlus, permission: "lead:read" },
+  { href: "/tasks", label: "Tasks", icon: CheckSquare, permission: "task:read" },
+  { href: "/partners", label: "Partners", icon: Building2, permission: "partner:read" },
+  { href: "/invoices", label: "Invoices", icon: Receipt, permission: "invoice:read" },
+  { href: "/quotes", label: "Quotes", icon: FileSpreadsheet, permission: "quote:read" },
+  { href: "/inbox", label: "Inbox", icon: MessageSquare, permission: "message:read" },
+  { href: "/marketing", label: "Marketing", icon: TrendingUp, permission: "lead:read" },
+  { href: "/documents", label: "Documents", icon: FileText, permission: "document:read" },
+  { href: "/analytics", label: "Analytics", icon: BarChart3, permission: "analytics:read" },
+  { href: "/roadmap", label: "90-Day Roadmap", icon: Target, permission: null },
+  { href: "/settings", label: "Settings", icon: Settings, permission: "settings:read" },
 ];
 
 interface SidebarProps {
   open: boolean;
   onToggle: () => void;
+  userRole?: string;
 }
 
-export function Sidebar({ open, onToggle }: SidebarProps) {
+export function Sidebar({ open, onToggle, userRole }: SidebarProps) {
   const pathname = usePathname();
+
+  // Filter nav items based on user role
+  const navItems = React.useMemo(() => {
+    if (!userRole || userRole === "SUPER_ADMIN") return allNavItems;
+
+    // Role-based filtering
+    const rolePermissions: Record<string, string[]> = {
+      ADMIN: ["*"],
+      MANAGER: ["patient:read", "lead:read", "task:read", "partner:read", "invoice:read", "quote:read", "message:read", "document:read", "analytics:read", "settings:read"],
+      SALES: ["lead:read", "patient:read", "message:read"],
+      COORDINATOR: ["patient:read", "task:read", "message:read", "document:read"],
+      FINANCE: ["invoice:read", "payment:read", "document:read"],
+      MARKETING: ["lead:read", "message:read", "analytics:read"],
+      STAKEHOLDER: ["patient:read", "lead:read", "invoice:read", "message:read"],
+      VIEWER: ["patient:read", "lead:read", "task:read", "document:read", "partner:read", "analytics:read"],
+    };
+
+    const permissions = rolePermissions[userRole] || [];
+    if (permissions.includes("*")) return allNavItems;
+
+    return allNavItems.filter((item) => {
+      if (!item.permission) return true;
+      const [resource] = item.permission.split(":");
+      return permissions.some((p) => p === item.permission || p === `${resource}:*`);
+    });
+  }, [userRole]);
 
   return (
     <>
