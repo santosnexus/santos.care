@@ -148,29 +148,60 @@ The lead form gracefully falls back to opening WhatsApp if the Ops Hub is unreac
 
 ## Deployment
 
-### Public Site → Vercel
+This is a **monorepo**. Both apps deploy from the repo root using Vercel project root directory settings.
+
+### Vercel Project Mapping
+
+| Vercel Project | Root Directory | URL |
+|---|---|---|
+| `santos-care` | `santocare-ops/` | https://santos-care.vercel.app |
+| `santos-care-web` | `public-site/` | https://santos-care-web.vercel.app |
+
+### Deploying from CLI
+
+From the monorepo root, deploy each app by temporarily swapping `.vercel/project.json`:
 
 ```bash
-cd public-site
-vercel --prod
+# Deploy Ops Hub
+echo '{"projectId":"prj_cE1lWoekWzHmTH9VEPP5Pz1u6gfy","orgId":"team_2ExKs46V2Ql6JOATzbWfYLlv","projectName":"santos-care"}' > .vercel/project.json
+npx vercel --prod
+
+# Deploy Public Site
+echo '{"projectId":"prj_AH5bIbLIyxf1lmAomgFAcg43LvVI","orgId":"team_2ExKs46V2Ql6JOATzbWfYLlv","projectName":"santos-care-web"}' > .vercel/project.json
+npx vercel --prod
+
+# Clean up
+rm -rf .vercel
 ```
 
-Add domain `santos.care` in Vercel project settings.
+Alternatively, GitHub pushes auto-deploy via Vercel's GitHub integration.
 
-### Ops Hub → Vercel
+### Environment Variables (Vercel)
 
-```bash
-cd santocare-ops
-vercel --prod
-```
+**santos-care (Ops Hub):**
+- `DATABASE_URL` — Supabase pooler connection
+- `DIRECT_URL` — Supabase direct connection
+- `NEXTAUTH_SECRET` — JWT signing secret
+- `NEXTAUTH_URL` — `https://santos-care.vercel.app`
+- `OPS_AUTH_USER` — `santos`
+- `OPS_AUTH_PASS` — `He@lInd!a2026`
 
-Add domain `ops.santos.care` in Vercel project settings. Set all env vars from `.env.example`.
+**santos-care-web (Public Site):**
+- `NEXT_PUBLIC_OPS_HUB_URL` — `https://santos-care.vercel.app`
+- `NEXT_PUBLIC_SITE_URL` — `https://santos-care-web.vercel.app`
+
+### Custom Domains (to configure)
+
+| Domain | Vercel Project |
+|---|---|
+| `santos.care` | `santos-care-web` |
+| `ops.santos.care` | `santos-care` |
 
 ---
 
 ## Database Schema (Prisma)
 
-11 entities with full relational integrity:
+21 tables with full relational integrity across 20 Prisma models + 1 implicit many-to-many:
 
 - **User** — Team members with role-based access (ADMIN, MANAGER, COORDINATOR, MARKETING, STAKEHOLDER)
 - **Patient** — Patient records with 10-stage pipeline tracking
