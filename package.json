@@ -1,0 +1,22 @@
+{
+  "name": "santos-care-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Heal India Medi Tourism monorepo — public site (santos.care) + ops hub (ops.santos.care)",
+  "scripts": {
+    "dev:public": "cd public-site && npm run dev",
+    "dev:ops": "cd santocare-ops && npm run dev",
+    "build:public": "cd public-site && npm run build",
+    "build:ops": "cd santocare-ops && npm run build",
+    "lint:public": "cd public-site && npm run lint",
+    "lint:ops": "cd santocare-ops && npm run lint",
+    "install:all": "cd public-site && npm install && cd ../santocare-ops && npm install",
+    "db:push": "cd santocare-ops && npm run db:push",
+    "db:seed": "cd santocare-ops && npm run db:seed",
+    "db:studio": "cd santocare-ops && npm run db:studio",
+    "typecheck": "cd public-site && npx tsc --noEmit && cd ../santocare-ops && npx tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,357 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  phone         String?
+  role          Role      @default(COORDINATOR)
+  avatar        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  assignedPatients   Patient[]  @relation("AssignedCoordinator")
+  createdTasks       Task[]     @relation("TaskCreator")
+  assignedTasks      Task[]     @relation("TaskAssignee")
+  uploadedDocuments  Document[] @relation("DocumentUploader")
+  patientNotes       Note[]     @relation("NoteCreator")
+  communications     Communication[]
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  COORDINATOR
+  MARKETING
+  STAKEHOLDER
+}
+
+model Patient {
+  id                 String         @id @default(cuid())
+  referenceNumber    String         @unique
+  name               String
+  country            String
+  phone              String
+  email              String
+  whatsapp           String?
+  treatmentType      String
+  treatmentDescription String?
+  preferredHospital  String?
+
+  stage              PipelineStage  @default(INQUIRY_RECEIVED)
+  stageHistory       StageChange[]
+  assignedCoordinatorId String?
+  assignedCoordinator   User?        @relation("AssignedCoordinator", fields: [assignedCoordinatorId], references: [id])
+
+  estimatedCost      Float?
+  depositReceived    Boolean        @default(false)
+  depositAmount      Float?
+  finalCost          Float?
+
+  inquiryDate        DateTime       @default(now())
+  expectedTravelDate DateTime?
+  actualTravelDate   DateTime?
+  dischargeDate     DateTime?
+
+  documents          Document[]
+  medicalReports     Document[]     @relation("MedicalReports")
+  communications     Communication[]
+  notes              Note[]
+  followUpSchedule   DateTime[]
+  telemedicineCompleted Boolean[]   @default([])
+
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  tasks              Task[]
+
+  @@map("patients")
+}
+
+enum PipelineStage {
+  INQUIRY_RECEIVED
+  QUALIFICATION
+  TREATMENT_PLAN_SENT
+  CONFIRMATION
+  VISA_TRAVEL
+  ARRIVED_ADMITTED
+  IN_TREATMENT
+  AYURVEDA_RECOVERY
+  COMPLETED_FOLLOWUP
+  CLOSED
+}
+
+model StageChange {
+  id         String   @id @default(cuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  fromStage   PipelineStage?
+  toStage     PipelineStage
+  changedAt   DateTime @default(now())
+  note        String?
+
+  @@map("stage_changes")
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  type        TaskType   @default(GENERAL)
+
+  patientId   String?
+  patient     Patient?   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  assignedToId  String
+  assignedTo    User      @relation("TaskAssignee", fields: [assignedToId], references: [id])
+
+  createdById   String
+  createdBy      User      @relation("TaskCreator", fields: [createdById], references: [id])
+
+  status      TaskStatus @default(PENDING)
+  priority    TaskPriority @default(MEDIUM)
+  dueDate     DateTime
+
+  completedAt DateTime?
+  recurring   RecurringType?
+
+  dependsOn   String[]
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("tasks")
+}
+
+enum TaskType {
+  PATIENT
+  GENERAL
+  MARKETING
+  PARTNER
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum RecurringType {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+model Partner {
+  id             String   @id @default(cuid())
+  name           String
+  category       PartnerCategory
+  contactPerson  String?
+  phone          String?
+  email          String?
+  address        String?
+
+  agreementStatus AgreementStatus @default(NONE)
+  agreementDate   DateTime?
+  commissionRate  Float?
+
+  totalPatientsReferred Int    @default(0)
+  totalRevenue         Float   @default(0)
+  responseTime         Int?
+  satisfactionScore    Float?
+
+  documents       Document[]
+  notes           Note[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("partners")
+}
+
+enum PartnerCategory {
+  HOSPITAL
+  AYURVEDA
+  LAB
+  TRANSPORT
+  NURSING
+  EQUIPMENT
+}
+
+enum AgreementStatus {
+  NONE
+  PENDING
+  SIGNED
+  EXPIRED
+}
+
+model Lead {
+  id           String   @id @default(cuid())
+  source       LeadSource
+  campaign     String?
+
+  name         String
+  country      String?
+  email        String?
+  phone        String?
+
+  status       LeadStatus @default(NEW)
+
+  treatmentInterest String?
+  budgetRange       String?
+
+  convertedToPatientId String?
+  conversionDate       DateTime?
+
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("leads")
+}
+
+enum LeadSource {
+  WHATSAPP
+  WEBSITE
+  FACEBOOK
+  GOOGLE_ADS
+  REFERRAL
+  PARTNER_HOSPITAL
+  EXHIBITION
+  OTHER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  LOST
+}
+
+model Document {
+  id         String   @id @default(cuid())
+  title      String
+  category   String
+  filePath   String
+  fileType   String?
+  size       Int?
+
+  patientId  String?
+  patient    Patient? @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  medicalReports Patient[] @relation("MedicalReports")
+
+  partnerId  String?
+  partner    Partner? @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  uploadedById String
+  uploadedBy   User   @relation("DocumentUploader", fields: [uploadedById], references: [id])
+
+  isPublic   Boolean @default(false)
+
+  createdAt  DateTime @default(now())
+
+  @@map("documents")
+}
+
+model Note {
+  id         String   @id @default(cuid())
+  content    String
+
+  patientId  String?
+  patient    Patient? @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  partnerId  String?
+  partner    Partner? @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  createdById String
+  createdBy   User    @relation("NoteCreator", fields: [createdById], references: [id])
+
+  createdAt  DateTime @default(now())
+
+  @@map("notes")
+}
+
+model Communication {
+  id         String   @id @default(cuid())
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  type       CommType
+  direction  CommDirection
+  content    String
+
+  createdById String
+  createdBy   User    @relation(fields: [createdById], references: [id])
+
+  createdAt  DateTime @default(now())
+
+  @@map("communications")
+}
+
+enum CommType {
+  WHATSAPP
+  EMAIL
+  CALL
+  MESSAGE
+}
+
+enum CommDirection {
+  INBOUND
+  OUTBOUND
+}
+
+model RoadmapItem {
+  id          String   @id @default(cuid())
+  phase       Int
+  title       String
+  description String?
+  milestone   String
+  status      RoadmapStatus @default(PENDING)
+  completedAt DateTime?
+  dueDate     DateTime
+  order       Int
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("roadmap_items")
+}
+
+enum RoadmapStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  DELAYED
+}
+
+model AnalyticsEvent {
+  id         String   @id @default(cuid())
+  eventType  String
+  eventData  Json
+  userId     String?
+  patientId  String?
+  createdAt  DateTime @default(now())
+
+  @@map("analytics_events")
+}
