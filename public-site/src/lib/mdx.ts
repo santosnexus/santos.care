@@ -1,8 +1,15 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import remarkRehype from "remark-rehype";
+import rehypeStringify from "rehype-stringify";
 
 const BLOG_DIR = path.join(process.cwd(), "src/content/blog");
+
+const _htmlCache = new Map<string, string>();
 
 let _allPostsCache: {
   frontmatter: BlogFrontmatter;
@@ -23,6 +30,14 @@ export interface BlogFrontmatter {
   targetAudience?: string;
   primaryKeywords?: string;
   secondaryKeywords?: string;
+}
+
+export function precompileMdxToHtml(mdx: string): string {
+  const cached = _htmlCache.get(mdx);
+  if (cached) return cached;
+  const html = String(unified().use(remarkParse).use(remarkGfm).use(remarkRehype).use(rehypeStringify).processSync(mdx));
+  _htmlCache.set(mdx, html);
+  return html;
 }
 
 export function getBlogSlugs(): string[] {
