@@ -4,6 +4,11 @@ import matter from "gray-matter";
 
 const BLOG_DIR = path.join(process.cwd(), "src/content/blog");
 
+let _allPostsCache: {
+  frontmatter: BlogFrontmatter;
+  content: string;
+}[] | null = null;
+
 export interface BlogFrontmatter {
   slug: string;
   title: string;
@@ -51,6 +56,10 @@ export function getBlogPost(slug: string): {
 
   const source = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(source);
+  if (_allPostsCache) {
+    const cached = _allPostsCache.find((p) => p.frontmatter.slug === slug);
+    if (cached) return cached;
+  }
   return { frontmatter: data as BlogFrontmatter, content };
 }
 
@@ -58,8 +67,9 @@ export function getAllBlogPosts(): {
   frontmatter: BlogFrontmatter;
   content: string;
 }[] {
+  if (_allPostsCache) return _allPostsCache;
   const slugs = getBlogSlugs();
-  return slugs
+  _allPostsCache = slugs
     .map((slug) => getBlogPost(slug))
     .filter((p): p is NonNullable<typeof p> => p !== null)
     .sort(
@@ -67,6 +77,7 @@ export function getAllBlogPosts(): {
         new Date(b.frontmatter.date).getTime() -
         new Date(a.frontmatter.date).getTime()
     );
+  return _allPostsCache;
 }
 
 export function getRelatedPosts(

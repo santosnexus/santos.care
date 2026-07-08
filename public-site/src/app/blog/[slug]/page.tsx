@@ -3,26 +3,13 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { ArrowLeft, Calendar, Clock, MessageCircle, Share2 } from "lucide-react";
 import { getBlogPost, getRelatedPosts } from "@/lib/mdx";
 import { getWhatsAppUrl } from "@/lib/utils";
 import { JsonLd, articleSchema, breadcrumbSchema } from "@/components/json-ld";
 import TableOfContents from "@/components/TableOfContents";
 
-export const dynamicParams = false;
-
-export async function generateStaticParams() {
-  const fs = await import("fs");
-  const path = await import("path");
-  const blogDir = path.join(process.cwd(), "src/content/blog");
-  const entries = fs.readdirSync(blogDir, { withFileTypes: true });
-  return entries
-    .filter((e) => e.isDirectory() || (e.isFile() && e.name.endsWith(".mdx")))
-    .map((e) => ({
-      slug: e.isDirectory() ? e.name : e.name.replace(/\.mdx$/, ""),
-    }));
-}
+export const dynamic = "force-dynamic";
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const post = getBlogPost(params.slug);
@@ -114,7 +101,7 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
                   options={{
                     mdxOptions: {
                       remarkPlugins: [remarkGfm],
-                      rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+                      rehypePlugins: [rehypeSlug],
                     },
                   }}
                 />
