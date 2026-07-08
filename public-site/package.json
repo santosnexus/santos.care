@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@mdx-js/loader": "^3.0.1",
-    "@next/mdx": "^14.2.35",
     "@tailwindcss/typography": "^0.5.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -20,7 +19,6 @@
     "next": "14.2.35",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "rehype-autolink-headings": "^7.1.0",
     "rehype-stringify": "^10.0.1",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
