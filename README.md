@@ -40,7 +40,7 @@ To use the seeded demo credentials, log in at `/login`:
 - Email: `admin@santos.care`
 - Password: `demo`
 
-Or use Basic Auth (legacy): `santos` / `He@lInd!a2026`
+Or use Basic Auth (legacy): `santos` / (configure via `OPS_AUTH_PASS` env var)
 
 ---
 
@@ -97,7 +97,7 @@ santos.care
 
 The Ops Hub supports **two authentication methods** simultaneously:
 
-1. **Basic Auth** (legacy) — username `santos`, password `He@lInd!a2026`
+1. **Basic Auth** (legacy) — username `santos`, password configured via `OPS_AUTH_PASS` env var
 2. **Session-based Auth** (new) — Login at `/login` with user credentials
 
 Session auth uses JWT tokens in HTTP-only cookies, 24-hour expiry. The system gracefully falls back to Basic Auth if no session cookie is present.
@@ -184,7 +184,7 @@ Alternatively, GitHub pushes auto-deploy via Vercel's GitHub integration.
 - `NEXTAUTH_SECRET` — JWT signing secret
 - `NEXTAUTH_URL` — `https://santos-care.vercel.app`
 - `OPS_AUTH_USER` — `santos`
-- `OPS_AUTH_PASS` — `He@lInd!a2026`
+- `OPS_AUTH_PASS` — (set to a strong password for production)
 
 **santos-care-web (Public Site):**
 - `NEXT_PUBLIC_OPS_HUB_URL` — `https://santos-care.vercel.app`

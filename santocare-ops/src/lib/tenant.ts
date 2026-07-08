@@ -55,7 +55,7 @@ async function resolveTenantFromJWT(token: string): Promise<Tenant | null> {
   try {
     const { jwtVerify } = await import("jose");
     const secret = new TextEncoder().encode(
-      process.env.NEXTAUTH_SECRET || "fallback-dev-secret-change-in-production-please"
+      process.env.NEXTAUTH_SECRET || ""
     );
 
     const { payload } = await jwtVerify(token, secret);

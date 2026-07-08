@@ -17,14 +17,45 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Seeding database...");
 
+  // Clean existing data (reverse dependency order)
+  await prisma.messageTemplate.deleteMany();
+  await prisma.message.deleteMany();
+  await prisma.auditLog.deleteMany();
+  await prisma.quoteLineItem.deleteMany();
+  await prisma.quote.deleteMany();
+  await prisma.payment.deleteMany();
+  await prisma.invoiceLineItem.deleteMany();
+  await prisma.invoice.deleteMany();
+  await prisma.communication.deleteMany();
+  await prisma.note.deleteMany();
+  await prisma.document.deleteMany();
+  await prisma.stageChange.deleteMany();
+  await prisma.task.deleteMany();
+  await prisma.patient.deleteMany();
+  await prisma.lead.deleteMany();
+  await prisma.partner.deleteMany();
+  await prisma.analyticsEvent.deleteMany();
+  await prisma.roadmapItem.deleteMany();
+  await prisma.user.deleteMany();
+  await prisma.tenant.deleteMany();
+  console.log("  cleaned existing data");
+
+  // Default tenant
+  const tenantId = "santos";
+  await prisma.tenant.create({
+    data: { id: tenantId, slug: tenantId, name: "Santos Care", plan: "STARTER", status: "ACTIVE" },
+  });
+  console.log(`  tenant: ${tenantId}`);
+
   // Default password for all demo users
-  const defaultPassword = "He@lInd!a2026";
+  const defaultPassword = "demo";
   const passwordHash = await bcrypt.hash(defaultPassword, 10);
 
   // Seed users with real password hashes
   const users = [
     {
       id: "1",
+      tenantId,
       email: "admin@santos.care",
       name: "Admin",
       phone: null,
@@ -34,6 +65,7 @@ async function main() {
     },
     {
       id: "2",
+      tenantId,
       email: "priya@santos.care",
       name: "Priya Sharma",
       phone: "+91 999 111 2222",
@@ -43,6 +75,7 @@ async function main() {
     },
     {
       id: "3",
+      tenantId,
       email: "rahul@santos.care",
       name: "Rahul Kumar",
       phone: "+91 999 333 4444",
@@ -53,51 +86,31 @@ async function main() {
   ];
 
   for (const u of users) {
-    await prisma.user.upsert({
-      where: { id: u.id },
-      update: { passwordHash },
-      create: u as any,
-    });
+    await prisma.user.create({ data: { ...u, isActive: true, createdAt: new Date() } as any });
   }
   console.log(`  ${users.length} users (password: ${defaultPassword})`);
 
   // Seed partners
   for (const p of mockPartners) {
-    await prisma.partner.upsert({
-      where: { id: p.id },
-      update: p as any,
-      create: p as any,
-    });
+    await prisma.partner.create({ data: p as any });
   }
   console.log(`  ${mockPartners.length} partners`);
 
   // Seed patients
   for (const p of mockPatients) {
-    await prisma.patient.upsert({
-      where: { id: p.id },
-      update: p as any,
-      create: p as any,
-    });
+    await prisma.patient.create({ data: p as any });
   }
   console.log(`  ${mockPatients.length} patients`);
 
   // Seed leads
   for (const l of mockLeads) {
-    await prisma.lead.upsert({
-      where: { id: l.id },
-      update: l as any,
-      create: l as any,
-    });
+    await prisma.lead.create({ data: l as any });
   }
   console.log(`  ${mockLeads.length} leads`);
 
   // Seed tasks
   for (const t of mockTasks) {
-    await prisma.task.upsert({
-      where: { id: t.id },
-      update: t as any,
-      create: t as any,
-    });
+    await prisma.task.create({ data: { ...t, tenantId, createdById: t.createdById || "1" } as any });
   }
   console.log(`  ${mockTasks.length} tasks`);
 
@@ -142,10 +155,8 @@ async function main() {
   ];
 
   for (const inv of demoInvoices) {
-    await prisma.invoice.upsert({
-      where: { id: inv.id },
-      update: inv as any,
-      create: {
+    await prisma.invoice.create({
+      data: {
         ...inv as any,
         lineItems: {
           create: [
@@ -206,10 +217,8 @@ async function main() {
   ];
 
   for (const quo of demoQuotes) {
-    await prisma.quote.upsert({
-      where: { id: quo.id },
-      update: quo as any,
-      create: {
+    await prisma.quote.create({
+      data: {
         ...quo as any,
         lineItems: {
           create: [
@@ -273,11 +282,7 @@ async function main() {
   ];
 
   for (const msg of demoMessages) {
-    await prisma.message.upsert({
-      where: { id: msg.id },
-      update: msg as any,
-      create: msg as any,
-    });
+    await prisma.message.create({ data: msg as any });
   }
   console.log(`  ${demoMessages.length} messages`);
 

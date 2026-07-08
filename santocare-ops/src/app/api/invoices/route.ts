@@ -1,78 +1,72 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requirePermission } from "@/lib/api-helpers";
-import { store } from "@/lib/db";
-import { writeAuditLog } from "@/lib/audit";
-import { prisma } from "@/lib/db";
+import { z } from "zod";
+import { requirePermission } from "@/lib/auth";
+import { createInvoice, listInvoices } from "@/services/invoices.service";
 
-export const GET = requirePermission("invoice:read")(async (req: NextRequest, ctx) => {
-  const url = new URL(req.url);
-  const patientId = url.searchParams.get("patientId") || undefined;
-  const status = url.searchParams.get("status") || undefined;
-
-  let invoices = await store.invoices.list(ctx.tenantId);
-
-  if (patientId) {
-    invoices = invoices.filter((i: any) => i.patientId === patientId);
-  }
-  if (status) {
-    invoices = invoices.filter((i: any) => i.status === status);
-  }
-
-  return NextResponse.json({ invoices });
+const ListQuerySchema = z.object({
+  patientId: z.string().optional(),
+  status: z.string().optional(),
+  search: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
 });
 
-export const POST = requirePermission("invoice:create")(async (req: NextRequest, ctx) => {
-  const body = await req.json();
-  const { patientId, lineItems, currency, taxRate, notes, terms, dueDate } = body;
+const LineItemSchema = z.object({
+  description: z.string().min(1),
+  quantity: z.coerce.number().min(0.01),
+  unitPrice: z.coerce.number().min(0),
+  category: z.enum(["SURGERY", "HOSPITAL", "HOTEL", "TRANSPORT", "VISA", "SERVICE", "OTHER"]).optional(),
+  refId: z.string().optional().nullable(),
+});
 
-  if (!patientId || !lineItems || lineItems.length === 0) {
-    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+const CreateInvoiceSchema = z.object({
+  patientId: z.string().min(1),
+  lineItems: z.array(LineItemSchema).min(1),
+  currency: z.string().optional(),
+  taxRate: z.coerce.number().min(0).max(100).optional(),
+  notes: z.string().optional().nullable(),
+  terms: z.string().optional().nullable(),
+  dueDate: z.string().datetime().optional(),
+});
+
+export async function GET(req: NextRequest) {
+  const auth = await requirePermission(req, "invoice:read");
+  if (!auth.ok) return auth.response;
+
+  const params = Object.fromEntries(req.nextUrl.searchParams.entries());
+  const parsed = ListQuerySchema.safeParse(params);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid query", details: parsed.error.flatten() }, { status: 400 });
   }
 
-  // Calculate totals
-  const subtotal = lineItems.reduce((sum: number, item: any) => sum + (item.quantity * item.unitPrice), 0);
-  const taxAmount = subtotal * ((taxRate || 0) / 100);
-  const total = subtotal + taxAmount;
-
-  // Generate invoice number
-  const number = await store.invoices.generateNumber(ctx.tenantId);
-
-  const invoice = await store.invoices.create({
-    tenantId: ctx.tenantId,
-    patientId,
-    number,
-    status: "DRAFT",
-    currency: currency || "USD",
-    subtotal,
-    taxRate: taxRate || 0,
-    taxAmount,
-    total,
-    amountPaid: 0,
-    issueDate: new Date().toISOString(),
-    dueDate: dueDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-    notes: notes || null,
-    terms: terms || null,
-    lineItems: lineItems.map((item: any) => ({
-      description: item.description,
-      quantity: item.quantity || 1,
-      unitPrice: item.unitPrice,
-      total: (item.quantity || 1) * item.unitPrice,
-      category: item.category || "SERVICE",
-      refId: item.refId || null,
-    })),
+  const result = await listInvoices(auth.user.tenantId, {
+    patientId: parsed.data.patientId,
+    status: parsed.data.status as any,
+    search: parsed.data.search,
+    page: parsed.data.page,
+    pageSize: parsed.data.limit,
   });
 
-  // Audit log
-  if (prisma) {
-    await writeAuditLog(prisma, {
-      tenantId: ctx.tenantId,
-      userId: ctx.user.id,
-      action: "CREATE",
-      entityType: "Invoice",
-      entityId: (invoice as any).id,
-      after: { number, total, patientId },
-    });
+  return NextResponse.json({ data: result.data, meta: { total: result.total, page: result.page, limit: result.pageSize, totalPages: result.totalPages } });
+}
+
+export async function POST(req: NextRequest) {
+  const auth = await requirePermission(req, "invoice:create");
+  if (!auth.ok) return auth.response;
+
+  const body = await req.json().catch(() => null);
+  if (!body) return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+
+  const parsed = CreateInvoiceSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten() }, { status: 422 });
   }
 
-  return NextResponse.json({ invoice }, { status: 201 });
-});
+  const invoice = await createInvoice({
+    ...parsed.data,
+    tenantId: auth.user.tenantId,
+    createdById: auth.user.id,
+  });
+
+  return NextResponse.json({ data: invoice }, { status: 201 });
+}

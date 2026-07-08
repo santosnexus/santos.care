@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_ENV: test
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/santos_test
+  NEXTAUTH_SECRET: "test-secret-for-ci-at-least-32-chars!!"
+  OPS_AUTH_USER: testuser
+  OPS_AUTH_PASS: testpass
+
+jobs:
+  lint-typecheck:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: |
+            santocare-ops/package-lock.json
+            public-site/package-lock.json
+      - name: Install ops hub
+        run: npm ci
+        working-directory: santocare-ops
+      - name: Install public site
+        run: npm ci
+        working-directory: public-site
+      - name: Lint ops
+        run: npm run lint
+        working-directory: santocare-ops
+      - name: Lint public
+        run: npm run lint
+        working-directory: public-site
+      - name: Type check ops
+        run: npm run typecheck
+        working-directory: santocare-ops
+      - name: Type check public
+        run: npm run typecheck
+        working-directory: public-site
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: santocare-ops/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+        working-directory: santocare-ops
+      - name: Run unit tests
+        run: npm run test
+        working-directory: santocare-ops
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [lint-typecheck, unit-tests]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: |
+            santocare-ops/package-lock.json
+            public-site/package-lock.json
+      - name: Install ops hub
+        run: npm ci
+        working-directory: santocare-ops
+      - name: Install public site
+        run: npm ci
+        working-directory: public-site
+      - name: Build ops hub
+        run: npm run build
+        working-directory: santocare-ops
+        env:
+          DATABASE_URL: "postgresql://placeholder:placeholder@localhost:5432/placeholder"
+          NEXTAUTH_SECRET: "build-time-placeholder-secret-32chars!!"
+          OPS_AUTH_USER: "build"
+          OPS_AUTH_PASS: "build"
+      - name: Build public site
+        run: npm run build
+        working-directory: public-site

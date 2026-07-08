@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 /**
  * Public lead capture endpoint on the public site.
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
     }
 
     // Local fallback: log the lead (in production, this would email/notify)
-    console.log("Lead captured (no ops hub):", body);
+    logger.info("Lead captured (no ops hub configured)");
     return NextResponse.json(
       {
         success: true,
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Lead capture error:", error);
+    logger.error("Lead capture error", error);
     return NextResponse.json({ error: "Failed to submit inquiry" }, { status: 500 });
   }
 }

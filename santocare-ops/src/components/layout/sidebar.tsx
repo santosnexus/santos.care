@@ -21,6 +21,7 @@ import {
   Receipt,
   MessageSquare,
   FileSpreadsheet,
+  CalendarDays,
 } from "lucide-react";
 
 const allNavItems = [
@@ -32,8 +33,10 @@ const allNavItems = [
   { href: "/invoices", label: "Invoices", icon: Receipt, permission: "invoice:read" },
   { href: "/quotes", label: "Quotes", icon: FileSpreadsheet, permission: "quote:read" },
   { href: "/inbox", label: "Inbox", icon: MessageSquare, permission: "message:read" },
+  { href: "/visa", label: "Visa", icon: FileText, permission: "visa:read" },
   { href: "/marketing", label: "Marketing", icon: TrendingUp, permission: "lead:read" },
   { href: "/documents", label: "Documents", icon: FileText, permission: "document:read" },
+  { href: "/travel", label: "Travel", icon: CalendarDays, permission: "itinerary:read" },
   { href: "/analytics", label: "Analytics", icon: BarChart3, permission: "analytics:read" },
   { href: "/roadmap", label: "90-Day Roadmap", icon: Target, permission: null },
   { href: "/settings", label: "Settings", icon: Settings, permission: "settings:read" },
@@ -55,13 +58,13 @@ export function Sidebar({ open, onToggle, userRole }: SidebarProps) {
     // Role-based filtering
     const rolePermissions: Record<string, string[]> = {
       ADMIN: ["*"],
-      MANAGER: ["patient:read", "lead:read", "task:read", "partner:read", "invoice:read", "quote:read", "message:read", "document:read", "analytics:read", "settings:read"],
+      MANAGER: ["patient:read", "lead:read", "task:read", "partner:read", "invoice:read", "quote:read", "message:read", "document:read", "analytics:read", "settings:read", "visa:read"],
       SALES: ["lead:read", "patient:read", "message:read"],
-      COORDINATOR: ["patient:read", "task:read", "message:read", "document:read"],
+      COORDINATOR: ["patient:read", "task:read", "message:read", "document:read", "visa:read"],
       FINANCE: ["invoice:read", "payment:read", "document:read"],
       MARKETING: ["lead:read", "message:read", "analytics:read"],
-      STAKEHOLDER: ["patient:read", "lead:read", "invoice:read", "message:read"],
-      VIEWER: ["patient:read", "lead:read", "task:read", "document:read", "partner:read", "analytics:read"],
+      STAKEHOLDER: ["patient:read", "lead:read", "invoice:read", "message:read", "visa:read"],
+      VIEWER: ["patient:read", "lead:read", "task:read", "document:read", "partner:read", "analytics:read", "visa:read"],
     };
 
     const permissions = rolePermissions[userRole] || [];

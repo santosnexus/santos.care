@@ -25,7 +25,7 @@
 - **URL:** https://santocare-ops.vercel.app
 - **Build:** 9 static pages + 10 serverless API routes
 - **Auth:** Middleware-based HTTP Basic Auth (Pro-only Vercel Password Protection is unavailable on Hobby)
-- **Credentials:** `santos` / `He@lInd!a2026` (set `OPS_AUTH_USER` / `OPS_AUTH_PASS` in Vercel env to override)
+- **Credentials:** `santos` / (set via `OPS_AUTH_USER` / `OPS_AUTH_PASS` env vars)
 - **Note:** All data is in-memory mock. Cold starts reset the in-memory arrays, so any "saved" data won't survive between requests across different serverless invocations.
 
 ### Achievements

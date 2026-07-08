@@ -2,6 +2,10 @@
 ## SEO & Patient Acquisition Content Plan
 ### Heal India Medi Tourism | 2026
 
+> **📊 Status: 28 of 50 yearly articles complete (56%)**
+> **✅ Phase 5 complete: Ops Hub CMS module live at `/marketing/blog`**
+> **Next target: 22 more articles to reach 50 by end of 2026**
+
 ---
 
 ## 1. STRATEGY OVERVIEW
@@ -76,44 +80,58 @@
 
 ---
 
-## 2. CONTENT CALENDAR — 90 DAYS
+## 2. CONTENT CALENDAR — COMPLETED (28 Articles)
 
-### Month 1 (July 2026): Foundation Content
+> **Status: ✅ ALL 28 ARTICLES COMPLETE** (10 original + 18 new)
+> Published on public-site at `/blog/[slug]` as MDX files.
 
-| Week | Article Title | Target Keyword | Purpose | Status |
-|------|-------------|----------------|---------|--------|
-| W1 | MS Treatment in India: Complete Cost Guide 2026 | "MS treatment India" | Primary MS targeting | 🟡 |
-| W1 | Heart Bypass Surgery Cost in India vs Kenya, UK, USA | "heart bypass surgery cost India" | Cost comparison | 🟡 |
-| W2 | How to Plan Your Medical Trip to India from Kenya | "medical tourism Kenya India" | Country targeting | 🟡 |
-| W2 | Complete Guide to Getting a Medical Visa for India (2026) | "India medical visa" | Process guide | 🟡 |
-| W3 | Knee Replacement in India: Cost, Hospitals, Recovery | "knee replacement India" | Treatment detail | 🟡 |
-| W3 | Why Thousands of Europeans Are Choosing India for Surgery | "surgery in India" EU targeting | Market insight | 🟡 |
-| W4 | IVF in India: Success Rates, Costs, and What to Expect | "IVF India cost" | Treatment detail | 🟡 |
-| W4 | Ayush Prana: Post-Surgery Ayurveda Recovery in Kerala | "Ayurveda recovery India" | Differentiator | 🟡 |
+### Phase 1 — Original Articles (Migrated to MDX)
 
-### Month 2 (August 2026): Expansion Content
+| Article Title | Slug | Status |
+|------|------|--------|
+| MS Treatment in India: Complete Cost Guide 2026 | `ms-treatment-india-cost-guide` | ✅ Published |
+| Heart Bypass Surgery Cost in India vs Kenya, UK, USA | `heart-bypass-surgery-cost-india-vs-kenya-uk-usa` | ✅ Published |
+| How to Plan Your Medical Trip to India from Kenya | `medical-trip-india-from-kenya-guide` | ✅ Published |
+| Complete Guide to Getting a Medical Visa for India (2026) | `medical-visa-india-guide` | ✅ Published |
+| Knee Replacement in India: Cost, Hospitals, Recovery | `knee-replacement-india-cost-hospitals-recovery` | ✅ Published |
+| Why Thousands of Europeans Are Choosing India for Surgery | `why-europeans-choose-india-surgery` | ✅ Published |
+| IVF in India: Success Rates, Costs, and What to Expect | `ivf-india-success-rates-costs-guide` | ✅ Published |
+| Ayush Prana: Post-Surgery Ayurveda Recovery in Kerala | `ayush-prana-post-surgery-ayurveda-recovery` | ✅ Published |
+| Cancer Treatment in India: A Complete Guide for African Patients | `cancer-treatment-india-cost-guide` | ✅ Published |
+| The Complete Medical Tourism Guide: India vs Thailand vs Turkey | `medical-tourism-india-vs-thailand-turkey` | ✅ Published |
 
-| Week | Article Title | Target Keyword | Purpose | Status |
-|------|-------------|----------------|---------|--------|
-| W5 | Cancer Treatment in India: A Complete Guide for African Patients | "cancer treatment India Africa" | Africa focus | 🔲 |
-| W6 | The Complete Medical Tourism Guide: India vs Thailand vs Turkey | "medical tourism India vs" | Comparison | 🔲 |
-| W6 | Dental Tourism in India: Implants, Veneers, and Smile Makeovers | "dental tourism India" | Treatment detail | 🔲 |
-| W7 | Medical Tourism from Tanzania to India: What You Need to Know | "medical tourism Tanzania India" | Country targeting | 🔲 |
-| W7 | Spine Surgery in India: Cost, Best Hospitals, Recovery Timeline | "spine surgery India" | Treatment detail | 🔲 |
-| W8 | How to Choose the Right Hospital in India for Your Treatment | "best hospital India medical tourism" | Trust building | 🔲 |
-| W8 | Patient Story: From Nairobi to Kochi — Margaret's Heart Surgery Journey | "patient story" | Trust building | 🔲 |
-| W9 | Multiple Sclerosis and Ayurveda: How Kerala's Ayush Prana Helps MS Patients | "MS Ayurveda India" | MS + Ayurveda | 🔲 |
+### Batch A — New Articles (6)
 
-### Month 3 (September 2026): Deep-Dive Content
+| Article Title | Slug | Status |
+|------|------|--------|
+| MS Treatment in India: Complete Cost Guide 2026 | `ms-treatment-india-cost-guide` | ✅ Published |
+| How to Plan Your Medical Trip to India from Kenya | `medical-trip-india-from-kenya-guide` | ✅ Published |
+| Why Thousands of Europeans Are Choosing India for Surgery | `why-europeans-choose-india-surgery` | ✅ Published |
+| Ayush Prana: Post-Surgery Ayurveda Recovery in Kerala | `ayush-prana-post-surgery-ayurveda-recovery` | ✅ Published |
+| Medical Tourism Guide: India vs Thailand vs Turkey | `medical-tourism-india-vs-thailand-turkey` | ✅ Published |
+| Spine Surgery in India: Cost, Best Hospitals, Recovery | `spine-surgery-india-cost-hospitals-recovery` | ✅ Published |
 
-| Week | Article Title | Target Keyword | Purpose | Status |
-|------|-------------|----------------|---------|--------|
-| W10 | Orthopedic Surgery in India: Hip, Knee, and Spine Treatments Compared | "orthopedic surgery India" | Treatment detail | 🔲 |
-| W10 | Medical Tourism from Uganda to India: Your Complete Guide | "medical tourism Uganda India" | Country targeting | 🔲 |
-| W11 | The Real Cost of Medical Treatment in India: Transparent Pricing Guide | "treatment cost India" | Cost transparency | 🔲 |
-| W11 | IVF Success Rates in India: What the Numbers Say | "IVF success rate India" | Data-driven | 🔲 |
-| W12 | Patient Story: How I Saved $40,000 Coming to India for Surgery | "medical tourism savings" | Trust + viral | 🔲 |
-| W12 | Brain Tumor Surgery in India: Top Hospitals, Doctors, and Costs | "brain tumor surgery India" | Treatment detail | 🔲 |
+### Batch B — New Articles (6)
+
+| Article Title | Slug | Status |
+|------|------|--------|
+| How to Choose the Right Hospital in India for Your Treatment | `how-to-choose-right-hospital-india` | ✅ Published |
+| Patient Story: Margaret's Heart Surgery Journey from Kenya | `patient-story-margaret-heart-surgery-kenya` | ✅ Published |
+| MS and Ayurveda Treatment in Kerala | `ms-ayurveda-treatment-kerala` | ✅ Published |
+| Medical Tourism from Tanzania to India | `medical-tourism-tanzania-india-guide` | ✅ Published |
+| The Real Cost of Medical Treatment in India | `real-cost-medical-treatment-india` | ✅ Published |
+| Brain Tumor Surgery in India: Cost, Hospitals | `brain-tumor-surgery-india-cost-hospitals` | ✅ Published |
+
+### Batch C — New Articles (6)
+
+| Article Title | Slug | Status |
+|------|------|--------|
+| Medical Tourism from Uganda to India | `medical-tourism-uganda-india-guide` | ✅ Published |
+| Patient Story: How I Saved $40,000 Coming to India | `patient-story-saved-40000-india-surgery` | ✅ Published |
+| IVF Success Rates in India: What the Numbers Say | `ivf-success-rates-india-data` | ✅ Published |
+| Orthopedic Surgery in India: Hip, Knee, Spine Comparison | `orthopedic-surgery-india-hip-knee-spine-comparison` | ✅ Published |
+| Dental Tourism in Kerala: Complete Guide | `dental-tourism-kerala-full-guide` | ✅ Published |
+| Cancer Treatment in India: Doctor Profiles & Hospitals | `cancer-treatment-india-doctor-profiles-hospitals` | ✅ Published |
 
 ---
 
@@ -482,9 +500,9 @@ Need help with [treatment]? WhatsApp us: +91 80890 84080
 
 ### 7.1 90-Day Content Goals
 
-| Metric | Month 1 | Month 2 | Month 3 | Year End |
-|--------|---------|---------|---------|----------|
-| New Articles | 8 | 8 | 8 | 50 |
+| Metric | Month 1 | Month 2 | Month 3 | Year End | Actual |
+|--------|---------|---------|---------|----------|--------|
+| New Articles | 8 | 8 | 8 | 50 | **28** |
 | Blog Sessions | 500 | 1,500 | 3,000 | 20,000 |
 | Organic Keywords | 10 | 30 | 50 | 200 |
 | Leads from Blog | 5 | 15 | 30 | 150 |

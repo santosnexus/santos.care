@@ -1,20 +1,23 @@
 import { PrismaClient } from "@prisma/client";
+import { logger } from "@/lib/logger";
+import { prisma } from "@/lib/db";
 
 export interface AuditLogEntry {
   tenantId: string;
   userId?: string;
-  action: "CREATE" | "UPDATE" | "DELETE";
+  action: "CREATE" | "UPDATE" | "DELETE" | "VIEW" | "EXPORT";
   entityType: string;
   entityId: string;
   before?: Record<string, any> | null;
   after?: Record<string, any> | null;
   ipAddress?: string;
   userAgent?: string;
+  metadata?: Record<string, unknown>;
 }
 
-export async function writeAuditLog(prisma: PrismaClient, entry: AuditLogEntry): Promise<void> {
+export async function writeAuditLog(prismaClient: PrismaClient, entry: AuditLogEntry): Promise<void> {
   try {
-    await prisma.auditLog.create({
+    await prismaClient.auditLog.create({
       data: {
         tenantId: entry.tenantId,
         userId: entry.userId || undefined,
@@ -29,12 +32,12 @@ export async function writeAuditLog(prisma: PrismaClient, entry: AuditLogEntry):
     });
   } catch (error) {
     // Audit log writes should never fail the main operation
-    console.error("Failed to write audit log:", error);
+    logger.error("Failed to write audit log", error);
   }
 }
 
 export async function getAuditLogs(
-  prisma: PrismaClient,
+  prismaClient: PrismaClient,
   tenantId: string,
   options?: {
     entityType?: string;
@@ -61,15 +64,41 @@ export async function getAuditLogs(
   }
 
   const [logs, total] = await Promise.all([
-    prisma.auditLog.findMany({
+    prismaClient.auditLog.findMany({
       where,
       include: { user: { select: { id: true, name: true, email: true } } },
       orderBy: { createdAt: "desc" },
       take: options?.limit || 50,
       skip: options?.offset || 0,
     }),
-    prisma.auditLog.count({ where }),
+    prismaClient.auditLog.count({ where }),
   ]);
 
   return { logs, total };
+}
+
+// ─── Singleton convenience wrappers (used by service layer) ───────────────────
+
+/**
+ * Log a mutation (CREATE / UPDATE / DELETE).
+ * Uses the singleton prisma instance. Never throws.
+ */
+export async function logAudit(entry: Omit<AuditLogEntry, "userId"> & { userId: string }): Promise<void> {
+  return writeAuditLog(prisma as unknown as PrismaClient, entry);
+}
+
+/**
+ * Log a read access event for compliance.
+ */
+export async function logAccess(input: {
+  tenantId: string;
+  userId: string;
+  entityType: string;
+  entityId: string;
+  ipAddress?: string;
+}): Promise<void> {
+  return logAudit({
+    ...input,
+    action: "VIEW",
+  });
 }

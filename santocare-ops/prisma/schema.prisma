@@ -35,9 +35,14 @@ model Tenant {
   quotes       Quote[]
   messages     Message[]
   messageTemplates MessageTemplate[]
+  itineraries  Itinerary[]
+  consentRecords ConsentRecord[]
+  visaApplications VisaApplication[]
+  blogPosts        BlogPost[]
 
   @@map("tenants")
 }
+
 
 enum TenantStatus {
   ACTIVE
@@ -127,6 +132,9 @@ model Patient {
   actualTravelDate   DateTime?
   dischargeDate     DateTime?
 
+  // Soft delete
+  deletedAt          DateTime?
+
   documents          Document[]
   medicalReports     Document[]     @relation("MedicalReports")
   communications     Communication[]
@@ -137,17 +145,21 @@ model Patient {
   invoices           Invoice[]
   quotes             Quote[]
   messages           Message[]
+  consentRecords     ConsentRecord[]
 
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 
   tasks              Task[]
+  itinerary          Itinerary?
+  visaApplications   VisaApplication[]
 
   @@unique([tenantId, referenceNumber])
   @@index([tenantId])
   @@index([tenantId, stage])
   @@index([tenantId, country])
   @@index([tenantId, assignedCoordinatorId])
+  @@index([tenantId, deletedAt])
   @@map("patients")
 }
 
@@ -252,24 +264,37 @@ model Partner {
   phone          String?
   email          String?
   address        String?
+  website        String?
+  description    String?
+  specializations String[] @default([])
 
-  agreementStatus AgreementStatus @default(NONE)
-  agreementDate   DateTime?
-  commissionRate  Float?
+  agreementStatus    AgreementStatus @default(NONE)
+  agreementDate      DateTime?
+  agreementExpiresAt DateTime?
+  commissionRate     Float?
+
+  // Public directory
+  isPubliclyListed   Boolean  @default(false)
+  slug               String?  @unique
 
   totalPatientsReferred Int    @default(0)
   totalRevenue         Float   @default(0)
   responseTime         Int?
   satisfactionScore    Float?
 
+  // Soft delete
+  deletedAt      DateTime?
+
   documents       Document[]
   notes           Note[]
+  itineraryEvents ItineraryEvent[]
 
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   @@index([tenantId])
   @@index([tenantId, category])
+  @@index([tenantId, deletedAt])
   @@map("partners")
 }
 
@@ -302,6 +327,7 @@ model Lead {
   phone        String?
 
   status       LeadStatus @default(NEW)
+  score        Int        @default(0)
 
   treatmentInterest String?
   budgetRange       String?
@@ -313,12 +339,20 @@ model Lead {
   utmMedium   String?
   utmCampaign String?
 
+  // Soft delete
+  deletedAt   DateTime?
+
+  // Drip sequence tracking
+  sequenceStartedAt DateTime?
+  lastContactAt     DateTime?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([tenantId])
   @@index([tenantId, status])
   @@index([tenantId, source])
+  @@index([tenantId, deletedAt])
   @@map("leads")
 }
 
@@ -487,6 +521,40 @@ model AuditLog {
   @@index([tenantId, userId])
   @@index([tenantId, createdAt])
   @@map("audit_logs")
+}
+
+// ─── Blog / Content ─────────────────────────────────────────────────────────
+
+enum BlogPostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+}
+
+model BlogPost {
+  id         String          @id @default(cuid())
+  tenantId   String
+  tenant     Tenant          @relation(fields: [tenantId], references: [id])
+
+  title      String
+  slug       String
+  excerpt    String?
+  content    String
+  imageUrl   String?
+  category   String?
+  tags       String[]        @default([])
+
+  status     BlogPostStatus  @default(DRAFT)
+  author     String?
+  publishDate DateTime?
+
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([tenantId, status])
+  @@map("blog_posts")
 }
 
 model Invoice {
@@ -747,4 +815,170 @@ enum TemplateCategory {
   INVOICE
   APPOINTMENT
   REMINDER
+}
+
+// ─── Itinerary ────────────────────────────────────────────────────────────────
+
+model Itinerary {
+  id         String           @id @default(cuid())
+  tenantId   String
+  tenant     Tenant           @relation(fields: [tenantId], references: [id])
+  patientId  String           @unique
+  patient    Patient          @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  events     ItineraryEvent[]
+
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@index([tenantId])
+  @@map("itineraries")
+}
+
+model ItineraryEvent {
+  id           String             @id @default(cuid())
+  itineraryId  String
+  itinerary    Itinerary          @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
+  type         ItineraryEventType
+  title        String
+  description  String?
+  date         DateTime
+  location     String?
+  notes        String?
+
+  partnerId    String?
+  partner      Partner?           @relation(fields: [partnerId], references: [id], onDelete: SetNull)
+
+  documentIds  String[]           @default([])
+  order        Int                @default(0)
+  status       EventStatus        @default(PLANNED)
+
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  @@index([itineraryId])
+  @@map("itinerary_events")
+}
+
+enum ItineraryEventType {
+  FLIGHT
+  HOTEL
+  PROCEDURE
+  CONSULTATION
+  DISCHARGE
+  VISA
+  TRANSPORT
+  OTHER
+}
+
+enum EventStatus {
+  PLANNED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+// ─── Consent ──────────────────────────────────────────────────────────────────
+
+model ConsentRecord {
+  id         String   @id @default(cuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  type       ConsentType
+  granted    Boolean
+  grantedAt  DateTime     @default(now())
+  revokedAt  DateTime?
+  ip         String?
+  userAgent  String?
+  notes      String?
+
+  createdAt  DateTime     @default(now())
+
+  @@index([tenantId])
+  @@index([tenantId, patientId])
+  @@map("consent_records")
+}
+
+enum ConsentType {
+  DATA_PROCESSING
+  MARKETING
+  TELEMEDICINE
+  RESEARCH
+  THIRD_PARTY_SHARING
+}
+
+// ─── Visa / Immigration ─────────────────────────────────────────────────────────
+
+enum VisaStatus {
+  DOCUMENTS_COLLECTED
+  SUBMITTED
+  IN_REVIEW
+  APPROVED
+  STAMPED
+  REJECTED
+  CANCELLED
+}
+
+enum VisaType {
+  MEDICAL
+  TOURIST
+  ATTENDANT
+  BUSINESS
+}
+
+model VisaApplication {
+  id              String          @id @default(cuid())
+  tenantId        String
+  tenant          Tenant          @relation(fields: [tenantId], references: [id])
+  patientId       String
+  patient         Patient         @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  type            VisaType        @default(MEDICAL)
+  status          VisaStatus      @default(DOCUMENTS_COLLECTED)
+
+  country         String
+  embassy         String?
+
+  applicationDate DateTime?
+  submittedDate   DateTime?
+  reviewedDate    DateTime?
+  decisionDate    DateTime?
+  visaExpiryDate  DateTime?
+
+  portOfEntry     String?
+  frroRegistered  Boolean         @default(false)
+  frroNumber      String?
+  frroExpiryDate  DateTime?
+
+  remarks         String?
+  attendantCount  Int             @default(0)
+
+  documents       VisaDocument[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([tenantId])
+  @@index([tenantId, patientId])
+  @@index([tenantId, status])
+  @@map("visa_applications")
+}
+
+model VisaDocument {
+  id                 String          @id @default(cuid())
+  visaApplicationId  String
+  visaApplication    VisaApplication @relation(fields: [visaApplicationId], references: [id], onDelete: Cascade)
+
+  name               String
+  fileUrl            String?
+  status             String          @default("PENDING")
+  notes              String?
+
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  @@index([visaApplicationId])
+  @@map("visa_documents")
 }

@@ -6,6 +6,7 @@ import {
   mockTasks,
   mockDocuments,
   mockUsers,
+  mockBlogPosts,
 } from "@/lib/data";
 
 /**
@@ -50,6 +51,7 @@ type PartnerRecord = Record<string, any>;
 type TaskRecord = Record<string, any>;
 type DocumentRecord = Record<string, any>;
 type UserRecord = Record<string, any>;
+type BlogPostRecord = Record<string, any>;
 
 let mockDataStore = {
   patients: [...mockPatients] as PatientRecord[],
@@ -58,6 +60,7 @@ let mockDataStore = {
   tasks: [...mockTasks] as TaskRecord[],
   documents: [...mockDocuments] as DocumentRecord[],
   users: [...mockUsers] as UserRecord[],
+  blogPosts: [...mockBlogPosts] as BlogPostRecord[],
 };
 
 export const store = {
@@ -545,6 +548,71 @@ export const store = {
     create: async (data: any) => {
       if (prisma) return prisma.payment.create({ data });
       return { id: Date.now().toString(), ...data };
+    },
+  },
+  blogPosts: {
+    list: async (tenantId?: string) => {
+      if (prisma) {
+        const where: any = {};
+        if (tenantId) where.tenantId = tenantId;
+        return prisma.blogPost.findMany({ where, orderBy: { createdAt: "desc" } });
+      }
+      if (tenantId) {
+        return mockDataStore.blogPosts.filter((p) => (p as any).tenantId === tenantId);
+      }
+      return mockDataStore.blogPosts;
+    },
+    find: async (id: string, tenantId?: string) => {
+      if (prisma) {
+        const where: any = { id };
+        if (tenantId) where.tenantId = tenantId;
+        return prisma.blogPost.findFirst({ where });
+      }
+      const post = mockDataStore.blogPosts.find((p) => p.id === id);
+      if (!post) return null;
+      if (tenantId && (post as any).tenantId !== tenantId) return null;
+      return post;
+    },
+    findBySlug: async (slug: string, tenantId?: string) => {
+      if (prisma) {
+        const where: any = { slug };
+        if (tenantId) where.tenantId = tenantId;
+        return prisma.blogPost.findFirst({ where });
+      }
+      const post = mockDataStore.blogPosts.find((p) => (p as any).slug === slug);
+      if (!post) return null;
+      if (tenantId && (post as any).tenantId !== tenantId) return null;
+      return post;
+    },
+    create: async (data: Partial<BlogPostRecord>) => {
+      if (prisma) return prisma.blogPost.create({ data: data as any });
+      const newPost = { id: Date.now().toString(), createdAt: new Date().toISOString(), ...data } as BlogPostRecord;
+      mockDataStore.blogPosts.unshift(newPost);
+      return newPost;
+    },
+    update: async (id: string, data: Partial<BlogPostRecord>, tenantId?: string) => {
+      if (prisma) {
+        const where: any = { id };
+        if (tenantId) where.tenantId = tenantId;
+        return prisma.blogPost.update({ where, data: data as any });
+      }
+      const idx = mockDataStore.blogPosts.findIndex((p) => p.id === id);
+      if (idx === -1) return null;
+      if (tenantId && (mockDataStore.blogPosts[idx] as any).tenantId !== tenantId) return null;
+      mockDataStore.blogPosts[idx] = { ...mockDataStore.blogPosts[idx], ...data };
+      return mockDataStore.blogPosts[idx];
+    },
+    delete: async (id: string, tenantId?: string) => {
+      if (prisma) {
+        const where: any = { id };
+        if (tenantId) where.tenantId = tenantId;
+        return prisma.blogPost.delete({ where });
+      }
+      const idx = mockDataStore.blogPosts.findIndex((p) => p.id === id);
+      if (idx === -1) return { id };
+      if (tenantId && (mockDataStore.blogPosts[idx] as any).tenantId !== tenantId) return { id };
+      mockDataStore.blogPosts = mockDataStore.blogPosts.filter((p) => p.id !== id);
+      return { id };
     },
   },
   documents: {

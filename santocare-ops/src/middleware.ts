@@ -1,9 +1,18 @@
+import "@/env";
 import { NextRequest, NextResponse } from "next/server";
 import { verifySessionToken } from "@/lib/auth";
 import { tenantResolver, Tenant } from "@/lib/tenant";
 
-const AUTH_USER = process.env.OPS_AUTH_USER || "santos";
-const AUTH_PASS = process.env.OPS_AUTH_PASS || "He@lInd!a2026";
+const ALLOWED_ORIGINS = process.env.CORS_ORIGINS?.split(",") || [
+  "https://santos.care",
+  "https://santos-care-web.vercel.app",
+  "https://santos-care.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:3001",
+];
+
+const AUTH_USER = process.env.OPS_AUTH_USER || "";
+const AUTH_PASS = process.env.OPS_AUTH_PASS || "";
 const COOKIE_NAME = "sc-ops-session";
 
 function isPublicPath(pathname: string) {
@@ -44,6 +53,35 @@ async function checkSessionAuth(req: NextRequest): Promise<{ valid: boolean; ten
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    const origin = req.headers.get("origin") || "";
+    const allowed = ALLOWED_ORIGINS.includes(origin) || ALLOWED_ORIGINS.includes("*");
+    if (allowed || !origin) {
+      return new NextResponse(null, {
+        status: 200,
+        headers: {
+          "Access-Control-Allow-Origin": origin || "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization, x-tenant-id",
+          "Access-Control-Allow-Credentials": "true",
+          "Access-Control-Max-Age": "86400",
+        },
+      });
+    }
+  }
+
+  // Add CORS headers to API responses (continue to auth after)
+  const addCorsHeaders = (response: NextResponse) => {
+    const origin = req.headers.get("origin") || "";
+    const allowed = ALLOWED_ORIGINS.includes(origin) || ALLOWED_ORIGINS.includes("*");
+    if (allowed) {
+      response.headers.set("Access-Control-Allow-Origin", origin);
+      response.headers.set("Access-Control-Allow-Credentials", "true");
+    }
+    return response;
+  };
+
   // Tenant resolution
   const allTenants = [
     { id: "santos", slug: "santos", name: "Santos Care", domain: null, plan: "STARTER" as const, status: "ACTIVE" as const },
@@ -52,7 +90,7 @@ export async function middleware(req: NextRequest) {
   const tenant = await tenantResolver(req, allTenants);
 
   if (isPublicPath(pathname)) {
-    return NextResponse.next();
+    return addCorsHeaders(NextResponse.next());
   }
 
   // Try session-based auth first
@@ -62,7 +100,7 @@ export async function middleware(req: NextRequest) {
     // Inject tenant ID into request headers for API routes
     const tenantId = tenant?.id || sessionAuth.tenantId || "santos";
     response.headers.set("x-tenant-id", tenantId);
-    return response;
+    return addCorsHeaders(response);
   }
 
   // Fall back to Basic Auth (for legacy compatibility)
@@ -72,12 +110,12 @@ export async function middleware(req: NextRequest) {
     // Inject default tenant for Basic Auth users
     const tenantId = tenant?.id || "santos";
     response.headers.set("x-tenant-id", tenantId);
-    return response;
+    return addCorsHeaders(response);
   }
 
   // API routes return 401 JSON
   if (pathname.startsWith("/api/")) {
-    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+    return addCorsHeaders(NextResponse.json({ error: "Authentication required" }, { status: 401 }));
   }
 
   // Page routes: redirect to login (no WWW-Authenticate header to avoid browser native dialog)

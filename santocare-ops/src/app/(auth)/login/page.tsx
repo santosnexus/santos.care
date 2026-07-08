@@ -7,7 +7,7 @@ import { Lock, Mail, LogIn, AlertCircle } from "lucide-react";
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("admin@santos.care");
-  const [password, setPassword] = useState("He@lInd!a2026");
+  const [password, setPassword] = useState("demo");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -102,10 +102,10 @@ export default function LoginPage() {
 
           <div className="mt-6 pt-6 border-t border-gray-200 text-center">
             <p className="text-xs text-gray-500">
-              Demo credentials: <code className="text-gray-700">admin@santos.care</code> / <code className="text-gray-700">He@lInd!a2026</code>
+              Demo credentials: <code className="text-gray-700">admin@santos.care</code> / <code className="text-gray-700">demo</code>
             </p>
             <p className="text-xs text-gray-400 mt-2">
-              Or use Basic Auth with <code>santos / He@lInd!a2026</code>
+              Or use Basic Auth with credentials from your environment.
             </p>
           </div>
         </div>

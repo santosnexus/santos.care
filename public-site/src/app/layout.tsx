@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { JsonLd, siteSchema } from "@/components/json-ld";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={inter.className}>
+        <JsonLd data={siteSchema()} />
         <Navbar />
         <main className="min-h-screen">{children}</main>
         <Footer />

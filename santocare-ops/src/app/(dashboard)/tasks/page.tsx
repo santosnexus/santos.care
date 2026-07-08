@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { logger } from "@/lib/logger";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -89,7 +90,7 @@ export default function TasksPage() {
   };
 
   const handleStatusChange = (taskId: string, newStatus: string) => {
-    console.log("Status change:", taskId, newStatus);
+    logger.debug("Status change", { taskId, newStatus });
   };
 
   return (

@@ -1,59 +1,38 @@
-import { NextResponse } from "next/server";
-import { store } from "@/lib/db";
-import { generateRefNumber } from "@/lib/utils";
-
 /**
- * Convert a lead to a patient.
- *
- * Creates a new patient record from lead data, marks the lead as CONVERTED,
- * and links the two together.
+ * POST /api/leads/[id]/convert  - Convert a qualified lead into a patient
  */
-export async function POST(request: Request, { params }: { params: { id: string } }) {
-  try {
-    const lead = await store.leads.find(params.id);
-    if (!lead) {
-      return NextResponse.json({ error: "Lead not found" }, { status: 404 });
-    }
+import { NextRequest, NextResponse } from "next/server";
+import { requirePermission } from "@/lib/auth";
+import { convertLeadToPatient } from "@/services/leads.service";
+import { inngest } from "@/inngest/client";
 
-    if (lead.status === "CONVERTED" && lead.convertedToPatientId) {
-      return NextResponse.json(
-        { error: "Lead already converted", patientId: lead.convertedToPatientId },
-        { status: 400 }
-      );
-    }
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const auth = await requirePermission(req, "lead:update");
+  if (!auth.ok) return auth.response;
 
-    // Create the patient from lead data
-    const patientData: any = {
-      referenceNumber: generateRefNumber(),
-      name: lead.name,
-      country: lead.country || "Unknown",
-      phone: lead.phone || "",
-      email: lead.email || `unknown-${Date.now()}@placeholder.local`,
-      treatmentType: lead.treatmentInterest || "General",
-      stage: "INQUIRY_RECEIVED",
-      inquiryDate: new Date().toISOString(),
-    };
+  const { id } = await params;
 
-    const created = await store.patients.create(patientData);
-    const patientId = created.id || (created as any)._id;
+  const { patient } = await convertLeadToPatient(auth.user.tenantId, id, auth.user.id);
 
-    // Mark lead as converted
-    await store.leads.update(params.id, {
-      status: "CONVERTED",
-      convertedToPatientId: patientId,
-      conversionDate: new Date().toISOString(),
-    } as any);
+  // Welcome the new patient
+  await inngest
+    .send({
+      name: "patient/created",
+      data: {
+        patientId: patient.id,
+        tenantId: patient.tenantId,
+        name: patient.name,
+        email: patient.email ?? "",
+        phone: patient.phone,
+        whatsapp: patient.whatsapp ?? null,
+        referenceNumber: patient.referenceNumber,
+        coordinatorId: patient.assignedCoordinatorId ?? null,
+      },
+    })
+    .catch(() => {});
 
-    return NextResponse.json({
-      success: true,
-      patient: created,
-      leadId: params.id,
-    });
-  } catch (error) {
-    console.error("Convert lead error:", error);
-    return NextResponse.json(
-      { error: "Failed to convert lead to patient" },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json({ data: { patient } }, { status: 201 });
 }

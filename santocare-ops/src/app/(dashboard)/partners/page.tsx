@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -25,184 +25,340 @@ import {
   Edit,
   Trash2,
   ChevronRight,
-  X,
+  AlertCircle,
+  Loader2,
+  Globe,
 } from "lucide-react";
+import { fetchWithAuth } from "@/lib/fetch-client";
 
-type PartnerCategory = "hospital" | "ayurveda" | "lab" | "transport" | "nursing" | "equipment";
-type AgreementStatus = "none" | "pending" | "signed" | "expired";
-
-interface Partner {
-  id: string;
-  name: string;
-  category: PartnerCategory;
-  contactPerson: string;
-  phone: string;
-  email: string;
-  address: string;
-  agreementStatus: AgreementStatus;
-  agreementDate?: string;
-  commissionRate?: number;
-  totalPatientsReferred: number;
-  totalRevenue: number;
-  responseTime?: number;
-  satisfactionScore?: number;
-  createdAt: string;
-}
-
-const MOCK_PARTNERS: Partner[] = [
-  { id: "1", name: "Aster Medcity", category: "hospital", contactPerson: "Dr. Prem Nair", phone: "+91 484 400 8000", email: "pren.nair@asterhospital.com", address: "Kochi, Kerala", agreementStatus: "signed", commissionRate: 5, totalPatientsReferred: 12, totalRevenue: 180000, satisfactionScore: 4.5, createdAt: "2024-01-15" },
-  { id: "2", name: "Amrita Hospital", category: "hospital", contactPerson: "Dr. Sanjay Chand", phone: "+91 487 242 8000", email: "sanjay@amrita.edu", address: "Kochi, Kerala", agreementStatus: "signed", commissionRate: 4, totalPatientsReferred: 8, totalRevenue: 120000, satisfactionScore: 4.7, createdAt: "2024-02-01" },
-  { id: "3", name: "Rajagiri Hospital", category: "hospital", contactPerson: "Fr. James", phone: "+91 484 618 5000", email: "rajagiri@rajagiri.edu", address: "Kochi, Kerala", agreementStatus: "signed", commissionRate: 5, totalPatientsReferred: 6, totalRevenue: 90000, satisfactionScore: 4.3, createdAt: "2024-01-20" },
-  { id: "4", name: "Ayush Prana", category: "ayurveda", contactPerson: "Dr. Manu Nair", phone: "+91 484 274 1234", email: "info@ayushprana.com", address: "Kochi, Kerala", agreementStatus: "signed", commissionRate: 10, totalPatientsReferred: 15, totalRevenue: 45000, satisfactionScore: 4.8, createdAt: "2024-03-01" },
-  { id: "5", name: "Metropolis Labs", category: "lab", contactPerson: "Rajesh Kumar", phone: "+91 22 4154 1234", email: "rajesh@metropolis.in", address: "Mumbai, Maharashtra", agreementStatus: "pending", totalPatientsReferred: 20, totalRevenue: 8000, createdAt: "2024-04-15" },
-  { id: "6", name: "Caring Hands Nursing", category: "nursing", contactPerson: "Mary Thomas", phone: "+91 484 274 5678", email: "mary@caringhands.com", address: "Kochi, Kerala", agreementStatus: "signed", commissionRate: 15, totalPatientsReferred: 10, totalRevenue: 15000, satisfactionScore: 4.6, createdAt: "2024-02-10" },
-  { id: "7", name: "Kochi Car Rentals", category: "transport", contactPerson: "Ravi Kumar", phone: "+91 484 274 9999", email: "ravi@kochicars.com", address: "Kochi, Kerala", agreementStatus: "signed", commissionRate: 0, totalPatientsReferred: 25, totalRevenue: 12500, satisfactionScore: 4.2, createdAt: "2024-01-05" },
-  { id: "8", name: "MedEq Solutions", category: "equipment", contactPerson: "Suresh Patel", phone: "+91 22 4154 5678", email: "suresh@medeq.in", address: "Mumbai, Maharashtra", agreementStatus: "pending", totalPatientsReferred: 0, totalRevenue: 0, createdAt: "2024-05-01" },
-];
+type PartnerCategory = "HOSPITAL" | "AYURVEDA" | "LAB" | "TRANSPORT" | "NURSING" | "EQUIPMENT";
+type AgreementStatus = "NONE" | "PENDING" | "SIGNED" | "EXPIRED";
 
 const CATEGORIES: { value: PartnerCategory | "all"; label: string }[] = [
   { value: "all", label: "All Partners" },
-  { value: "hospital", label: "Hospitals" },
-  { value: "ayurveda", label: "Ayurveda" },
-  { value: "lab", label: "Labs" },
-  { value: "transport", label: "Transport" },
-  { value: "nursing", label: "Nursing" },
-  { value: "equipment", label: "Equipment" },
+  { value: "HOSPITAL", label: "Hospitals" },
+  { value: "AYURVEDA", label: "Ayurveda" },
+  { value: "LAB", label: "Labs" },
+  { value: "TRANSPORT", label: "Transport" },
+  { value: "NURSING", label: "Nursing" },
+  { value: "EQUIPMENT", label: "Equipment" },
 ];
 
-const CATEGORY_COLORS: Record<PartnerCategory, string> = {
-  hospital: "bg-blue-100 text-blue-800",
-  ayurveda: "bg-green-100 text-green-800",
-  lab: "bg-purple-100 text-purple-800",
-  transport: "bg-orange-100 text-orange-800",
-  nursing: "bg-pink-100 text-pink-800",
-  equipment: "bg-yellow-100 text-yellow-800",
+const CATEGORY_LABELS: Record<PartnerCategory, string> = {
+  HOSPITAL: "Hospital",
+  AYURVEDA: "Ayurveda",
+  LAB: "Lab",
+  TRANSPORT: "Transport",
+  NURSING: "Nursing",
+  EQUIPMENT: "Equipment",
 };
 
-const AGREEMENT_COLORS: Record<AgreementStatus, string> = {
-  none: "bg-gray-100 text-gray-800",
-  pending: "bg-amber-100 text-amber-800",
-  signed: "bg-green-100 text-green-800",
-  expired: "bg-red-100 text-red-800",
+const CATEGORY_COLORS: Record<PartnerCategory, string> = {
+  HOSPITAL: "bg-blue-100 text-blue-800",
+  AYURVEDA: "bg-green-100 text-green-800",
+  LAB: "bg-purple-100 text-purple-800",
+  TRANSPORT: "bg-orange-100 text-orange-800",
+  NURSING: "bg-pink-100 text-pink-800",
+  EQUIPMENT: "bg-yellow-100 text-yellow-800",
 };
 
 const AGREEMENT_LABELS: Record<AgreementStatus, string> = {
-  none: "No Agreement",
-  pending: "Pending",
-  signed: "Signed",
-  expired: "Expired",
+  NONE: "No Agreement",
+  PENDING: "Pending",
+  SIGNED: "Signed",
+  EXPIRED: "Expired",
+};
+
+const AGREEMENT_COLORS: Record<AgreementStatus, string> = {
+  NONE: "bg-gray-100 text-gray-800",
+  PENDING: "bg-amber-100 text-amber-800",
+  SIGNED: "bg-green-100 text-green-800",
+  EXPIRED: "bg-red-100 text-red-800",
+};
+
+interface PartnerRow {
+  id: string;
+  name: string;
+  category: PartnerCategory;
+  contactPerson: string | null;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  agreementStatus: AgreementStatus;
+  agreementExpiresAt: string | null;
+  commissionRate: number | null;
+  totalPatientsReferred: number;
+  totalRevenue: number;
+  satisfactionScore: number | null;
+  isPubliclyListed: boolean;
+  createdAt: string;
+}
+
+interface PartnerDetail extends PartnerRow {
+  website: string | null;
+  description: string | null;
+  specializations: string[];
+  agreementDate: string | null;
+  responseTime: number | null;
+  slug: string | null;
+  notes?: Array<{ id: string; content: string; createdAt: string; createdBy?: { name: string } }>;
+  documents?: Array<{ id: string; name: string; type: string; createdAt: string }>;
+  _count?: { itineraryEvents: number };
+}
+
+const emptyForm = {
+  name: "", category: "HOSPITAL" as PartnerCategory, contactPerson: "",
+  phone: "", email: "", address: "", website: "", description: "",
+  commissionRate: "", agreementStatus: "PENDING" as AgreementStatus,
+  agreementDate: "", agreementExpiresAt: "", isPubliclyListed: false,
 };
 
 export default function PartnersPage() {
-  const [partners, setPartners] = React.useState<Partner[]>(MOCK_PARTNERS);
+  const [partners, setPartners] = React.useState<PartnerRow[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [categoryFilter, setCategoryFilter] = React.useState<PartnerCategory | "all">("all");
-  const [addModalOpen, setAddModalOpen] = React.useState(false);
-  const [detailModalOpen, setDetailModalOpen] = React.useState(false);
-  const [selectedPartner, setSelectedPartner] = React.useState<Partner | null>(null);
+
+  const [formOpen, setFormOpen] = React.useState(false);
+  const [editingId, setEditingId] = React.useState<string | null>(null);
+  const [form, setForm] = React.useState(emptyForm);
+  const [submitting, setSubmitting] = React.useState(false);
+  const [formError, setFormError] = React.useState<string | null>(null);
+
+  const [detailOpen, setDetailOpen] = React.useState(false);
+  const [detail, setDetail] = React.useState<PartnerDetail | null>(null);
+  const [detailLoading, setDetailLoading] = React.useState(false);
+
+  const [deleteTarget, setDeleteTarget] = React.useState<PartnerRow | null>(null);
+  const [deleting, setDeleting] = React.useState(false);
+
+  const loadPartners = React.useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    const params = new URLSearchParams();
+    if (searchQuery) params.set("search", searchQuery);
+    if (categoryFilter !== "all") params.set("category", categoryFilter);
+    params.set("limit", "100");
+    try {
+      const res = await fetchWithAuth(`/api/partners?${params}`);
+      if (!res.ok) throw new Error("Failed to load partners");
+      const json = await res.json();
+      setPartners(json.data ?? []);
+    } catch (e: any) {
+      setError(e.message ?? "Error loading partners");
+    } finally {
+      setLoading(false);
+    }
+  }, [searchQuery, categoryFilter]);
+
+  React.useEffect(() => {
+    loadPartners();
+  }, [loadPartners]);
 
   const filteredPartners = partners.filter((p) => {
     const matchesSearch =
+      !searchQuery ||
       p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.contactPerson.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.email.toLowerCase().includes(searchQuery.toLowerCase());
+      (p.contactPerson?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+      (p.email?.toLowerCase() || "").includes(searchQuery.toLowerCase());
     const matchesCategory = categoryFilter === "all" || p.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
 
   const stats = {
     totalPartners: partners.length,
-    activeMOUs: partners.filter((p) => p.agreementStatus === "signed").length,
+    activeMOUs: partners.filter((p) => p.agreementStatus === "SIGNED").length,
     totalPatientsReferred: partners.reduce((sum, p) => sum + p.totalPatientsReferred, 0),
     totalRevenue: partners.reduce((sum, p) => sum + p.totalRevenue, 0),
+    expiringSoon: partners.filter(
+      (p) =>
+        p.agreementStatus === "SIGNED" &&
+        p.agreementExpiresAt &&
+        new Date(p.agreementExpiresAt) <= new Date(Date.now() + 30 * 86_400_000)
+    ).length,
   };
 
-  const handleViewDetails = (partner: Partner) => {
-    setSelectedPartner(partner);
-    setDetailModalOpen(true);
+  const openCreate = () => {
+    setEditingId(null);
+    setForm(emptyForm);
+    setFormError(null);
+    setFormOpen(true);
   };
 
-  const handleDeletePartner = (id: string) => {
-    setPartners(partners.filter((p) => p.id !== id));
-    if (selectedPartner?.id === id) {
-      setDetailModalOpen(false);
-      setSelectedPartner(null);
+  const openEdit = (p: PartnerRow) => {
+    setEditingId(p.id);
+    setForm({
+      name: p.name,
+      category: p.category,
+      contactPerson: p.contactPerson ?? "",
+      phone: p.phone ?? "",
+      email: p.email ?? "",
+      address: p.address ?? "",
+      website: "",
+      description: "",
+      commissionRate: p.commissionRate != null ? String(p.commissionRate) : "",
+      agreementStatus: p.agreementStatus,
+      agreementDate: "",
+      agreementExpiresAt: p.agreementExpiresAt ?? "",
+      isPubliclyListed: p.isPubliclyListed,
+    });
+    setFormError(null);
+    setFormOpen(true);
+  };
+
+  const submitForm = async () => {
+    setSubmitting(true);
+    setFormError(null);
+    try {
+      const payload: Record<string, any> = {
+        name: form.name,
+        category: form.category,
+        agreementStatus: form.agreementStatus,
+        isPubliclyListed: form.isPubliclyListed,
+      };
+      if (form.contactPerson) payload.contactPerson = form.contactPerson;
+      if (form.phone) payload.phone = form.phone;
+      if (form.email) payload.email = form.email;
+      if (form.address) payload.address = form.address;
+      if (form.website) payload.website = form.website;
+      if (form.description) payload.description = form.description;
+      if (form.commissionRate) payload.commissionRate = Number(form.commissionRate);
+      if (form.agreementDate) payload.agreementDate = new Date(form.agreementDate).toISOString();
+      if (form.agreementExpiresAt) payload.agreementExpiresAt = new Date(form.agreementExpiresAt).toISOString();
+
+      const res = editingId
+        ? await fetchWithAuth(`/api/partners/${editingId}`, { method: "PATCH", body: JSON.stringify(payload) })
+        : await fetchWithAuth(`/api/partners`, { method: "POST", body: JSON.stringify(payload) });
+
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Failed to save partner");
+      setFormOpen(false);
+      await loadPartners();
+    } catch (e: any) {
+      setFormError(e.message ?? "Error saving partner");
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const handleAddPartner = (formData: FormData) => {
-    const newPartner: Partner = {
-      id: String(partners.length + 1),
-      name: formData.get("name") as string,
-      category: formData.get("category") as PartnerCategory,
-      contactPerson: formData.get("contactPerson") as string,
-      phone: formData.get("phone") as string,
-      email: formData.get("email") as string,
-      address: formData.get("address") as string,
-      agreementStatus: formData.get("agreementStatus") as AgreementStatus,
-      commissionRate: formData.get("commissionRate") ? Number(formData.get("commissionRate")) : undefined,
-      totalPatientsReferred: 0,
-      totalRevenue: 0,
-      createdAt: new Date().toISOString().split("T")[0],
-    };
-    setPartners([...partners, newPartner]);
-    setAddModalOpen(false);
+  const openDetail = async (p: PartnerRow) => {
+    setDetailOpen(true);
+    setDetail(null);
+    setDetailLoading(true);
+    try {
+      const res = await fetchWithAuth(`/api/partners/${p.id}`);
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Failed to load partner");
+      setDetail(json.data);
+    } catch (e: any) {
+      setFormError(e.message);
+      setDetailOpen(false);
+    } finally {
+      setDetailLoading(false);
+    }
   };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      const res = await fetchWithAuth(`/api/partners/${deleteTarget.id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const j = await res.json();
+        throw new Error(j.error ?? "Failed to delete partner");
+      }
+      setDeleteTarget(null);
+      if (detail?.id === deleteTarget.id) {
+        setDetailOpen(false);
+        setDetail(null);
+      }
+      await loadPartners();
+    } catch (e: any) {
+      setFormError(e.message);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const daysUntilExpiry = (dateStr: string | null): number | null => {
+    if (!dateStr) return null;
+    const diff = new Date(dateStr).getTime() - Date.now();
+    return Math.ceil(diff / 86_400_000);
+  };
+
+  const fmtDate = (s?: string | null) => (s ? new Date(s).toLocaleDateString() : "—");
+  const fmtMoney = (n: number | null | undefined) => (n != null ? `$${n.toLocaleString()}` : "—");
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Partners</h1>
-          <p className="text-muted-foreground">
-            Manage healthcare partners and service providers
-          </p>
+          <p className="text-muted-foreground">Manage healthcare partners and service providers</p>
         </div>
-        <Button onClick={() => setAddModalOpen(true)}>
+        <Button onClick={openCreate}>
           <Plus className="h-4 w-4 mr-2" />
           Add Partner
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-5">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Partners</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalPartners}</div>
-            <p className="text-xs text-muted-foreground">Active partnerships</p>
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Total Partners</p>
+                <p className="text-2xl font-bold">{stats.totalPartners}</p>
+              </div>
+              <Building2 className="h-5 w-5 text-muted-foreground" />
+            </div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active MOUs</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.activeMOUs}</div>
-            <p className="text-xs text-muted-foreground">Signed agreements</p>
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Active MOUs</p>
+                <p className="text-2xl font-bold">{stats.activeMOUs}</p>
+              </div>
+              <FileText className="h-5 w-5 text-muted-foreground" />
+            </div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Patients Referred</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalPatientsReferred}</div>
-            <p className="text-xs text-muted-foreground">Total referrals</p>
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Patients Referred</p>
+                <p className="text-2xl font-bold">{stats.totalPatientsReferred}</p>
+              </div>
+              <Users className="h-5 w-5 text-muted-foreground" />
+            </div>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Partner Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${stats.totalRevenue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Total generated</p>
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Partner Revenue</p>
+                <p className="text-2xl font-bold">${stats.totalRevenue.toLocaleString()}</p>
+              </div>
+              <DollarSign className="h-5 w-5 text-muted-foreground" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Expiring Soon</p>
+                <p className={`text-2xl font-bold ${stats.expiringSoon > 0 ? "text-red-600" : ""}`}>
+                  {stats.expiringSoon}
+                </p>
+              </div>
+              <Clock className="h-5 w-5 text-muted-foreground" />
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -211,7 +367,7 @@ export default function PartnersPage() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search partners..."
+            placeholder="Search by name, contact, or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
@@ -235,265 +391,354 @@ export default function PartnersPage() {
         </TabsList>
       </Tabs>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {filteredPartners.map((partner) => (
-          <Card key={partner.id} className="cursor-pointer hover:border-primary/50 transition-colors">
-            <CardHeader className="flex flex-row items-start justify-between space-y-0">
-              <div className="space-y-1">
-                <CardTitle className="text-lg">{partner.name}</CardTitle>
-                <CardDescription className="flex items-center gap-2">
-                  <Badge variant="outline" className={CATEGORY_COLORS[partner.category]}>
-                    {partner.category.charAt(0).toUpperCase() + partner.category.slice(1)}
-                  </Badge>
-                  <Badge variant="outline" className={AGREEMENT_COLORS[partner.agreementStatus]}>
-                    {AGREEMENT_LABELS[partner.agreementStatus]}
-                  </Badge>
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-2 text-sm">
-                <Users className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">{partner.totalPatientsReferred} patients referred</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">${partner.totalRevenue.toLocaleString()} revenue</span>
-              </div>
-              {partner.satisfactionScore && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                  <span className="text-muted-foreground">{partner.satisfactionScore}/5 satisfaction</span>
-                </div>
-              )}
-              <div className="pt-3 border-t space-y-1">
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="font-medium">{partner.contactPerson}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Phone className="h-3 w-3" />
-                  {partner.phone}
-                </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Mail className="h-3 w-3" />
-                  {partner.email}
-                </div>
-              </div>
-              <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => handleViewDetails(partner)}>
-                  View Details
-                </Button>
-                <Button variant="ghost" size="icon" onClick={() => handleDeletePartner(partner.id)}>
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {error && (
+        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          <AlertCircle className="h-4 w-4" /> {error}
+        </div>
+      )}
 
-      {filteredPartners.length === 0 && (
+      {loading && (
+        <div className="flex items-center justify-center py-12 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin mr-2" /> Loading partners...
+        </div>
+      )}
+
+      {!loading && (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {filteredPartners.map((partner) => {
+            const daysLeft = daysUntilExpiry(partner.agreementExpiresAt);
+            return (
+              <Card key={partner.id} className="cursor-pointer hover:border-primary/50 transition-colors">
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <h3 className="font-semibold">{partner.name}</h3>
+                      <div className="flex flex-wrap gap-1">
+                        <Badge variant="outline" className={CATEGORY_COLORS[partner.category]}>
+                          {CATEGORY_LABELS[partner.category]}
+                        </Badge>
+                        <Badge variant="outline" className={AGREEMENT_COLORS[partner.agreementStatus]}>
+                          {AGREEMENT_LABELS[partner.agreementStatus]}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  {daysLeft !== null && daysLeft <= 30 && partner.agreementStatus === "SIGNED" && (
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded">
+                      <AlertCircle className="h-3 w-3" />
+                      {daysLeft <= 0 ? "Agreement expired" : `${daysLeft} days left`}
+                    </div>
+                  )}
+
+                  <div className="space-y-1 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Users className="h-3.5 w-3.5" />
+                      {partner.totalPatientsReferred} patients
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <DollarSign className="h-3.5 w-3.5" />
+                      {fmtMoney(partner.totalRevenue)}
+                    </div>
+                    {partner.satisfactionScore && (
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
+                        {partner.satisfactionScore}/5
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="pt-2 border-t space-y-1 text-sm">
+                    {partner.contactPerson && <p className="font-medium">{partner.contactPerson}</p>}
+                    {partner.phone && (
+                      <div className="flex items-center gap-1.5 text-muted-foreground">
+                        <Phone className="h-3 w-3" /> {partner.phone}
+                      </div>
+                    )}
+                    {partner.email && (
+                      <div className="flex items-center gap-1.5 text-muted-foreground">
+                        <Mail className="h-3 w-3" /> {partner.email}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-2 pt-1">
+                    <Button variant="outline" size="sm" className="flex-1" onClick={() => openDetail(partner)}>
+                      View Details
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => openEdit(partner)} title="Edit">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => setDeleteTarget(partner)} title="Delete">
+                      <Trash2 className="h-4 w-4 text-red-600" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      {!loading && filteredPartners.length === 0 && (
         <div className="text-center py-12 border-2 border-dashed rounded-lg">
           <Building2 className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
           <h3 className="text-lg font-medium mb-2">No partners found</h3>
           <p className="text-muted-foreground mb-4">Try adjusting your search or filters</p>
-          <Button onClick={() => setAddModalOpen(true)}>
+          <Button onClick={openCreate}>
             <Plus className="h-4 w-4 mr-2" />
             Add Partner
           </Button>
         </div>
       )}
 
-      <Dialog open={addModalOpen} onClose={() => setAddModalOpen(false)} title="Add New Partner">
-        <DialogContent className="max-w-2xl">
-          <form
-            id="add-partner-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleAddPartner(new FormData(e.currentTarget));
-            }}
-            className="space-y-4"
-          >
+      <Dialog open={formOpen} onClose={() => setFormOpen(false)} title={editingId ? "Edit Partner" : "Add New Partner"}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <div className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name">Partner Name *</Label>
-                <Input id="name" name="name" placeholder="e.g., Aster Medcity" required />
+                <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Aster Medcity" required />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="category">Category *</Label>
                 <Select
                   id="category"
-                  name="category"
-                  options={CATEGORIES.filter((c) => c.value !== "all").map((c) => ({
-                    value: c.value,
-                    label: c.label,
-                  }))}
-                  placeholder="Select category"
-                  required
+                  options={CATEGORIES.filter((c) => c.value !== "all").map((c) => ({ value: c.value, label: c.label }))}
+                  value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value as PartnerCategory })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="contactPerson">Contact Person *</Label>
-                <Input id="contactPerson" name="contactPerson" placeholder="Dr. Prem Nair" required />
+                <Label htmlFor="contactPerson">Contact Person</Label>
+                <Input id="contactPerson" value={form.contactPerson} onChange={(e) => setForm({ ...form, contactPerson: e.target.value })} placeholder="Dr. Prem Nair" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone *</Label>
-                <Input id="phone" name="phone" type="tel" placeholder="+91 484 400 8000" required />
+                <Label htmlFor="phone">Phone</Label>
+                <Input id="phone" type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+91 484 400 8000" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email *</Label>
-                <Input id="email" name="email" type="email" placeholder="contact@partner.com" required />
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="contact@partner.com" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address">Address</Label>
-                <Input id="address" name="address" placeholder="Kochi, Kerala" />
+                <Input id="address" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="Kochi, Kerala" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="website">Website</Label>
+                <Input id="website" type="url" value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} placeholder="https://asterhospital.com" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="commissionRate">Commission Rate (%)</Label>
+                <Input id="commissionRate" type="number" step="0.1" value={form.commissionRate} onChange={(e) => setForm({ ...form, commissionRate: e.target.value })} placeholder="5" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="agreementStatus">Agreement Status</Label>
                 <Select
                   id="agreementStatus"
-                  name="agreementStatus"
                   options={[
-                    { value: "none", label: "No Agreement" },
-                    { value: "pending", label: "Pending" },
-                    { value: "signed", label: "Signed" },
-                    { value: "expired", label: "Expired" },
+                    { value: "NONE", label: "No Agreement" },
+                    { value: "PENDING", label: "Pending" },
+                    { value: "SIGNED", label: "Signed" },
+                    { value: "EXPIRED", label: "Expired" },
                   ]}
-                  placeholder="Select status"
+                  value={form.agreementStatus}
+                  onChange={(e) => setForm({ ...form, agreementStatus: e.target.value as AgreementStatus })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="commissionRate">Commission Rate (%)</Label>
-                <Input id="commissionRate" name="commissionRate" type="number" step="0.1" placeholder="5" />
+                <Label htmlFor="agreementDate">Agreement Date</Label>
+                <Input id="agreementDate" type="date" value={form.agreementDate} onChange={(e) => setForm({ ...form, agreementDate: e.target.value })} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="agreementExpiresAt">Agreement Expiry</Label>
+                <Input id="agreementExpiresAt" type="date" value={form.agreementExpiresAt} onChange={(e) => setForm({ ...form, agreementExpiresAt: e.target.value })} />
+              </div>
+              <div className="space-y-2 flex items-end pb-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.isPubliclyListed}
+                    onChange={(e) => setForm({ ...form, isPubliclyListed: e.target.checked })}
+                    className="h-4 w-4 rounded border-gray-300"
+                  />
+                  <span className="text-sm">List in public directory</span>
+                </label>
               </div>
             </div>
-          </form>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea id="description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Partner description..." rows={3} />
+            </div>
+            {formError && (
+              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                <AlertCircle className="h-4 w-4" /> {formError}
+              </div>
+            )}
+          </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAddModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button type="submit" form="add-partner-form">
-              Add Partner
+            <Button variant="outline" onClick={() => setFormOpen(false)} disabled={submitting}>Cancel</Button>
+            <Button onClick={submitForm} disabled={submitting || !form.name}>
+              {submitting ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving...</> : editingId ? "Save Changes" : "Create Partner"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <Dialog open={detailModalOpen} onClose={() => setDetailModalOpen(false)} title="Partner Details">
-        <DialogContent className="max-w-2xl">
-          {selectedPartner && (
+      <Dialog open={detailOpen} onClose={() => setDetailOpen(false)} title="Partner Details">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          {detailLoading && (
+            <div className="flex items-center justify-center py-8 text-muted-foreground">
+              <Loader2 className="h-5 w-5 animate-spin mr-2" /> Loading...
+            </div>
+          )}
+          {detail && (
             <div className="space-y-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold">{selectedPartner.name}</h2>
-                  <div className="flex gap-2 mt-2">
-                    <Badge variant="outline" className={CATEGORY_COLORS[selectedPartner.category]}>
-                      {selectedPartner.category.charAt(0).toUpperCase() + selectedPartner.category.slice(1)}
+                  <h2 className="text-xl font-semibold">{detail.name}</h2>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <Badge variant="outline" className={CATEGORY_COLORS[detail.category]}>
+                      {CATEGORY_LABELS[detail.category]}
                     </Badge>
-                    <Badge variant="outline" className={AGREEMENT_COLORS[selectedPartner.agreementStatus]}>
-                      {AGREEMENT_LABELS[selectedPartner.agreementStatus]}
+                    <Badge variant="outline" className={AGREEMENT_COLORS[detail.agreementStatus]}>
+                      {AGREEMENT_LABELS[detail.agreementStatus]}
                     </Badge>
+                    {detail.isPubliclyListed && (
+                      <Badge variant="outline" className="bg-teal-100 text-teal-800">
+                        <Globe className="h-3 w-3 mr-1" /> Public
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="flex items-center gap-3 p-3 rounded-lg border">
+              {detail.agreementExpiresAt && detail.agreementStatus === "SIGNED" && (
+                <div className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
+                  daysUntilExpiry(detail.agreementExpiresAt)! <= 30
+                    ? "bg-red-50 text-red-700 border border-red-200"
+                    : "bg-green-50 text-green-700 border border-green-200"
+                }`}>
+                  <Clock className="h-4 w-4" />
+                  Agreement {daysUntilExpiry(detail.agreementExpiresAt)! <= 0
+                    ? "expired"
+                    : `expires in ${daysUntilExpiry(detail.agreementExpiresAt)} days`}
+                  ({fmtDate(detail.agreementExpiresAt)})
+                </div>
+              )}
+
+              <div className="grid gap-3 md:grid-cols-2 text-sm">
+                <div><span className="text-muted-foreground">Phone:</span> {detail.phone || "—"}</div>
+                <div><span className="text-muted-foreground">Email:</span> {detail.email || "—"}</div>
+                <div><span className="text-muted-foreground">Address:</span> {detail.address || "—"}</div>
+                <div><span className="text-muted-foreground">Website:</span> {detail.website || "—"}</div>
+                <div><span className="text-muted-foreground">Contact:</span> {detail.contactPerson || "—"}</div>
+                <div><span className="text-muted-foreground">Commission:</span> {detail.commissionRate != null ? `${detail.commissionRate}%` : "—"}</div>
+                <div><span className="text-muted-foreground">Response Time:</span> {detail.responseTime != null ? `${detail.responseTime}h` : "—"}</div>
+                <div><span className="text-muted-foreground">Satisfaction:</span> {detail.satisfactionScore != null ? `${detail.satisfactionScore}/5` : "—"}</div>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-3">
+                <div className="flex items-center gap-2 p-3 rounded-lg border">
                   <Users className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Patients Referred</p>
-                    <p className="font-medium">{selectedPartner.totalPatientsReferred}</p>
+                    <p className="text-xs text-muted-foreground">Referred</p>
+                    <p className="font-medium">{detail.totalPatientsReferred}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 rounded-lg border">
+                <div className="flex items-center gap-2 p-3 rounded-lg border">
                   <DollarSign className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="text-xs text-muted-foreground">Total Revenue</p>
-                    <p className="font-medium">${selectedPartner.totalRevenue.toLocaleString()}</p>
+                    <p className="text-xs text-muted-foreground">Revenue</p>
+                    <p className="font-medium">{fmtMoney(detail.totalRevenue)}</p>
                   </div>
                 </div>
-                {selectedPartner.commissionRate !== undefined && (
-                  <div className="flex items-center gap-3 p-3 rounded-lg border">
-                    <Clock className="h-5 w-5 text-muted-foreground" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Commission Rate</p>
-                      <p className="font-medium">{selectedPartner.commissionRate}%</p>
-                    </div>
-                  </div>
-                )}
-                {selectedPartner.satisfactionScore && (
-                  <div className="flex items-center gap-3 p-3 rounded-lg border">
-                    <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Satisfaction Score</p>
-                      <p className="font-medium">{selectedPartner.satisfactionScore}/5</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="p-4 rounded-lg border">
-                <h3 className="font-medium mb-3">Contact Information</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-sm w-32">Contact Person:</span>
-                    <span className="text-sm">{selectedPartner.contactPerson}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{selectedPartner.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{selectedPartner.email}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">{selectedPartner.address}</span>
+                <div className="flex items-center gap-2 p-3 rounded-lg border">
+                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Itinerary Events</p>
+                    <p className="font-medium">{detail._count?.itineraryEvents ?? 0}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="p-4 rounded-lg border">
-                <h3 className="font-medium mb-3">Agreement Details</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-sm w-32">Status:</span>
-                    <Badge variant="outline" className={AGREEMENT_COLORS[selectedPartner.agreementStatus]}>
-                      {AGREEMENT_LABELS[selectedPartner.agreementStatus]}
-                    </Badge>
-                  </div>
-                  {selectedPartner.agreementDate && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-sm w-32">Agreement Date:</span>
-                      <span className="text-sm">{selectedPartner.agreementDate}</span>
-                    </div>
-                  )}
-                  {selectedPartner.commissionRate !== undefined && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-sm w-32">Commission Rate:</span>
-                      <span className="text-sm">{selectedPartner.commissionRate}%</span>
-                    </div>
-                  )}
+              {detail.description && (
+                <div>
+                  <h4 className="text-sm font-semibold mb-1">Description</h4>
+                  <p className="text-sm text-muted-foreground">{detail.description}</p>
                 </div>
-              </div>
+              )}
 
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <FileText className="h-4 w-4 mr-2" />
-                  Documents
+              {detail.specializations && detail.specializations.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold mb-2">Specializations</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {detail.specializations.map((s, i) => (
+                      <Badge key={i} variant="secondary">{s}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {(detail.notes?.length ?? 0) > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold mb-2">Recent Notes</h4>
+                  <ul className="space-y-2">
+                    {detail.notes!.slice(0, 5).map((n) => (
+                      <li key={n.id} className="text-sm p-2 bg-muted rounded">
+                        <p>{n.content}</p>
+                        <p className="text-xs text-muted-foreground mt-1">— {n.createdBy?.name ?? "Unknown"}, {fmtDate(n.createdAt)}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {(detail.documents?.length ?? 0) > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold mb-2">Documents</h4>
+                  <ul className="space-y-1 text-sm">
+                    {detail.documents!.slice(0, 5).map((d) => (
+                      <li key={d.id} className="flex justify-between p-2 bg-muted rounded">
+                        <span>{d.name}</span>
+                        <span className="text-xs text-muted-foreground">{d.type} · {fmtDate(d.createdAt)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              <div className="flex gap-2 pt-2">
+                <Button variant="outline" size="sm" onClick={() => { setDetailOpen(false); openEdit(detail); }}>
+                  <Edit className="h-4 w-4 mr-2" /> Edit
                 </Button>
-                <Button variant="outline">
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit
-                </Button>
-                <Button variant="destructive" onClick={() => handleDeletePartner(selectedPartner.id)}>
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Delete
+                <Button variant="destructive" size="sm" onClick={() => { setDetailOpen(false); setDeleteTarget(detail); }}>
+                  <Trash2 className="h-4 w-4 mr-2" /> Delete
                 </Button>
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Delete Partner">
+        <DialogContent>
+          <p className="text-sm">
+            Are you sure you want to delete <strong>{deleteTarget?.name}</strong>?
+            The partner will be soft-deleted and excluded from default queries. Audit history is preserved.
+          </p>
+          {formError && (
+            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mt-3">
+              <AlertCircle className="h-4 w-4" /> {formError}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleting}>Cancel</Button>
+            <Button onClick={confirmDelete} disabled={deleting} className="bg-red-600 hover:bg-red-700">
+              {deleting ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Deleting...</> : "Delete"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

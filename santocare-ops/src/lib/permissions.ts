@@ -35,10 +35,13 @@ export const PERMISSIONS: PermissionsMap = {
     "task:*",
     "partner:*",
     "document:*",
+    "itinerary:*",
+    "visa:*",
     "user:read",
     "user:invite",
     "settings:*",
     "audit:read",
+    "blog:*",
   ],
   [Role.MANAGER]: [
     // Can read and create own team, but not manage system
@@ -46,7 +49,8 @@ export const PERMISSIONS: PermissionsMap = {
     "lead:read", "lead:create", "lead:update",
     "invoice:read", "invoice:create", "invoice:update",
     "payment:read", "payment:create",
-    "message:*", "task:*", "partner:read", "document:read",
+    "message:*", "task:*", "partner:read", "document:read", "itinerary:*", "visa:*",
+    "blog:read",
   ],
   [Role.SALES]: [
     // Can manage leads and convert to patients
@@ -60,6 +64,7 @@ export const PERMISSIONS: PermissionsMap = {
     "task:*",
     "message:*",
     "document:read",
+    "itinerary:*", "visa:*",
   ],
   [Role.FINANCE]: [
     // Can manage all money-related operations
@@ -70,11 +75,13 @@ export const PERMISSIONS: PermissionsMap = {
     "lead:read", "lead:create",
     "message:*",
     "analytics:read",
+    "blog:*",
   ],
   [Role.STAKEHOLDER]: [
     // Limited read access
     "patient:read", "lead:read", "invoice:read",
-    "message:read",
+    "message:read", "itinerary:read", "visa:read",
+    "blog:read",
   ],
   [Role.VIEWER]: [
     // Read-only access across modules
@@ -83,7 +90,8 @@ export const PERMISSIONS: PermissionsMap = {
     "task:read",
     "document:read",
     "partner:read",
-    "analytics:read",
+    "analytics:read", "itinerary:read", "visa:read",
+    "blog:read",
   ],
 };
 

@@ -3,9 +3,12 @@
  * This allows the ops hub to work in demo mode without a real database.
  */
 
+export const DEFAULT_TENANT_ID = "santos";
+
 export const mockPatients = [
   {
     id: "1",
+    tenantId: DEFAULT_TENANT_ID,
     referenceNumber: "HIMT-2026-0042",
     name: "James Mwangi",
     country: "Kenya",
@@ -28,6 +31,7 @@ export const mockPatients = [
   },
   {
     id: "2",
+    tenantId: DEFAULT_TENANT_ID,
     referenceNumber: "HIMT-2026-0041",
     name: "Fatima Al-Hassan",
     country: "UAE",
@@ -50,6 +54,7 @@ export const mockPatients = [
   },
   {
     id: "3",
+    tenantId: DEFAULT_TENANT_ID,
     referenceNumber: "HIMT-2026-0040",
     name: "Sarah Thompson",
     country: "United Kingdom",
@@ -75,6 +80,7 @@ export const mockPatients = [
 export const mockLeads = [
   {
     id: "1",
+    tenantId: DEFAULT_TENANT_ID,
     source: "WHATSAPP",
     campaign: null,
     name: "David Kimani",
@@ -93,6 +99,7 @@ export const mockLeads = [
   },
   {
     id: "2",
+    tenantId: DEFAULT_TENANT_ID,
     source: "WEBSITE",
     campaign: null,
     name: "Sarah Oduya",
@@ -111,6 +118,7 @@ export const mockLeads = [
   },
   {
     id: "3",
+    tenantId: DEFAULT_TENANT_ID,
     source: "GOOGLE_ADS",
     campaign: "ortho-uk-2026",
     name: "Michael Brown",
@@ -129,6 +137,7 @@ export const mockLeads = [
   },
   {
     id: "4",
+    tenantId: DEFAULT_TENANT_ID,
     source: "FACEBOOK",
     campaign: null,
     name: "Blessing Adeyemi",
@@ -147,6 +156,7 @@ export const mockLeads = [
   },
   {
     id: "5",
+    tenantId: DEFAULT_TENANT_ID,
     source: "REFERRAL",
     campaign: null,
     name: "Emma Watson",
@@ -165,6 +175,7 @@ export const mockLeads = [
   },
   {
     id: "6",
+    tenantId: DEFAULT_TENANT_ID,
     source: "WHATSAPP",
     campaign: null,
     name: "James Ochieng",
@@ -186,6 +197,7 @@ export const mockLeads = [
 export const mockPartners = [
   {
     id: "1",
+    tenantId: DEFAULT_TENANT_ID,
     name: "Aster Medcity",
     category: "HOSPITAL",
     contactPerson: "Dr. Prem Nair",
@@ -202,6 +214,7 @@ export const mockPartners = [
   },
   {
     id: "2",
+    tenantId: DEFAULT_TENANT_ID,
     name: "Amrita Hospital",
     category: "HOSPITAL",
     contactPerson: "Dr. Sanjay Chand",
@@ -218,6 +231,7 @@ export const mockPartners = [
   },
   {
     id: "3",
+    tenantId: DEFAULT_TENANT_ID,
     name: "Ayush Prana",
     category: "AYURVEDA",
     contactPerson: "Dr. Manu Nair",
@@ -234,6 +248,7 @@ export const mockPartners = [
   },
   {
     id: "4",
+    tenantId: DEFAULT_TENANT_ID,
     name: "Sunrise Hospital",
     category: "HOSPITAL",
     contactPerson: "Dr. Anil Pillai",
@@ -253,6 +268,7 @@ export const mockPartners = [
 export const mockTasks = [
   {
     id: "1",
+    tenantId: DEFAULT_TENANT_ID,
     title: "Follow up with James Mwangi on visa status",
     description: "Confirm travel dates and visa status",
     type: "PATIENT",
@@ -267,6 +283,7 @@ export const mockTasks = [
   },
   {
     id: "2",
+    tenantId: DEFAULT_TENANT_ID,
     title: "Send treatment plan to Fatima Al-Hassan",
     description: "Include cost breakdown and hospital options",
     type: "PATIENT",
@@ -281,6 +298,7 @@ export const mockTasks = [
   },
   {
     id: "3",
+    tenantId: DEFAULT_TENANT_ID,
     title: "Schedule Ayurveda session for Sarah Thompson",
     description: "Week 4 recovery program at Ayush Prana",
     type: "PATIENT",
@@ -298,6 +316,7 @@ export const mockTasks = [
 export const mockDocuments = [
   {
     id: "1",
+    tenantId: DEFAULT_TENANT_ID,
     title: "HEAL_INDIA_OPERATIONS_MANUAL.md",
     category: "Operations Manual",
     filePath: "/docs/HEAL_INDIA_OPERATIONS_MANUAL.md",
@@ -311,6 +330,7 @@ export const mockDocuments = [
   },
   {
     id: "2",
+    tenantId: DEFAULT_TENANT_ID,
     title: "EMAIL_TEMPLATES_HOSPITAL_OUTREACH.md",
     category: "Email Templates",
     filePath: "/docs/EMAIL_TEMPLATES_HOSPITAL_OUTREACH.md",
@@ -324,6 +344,7 @@ export const mockDocuments = [
   },
   {
     id: "3",
+    tenantId: DEFAULT_TENANT_ID,
     title: "WHATSAPP_MESSAGE_TEMPLATES.md",
     category: "WhatsApp Scripts",
     filePath: "/docs/WHATSAPP_MESSAGE_TEMPLATES.md",
@@ -337,6 +358,7 @@ export const mockDocuments = [
   },
   {
     id: "4",
+    tenantId: DEFAULT_TENANT_ID,
     title: "Ayush Prana Partnership Agreement",
     category: "Partnership",
     filePath: "/docs/ayush-prana-agreement.pdf",
@@ -353,6 +375,7 @@ export const mockDocuments = [
 export const mockUsers = [
   {
     id: "1",
+    tenantId: DEFAULT_TENANT_ID,
     email: "admin@santos.care",
     name: "Admin",
     phone: null,
@@ -364,6 +387,7 @@ export const mockUsers = [
   },
   {
     id: "2",
+    tenantId: DEFAULT_TENANT_ID,
     email: "priya@santos.care",
     name: "Priya Sharma",
     phone: "+91 999 111 2222",
@@ -375,6 +399,7 @@ export const mockUsers = [
   },
   {
     id: "3",
+    tenantId: DEFAULT_TENANT_ID,
     email: "rahul@santos.care",
     name: "Rahul Kumar",
     phone: "+91 999 333 4444",
@@ -383,5 +408,104 @@ export const mockUsers = [
     passwordHash: null,
     isActive: true,
     createdAt: "2026-02-01T00:00:00.000Z",
+  },
+];
+
+export const mockBlogPosts = [
+  {
+    id: "1",
+    tenantId: DEFAULT_TENANT_ID,
+    title: "MS Treatment in India: Complete Cost Guide 2026",
+    slug: "ms-treatment-india-cost-guide",
+    excerpt: "Compare MS treatment costs in India vs USA, UK, Kenya. Save up to 80% at JCI hospitals. Full cost breakdown, top hospitals, and recovery included.",
+    content: "# MS Treatment in India\n\nComplete guide...",
+    imageUrl: "https://images.unsplash.com/photo-1638202993928-7267aad84c31?w=1200",
+    category: "Cost Guide",
+    tags: ["MS", "multiple sclerosis", "cost guide"],
+    status: "PUBLISHED",
+    author: "Priya Sharma",
+    publishDate: "2026-06-15T00:00:00.000Z",
+    createdAt: "2026-06-10T00:00:00.000Z",
+    updatedAt: "2026-06-15T00:00:00.000Z",
+  },
+  {
+    id: "2",
+    tenantId: DEFAULT_TENANT_ID,
+    title: "How to Plan Your Medical Trip to India from Kenya",
+    slug: "medical-trip-india-from-kenya-guide",
+    excerpt: "Complete guide for Kenyan patients traveling to India for medical treatment. Includes visa process, flight booking, hospital selection, and cost-saving tips.",
+    content: "# Medical Trip to India from Kenya\n\nComplete guide...",
+    imageUrl: "https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?w=1200",
+    category: "Country Guide",
+    tags: ["Kenya", "medical tourism", "travel guide"],
+    status: "PUBLISHED",
+    author: "Rahul Kumar",
+    publishDate: "2026-06-18T00:00:00.000Z",
+    createdAt: "2026-06-12T00:00:00.000Z",
+    updatedAt: "2026-06-18T00:00:00.000Z",
+  },
+  {
+    id: "3",
+    tenantId: DEFAULT_TENANT_ID,
+    title: "Why Thousands of Europeans Are Choosing India for Surgery",
+    slug: "why-europeans-choose-india-surgery",
+    excerpt: "Discover why European patients choose India for surgery: 80% cost savings, JCI-accredited hospitals, zero waiting lists, and Ayurveda recovery.",
+    content: "# Why Europeans Choose India\n\nDetailed analysis...",
+    imageUrl: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200",
+    category: "Market Insight",
+    tags: ["Europe", "medical tourism", "cost comparison"],
+    status: "PUBLISHED",
+    author: "Priya Sharma",
+    publishDate: "2026-06-22T00:00:00.000Z",
+    createdAt: "2026-06-15T00:00:00.000Z",
+    updatedAt: "2026-06-22T00:00:00.000Z",
+  },
+  {
+    id: "4",
+    tenantId: DEFAULT_TENANT_ID,
+    title: "Brain Tumor Surgery in India: Top Hospitals, Doctors & Costs",
+    slug: "brain-tumor-surgery-india-cost-hospitals",
+    excerpt: "Brain tumor surgery in India costs $5,000-$12,000 vs $50,000-$150,000 in USA. Top neurosurgeons, JCI hospitals, success rates, and recovery guide.",
+    content: "# Brain Tumor Surgery in India\n\nComprehensive guide...",
+    imageUrl: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1200",
+    category: "Cost Guide",
+    tags: ["brain tumor", "neurosurgery", "cost guide"],
+    status: "PUBLISHED",
+    author: "Priya Sharma",
+    publishDate: "2026-06-28T00:00:00.000Z",
+    createdAt: "2026-06-20T00:00:00.000Z",
+    updatedAt: "2026-06-28T00:00:00.000Z",
+  },
+  {
+    id: "5",
+    tenantId: DEFAULT_TENANT_ID,
+    title: "Medical Tourism from Tanzania to India: Complete Guide",
+    slug: "medical-tourism-tanzania-india-guide",
+    excerpt: "Complete guide for Tanzanian patients seeking treatment in India. Costs, visa process, flight routes, hospital partners, and patient stories.",
+    content: "# Medical Tourism Tanzania to India\n\nFull guide...",
+    imageUrl: "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=1200",
+    category: "Country Guide",
+    tags: ["Tanzania", "medical tourism", "travel guide"],
+    status: "PUBLISHED",
+    author: "Rahul Kumar",
+    publishDate: "2026-07-02T00:00:00.000Z",
+    createdAt: "2026-06-25T00:00:00.000Z",
+    updatedAt: "2026-07-02T00:00:00.000Z",
+  },
+  {
+    id: "6",
+    tenantId: DEFAULT_TENANT_ID,
+    title: "Patient Story: Margaret's Heart Surgery Journey from Kenya",
+    slug: "patient-story-margaret-heart-surgery-kenya",
+    excerpt: "Margaret from Kenya shares her heart bypass surgery journey in India. How she saved $30,000, found the right hospital, and recovered fully.",
+    content: "# Margaret's Heart Surgery Journey\n\nPatient story...",
+    imageUrl: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200",
+    category: "Patient Story",
+    tags: ["patient story", "heart surgery", "Kenya"],
+    status: "PUBLISHED",
+    author: "Priya Sharma",
+    publishDate: "2026-07-05T00:00:00.000Z",
+    createdAt: "2026-06-28T00:00:00.000Z",
+    updatedAt: "2026-07-05T00:00:00.000Z",
   },
 ];

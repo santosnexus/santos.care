@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { fetchWithAuth } from "@/lib/fetch-client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -99,11 +100,10 @@ export default function PatientDetailPage() {
     const load = async () => {
       setLoading(true);
       try {
-        const headers = { Authorization: "Basic " + btoa("santos:He@lInd!a2026") };
         const [patientRes, tasksRes, docsRes] = await Promise.all([
-          fetch(`/api/patients/${id}`, { headers }),
-          fetch(`/api/tasks?patientId=${id}`, { headers }),
-          fetch(`/api/documents`, { headers }),
+          fetchWithAuth(`/api/patients/${id}`),
+          fetchWithAuth(`/api/tasks?patientId=${id}`),
+          fetchWithAuth(`/api/documents`),
         ]);
         const patientData = await patientRes.json();
         const tasksData = await tasksRes.json();

@@ -1,61 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requirePermissionDynamic } from "@/lib/api-helpers";
-import { store } from "@/lib/db";
-import { writeAuditLog } from "@/lib/audit";
-import { prisma } from "@/lib/db";
+import { z } from "zod";
+import { requirePermission } from "@/lib/auth";
+import { createPayment, listPayments } from "@/services/payments.service";
 
-export const GET = requirePermissionDynamic<{ id: string }>("payment:read")(async (req, ctx, { params }) => {
-  const payments = await store.payments.list(ctx.tenantId, params.id);
-  return NextResponse.json({ payments });
+const CreatePaymentSchema = z.object({
+  amount: z.coerce.number().min(0.01),
+  currency: z.string().optional(),
+  method: z.enum(["BANK_TRANSFER", "CARD", "CASH", "CHEQUE", "INSURANCE", "OTHER"]).optional(),
+  reference: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
 });
 
-export const POST = requirePermissionDynamic<{ id: string }>("payment:create")(async (req, ctx, { params }) => {
-  const body = await req.json();
-  const { amount, currency, method, reference, notes } = body;
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requirePermission(req, "payment:read");
+  if (!auth.ok) return auth.response;
 
-  if (!amount || amount <= 0) {
-    return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+  const { id } = await params;
+  const payments = await listPayments(auth.user.tenantId, id);
+  return NextResponse.json({ data: payments });
+}
+
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requirePermission(req, "payment:create");
+  if (!auth.ok) return auth.response;
+
+  const { id } = await params;
+  const body = await req.json().catch(() => null);
+  if (!body) return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+
+  const parsed = CreatePaymentSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten() }, { status: 422 });
   }
 
-  const invoice = await store.invoices.find(params.id, ctx.tenantId);
-  if (!invoice) {
-    return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
-  }
-
-  const payment = await store.payments.create({
-    tenantId: ctx.tenantId,
-    invoiceId: params.id,
-    amount,
-    currency: currency || (invoice as any).currency || "USD",
-    method: method || "BANK_TRANSFER",
-    reference: reference || null,
-    notes: notes || null,
-    receivedAt: new Date().toISOString(),
-    recordedById: ctx.user.id,
-  });
-
-  const newAmountPaid = ((invoice as any).amountPaid || 0) + amount;
-  const total = (invoice as any).total;
-  let newStatus = "PARTIAL";
-  if (newAmountPaid >= total) {
-    newStatus = "PAID";
-  }
-
-  await store.invoices.update(params.id, {
-    amountPaid: newAmountPaid,
-    status: newStatus,
-    paidAt: newStatus === "PAID" ? new Date().toISOString() : null,
-  }, ctx.tenantId);
-
-  if (prisma) {
-    await writeAuditLog(prisma, {
-      tenantId: ctx.tenantId,
-      userId: ctx.user.id,
-      action: "CREATE",
-      entityType: "Payment",
-      entityId: (payment as any).id,
+  try {
+    const payment = await createPayment({
+      ...parsed.data,
+      tenantId: auth.user.tenantId,
+      invoiceId: id,
+      recordedById: auth.user.id,
     });
+    return NextResponse.json({ data: payment }, { status: 201 });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message ?? "Failed to record payment" }, { status: 400 });
   }
-
-  return NextResponse.json({ payment }, { status: 201 });
-});
+}

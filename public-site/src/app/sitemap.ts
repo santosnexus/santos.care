@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { treatmentList } from "@/data/treatments";
 import { countryList } from "@/data/countries";
-import { blogPosts } from "@/data/blog-posts";
+import { getAllBlogPosts } from "@/lib/mdx";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://santos.care";
 
@@ -31,9 +31,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const blogRoutes = blogPosts.map((p) => ({
-    url: `${SITE_URL}/blog/${p.slug}`,
-    lastModified: new Date(p.date),
+  const allPosts = getAllBlogPosts();
+  const blogRoutes = allPosts.map((p) => ({
+    url: `${SITE_URL}/blog/${p.frontmatter.slug}`,
+    lastModified: new Date(p.frontmatter.date),
     changeFrequency: "monthly" as const,
     priority: 0.6,
   }));

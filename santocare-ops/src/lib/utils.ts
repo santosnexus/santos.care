@@ -132,3 +132,17 @@ export type TaskPriority = (typeof TASK_PRIORITIES)[number];
 
 export const TASK_STATUSES = ["pending", "in_progress", "completed", "cancelled"] as const;
 export type TaskStatus = (typeof TASK_STATUSES)[number];
+
+/**
+ * Convert a string to a URL-safe slug.
+ * e.g. "Apollo Hospitals" → "apollo-hospitals"
+ */
+export function slugify(str: string): string {
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^\w-]/g, "")
+    .replace(/--+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}

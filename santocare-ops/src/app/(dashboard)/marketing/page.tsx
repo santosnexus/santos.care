@@ -31,6 +31,7 @@ import {
   Trash2,
   MoreHorizontal,
   Mail,
+  ArrowRight,
 } from "lucide-react";
 
 const MOCK_LEADS = [
@@ -447,14 +448,53 @@ export default function MarketingPage() {
         </TabsContent>
 
         <TabsContent value="content" className="space-y-6">
-          <div className="flex justify-end">
-            <Button onClick={() => setAddContentModalOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Content
-            </Button>
+          <div className="flex justify-between items-center">
+            <p className="text-sm text-muted-foreground">
+              Manage your blog posts, patient stories, and content calendar
+            </p>
+            <a href="/marketing/blog">
+              <Button>
+                <FileText className="h-4 w-4 mr-2" />
+                Manage Blog
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </a>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Published</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">{MOCK_CONTENT.filter(c => c.status === "published").length}</div>
+                <p className="text-xs text-muted-foreground mt-1">28 total articles on public site</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Scheduled</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">{MOCK_CONTENT.filter(c => c.status === "scheduled").length}</div>
+                <p className="text-xs text-muted-foreground mt-1">Upcoming publications</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Drafts</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">{MOCK_CONTENT.filter(c => c.status === "draft").length}</div>
+                <p className="text-xs text-muted-foreground mt-1">Needs review or scheduling</p>
+              </CardContent>
+            </Card>
           </div>
 
           <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Recent Content</CardTitle>
+            </CardHeader>
             <CardContent className="p-0">
               <Table>
                 <TableHeader>
@@ -464,7 +504,6 @@ export default function MarketingPage() {
                     <TableHead>Status</TableHead>
                     <TableHead>Publish Date</TableHead>
                     <TableHead>Author</TableHead>
-                    <TableHead className="w-[100px]"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -495,89 +534,12 @@ export default function MarketingPage() {
                         </div>
                       </TableCell>
                       <TableCell>{content.author}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-1">
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </CardContent>
           </Card>
-
-          <Dialog open={addContentModalOpen} onClose={() => setAddContentModalOpen(false)} title="Add New Content">
-            <DialogContent className="max-w-2xl">
-              <form className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2 md:col-span-2">
-                    <Label htmlFor="content-title">Title *</Label>
-                    <Input id="content-title" placeholder="Content title" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="content-type">Type *</Label>
-                    <Select
-                      id="content-type"
-                      options={[
-                        { value: "Blog", label: "Blog" },
-                        { value: "Social", label: "Social Post" },
-                        { value: "Email", label: "Email" },
-                      ]}
-                      placeholder="Select type"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="content-status">Status</Label>
-                    <Select
-                      id="content-status"
-                      options={[
-                        { value: "draft", label: "Draft" },
-                        { value: "scheduled", label: "Scheduled" },
-                        { value: "published", label: "Published" },
-                      ]}
-                      placeholder="Select status"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="content-date">Publish Date *</Label>
-                    <Input id="content-date" type="date" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="content-author">Author</Label>
-                    <Select
-                      id="content-author"
-                      options={[
-                        { value: "priya", label: "Priya" },
-                        { value: "rahul", label: "Rahul" },
-                        { value: "marketing", label: "Marketing" },
-                      ]}
-                      placeholder="Select author"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="content-description">Description / Notes</Label>
-                  <Textarea
-                    id="content-description"
-                    placeholder="Brief description of the content..."
-                    rows={3}
-                  />
-                </div>
-              </form>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setAddContentModalOpen(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={() => setAddContentModalOpen(false)}>Create Content</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
         </TabsContent>
       </Tabs>
     </div>

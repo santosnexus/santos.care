@@ -1,47 +1,59 @@
-import { NextResponse } from "next/server";
-import { store, isMockMode } from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { requirePermission } from "@/lib/auth";
+import { createDocument, listDocuments } from "@/services/documents.service";
 
-async function getTenantId(request: Request): Promise<string | null> {
-  const { searchParams } = new URL(request.url);
-  const tenantId = searchParams.get("tenantId") || request.headers.get("x-tenant-id");
-  return tenantId || null;
+const ListQuerySchema = z.object({
+  category: z.string().optional(),
+  patientId: z.string().optional(),
+  partnerId: z.string().optional(),
+  search: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+const CreateDocumentSchema = z.object({
+  title: z.string().min(1),
+  category: z.string().min(1),
+  filePath: z.string().min(1),
+  fileType: z.string().optional().nullable(),
+  size: z.coerce.number().int().optional().nullable(),
+  patientId: z.string().optional().nullable(),
+  partnerId: z.string().optional().nullable(),
+  isPublic: z.coerce.boolean().optional(),
+});
+
+export async function GET(req: NextRequest) {
+  const auth = await requirePermission(req, "document:read");
+  if (!auth.ok) return auth.response;
+
+  const params = Object.fromEntries(req.nextUrl.searchParams.entries());
+  const parsed = ListQuerySchema.safeParse(params);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid query", details: parsed.error.flatten() }, { status: 400 });
+  }
+
+  const result = await listDocuments(auth.user.tenantId, parsed.data);
+  return NextResponse.json({ data: result.data, meta: { total: result.total, page: result.page, limit: result.pageSize, totalPages: result.totalPages } });
 }
 
-export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const category = searchParams.get("category");
-    const isPublic = searchParams.get("isPublic");
-    const tenantId = await getTenantId(request);
+export async function POST(req: NextRequest) {
+  const auth = await requirePermission(req, "document:create");
+  if (!auth.ok) return auth.response;
 
-    let documents = await store.documents.list();
+  const body = await req.json().catch(() => null);
+  if (!body) return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
 
-    if (tenantId) {
-      documents = (documents as any[]).filter((d: any) => d.tenantId === tenantId);
-    }
-
-    if (category) documents = documents.filter((d: any) => d.category === category);
-    if (isPublic !== null) {
-      const wantPublic = isPublic === "true";
-      documents = documents.filter((d: any) => d.isPublic === wantPublic);
-    }
-
-    documents.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
-    return NextResponse.json({ documents, total: documents.length, mockMode: isMockMode });
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch documents" }, { status: 500 });
+  const parsed = CreateDocumentSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten() }, { status: 422 });
   }
-}
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const tenantId = body.tenantId || "santos";
+  const doc = await createDocument({
+    ...parsed.data,
+    tenantId: auth.user.tenantId,
+    uploadedById: auth.user.id,
+  });
 
-    const created = await store.documents.create({...body, tenantId});
-    return NextResponse.json({ document: created }, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to create document" }, { status: 500 });
-  }
+  return NextResponse.json({ data: doc }, { status: 201 });
 }

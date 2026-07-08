@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { store } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 /**
  * Public lead capture endpoint.
@@ -8,6 +10,15 @@ import { store } from "@/lib/db";
  */
 export async function POST(request: Request) {
   try {
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anonymous";
+    const rl = rateLimit(`lead-capture:${ip}`);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+      );
+    }
+
     const body = await request.json();
 
     // Minimal validation
@@ -35,7 +46,7 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Lead capture error:", error);
+    logger.error("Lead capture error", error);
     return NextResponse.json({ error: "Failed to submit inquiry" }, { status: 500 });
   }
 }

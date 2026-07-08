@@ -1,77 +1,73 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requirePermission } from "@/lib/api-helpers";
-import { store } from "@/lib/db";
-import { writeAuditLog } from "@/lib/audit";
-import { prisma } from "@/lib/db";
+import { z } from "zod";
+import { requirePermission } from "@/lib/auth";
+import { createQuote, listQuotes } from "@/services/quotes.service";
 
-export const GET = requirePermission("quote:read")(async (req: NextRequest, ctx) => {
-  const url = new URL(req.url);
-  const patientId = url.searchParams.get("patientId") || undefined;
-  const status = url.searchParams.get("status") || undefined;
-
-  let quotes = await store.quotes.list(ctx.tenantId);
-
-  if (patientId) {
-    quotes = quotes.filter((q: any) => q.patientId === patientId);
-  }
-  if (status) {
-    quotes = quotes.filter((q: any) => q.status === status);
-  }
-
-  return NextResponse.json({ quotes });
+const ListQuerySchema = z.object({
+  patientId: z.string().optional(),
+  status: z.string().optional(),
+  search: z.string().optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
 });
 
-export const POST = requirePermission("quote:create")(async (req: NextRequest, ctx) => {
-  const body = await req.json();
-  const { patientId, lineItems, currency, taxRate, notes, terms, validUntil, treatmentPlan, hospitalName } = body;
+const LineItemSchema = z.object({
+  description: z.string().min(1),
+  quantity: z.coerce.number().min(0.01),
+  unitPrice: z.coerce.number().min(0),
+  category: z.enum(["SURGERY", "HOSPITAL", "HOTEL", "TRANSPORT", "VISA", "SERVICE", "OTHER"]).optional(),
+});
 
-  if (!lineItems || lineItems.length === 0) {
-    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+const CreateQuoteSchema = z.object({
+  patientId: z.string().optional().nullable(),
+  lineItems: z.array(LineItemSchema).min(1),
+  currency: z.string().optional(),
+  taxRate: z.coerce.number().min(0).max(100).optional(),
+  notes: z.string().optional().nullable(),
+  terms: z.string().optional().nullable(),
+  validUntil: z.string().datetime().optional(),
+  treatmentPlan: z.string().optional().nullable(),
+  hospitalName: z.string().optional().nullable(),
+});
+
+export async function GET(req: NextRequest) {
+  const auth = await requirePermission(req, "quote:read");
+  if (!auth.ok) return auth.response;
+
+  const params = Object.fromEntries(req.nextUrl.searchParams.entries());
+  const parsed = ListQuerySchema.safeParse(params);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid query", details: parsed.error.flatten() }, { status: 400 });
   }
 
-  // Calculate totals
-  const subtotal = lineItems.reduce((sum: number, item: any) => sum + (item.quantity * item.unitPrice), 0);
-  const taxAmount = subtotal * ((taxRate || 0) / 100);
-  const total = subtotal + taxAmount;
-
-  // Generate quote number
-  const number = await store.quotes.generateNumber(ctx.tenantId);
-
-  const quote = await store.quotes.create({
-    tenantId: ctx.tenantId,
-    patientId: patientId || null,
-    number,
-    status: "DRAFT",
-    currency: currency || "USD",
-    subtotal,
-    taxRate: taxRate || 0,
-    taxAmount,
-    total,
-    validUntil: validUntil || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-    notes: notes || null,
-    terms: terms || null,
-    treatmentPlan: treatmentPlan || null,
-    hospitalName: hospitalName || null,
-    lineItems: lineItems.map((item: any) => ({
-      description: item.description,
-      quantity: item.quantity || 1,
-      unitPrice: item.unitPrice,
-      total: (item.quantity || 1) * item.unitPrice,
-      category: item.category || "SERVICE",
-    })),
+  const result = await listQuotes(auth.user.tenantId, {
+    patientId: parsed.data.patientId,
+    status: parsed.data.status as any,
+    search: parsed.data.search,
+    page: parsed.data.page,
+    pageSize: parsed.data.limit,
   });
 
-  // Audit log
-  if (prisma) {
-    await writeAuditLog(prisma, {
-      tenantId: ctx.tenantId,
-      userId: ctx.user.id,
-      action: "CREATE",
-      entityType: "Quote",
-      entityId: (quote as any).id,
-      after: { number, total, patientId },
-    });
+  return NextResponse.json({ data: result.data, meta: { total: result.total, page: result.page, limit: result.pageSize, totalPages: result.totalPages } });
+}
+
+export async function POST(req: NextRequest) {
+  const auth = await requirePermission(req, "quote:create");
+  if (!auth.ok) return auth.response;
+
+  const body = await req.json().catch(() => null);
+  if (!body) return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+
+  const parsed = CreateQuoteSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten() }, { status: 422 });
   }
 
-  return NextResponse.json({ quote }, { status: 201 });
-});
+  const quote = await createQuote({
+    ...parsed.data,
+    tenantId: auth.user.tenantId,
+    createdById: auth.user.id,
+  });
+
+  return NextResponse.json({ data: quote }, { status: 201 });
+}

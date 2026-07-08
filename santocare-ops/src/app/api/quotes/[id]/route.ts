@@ -1,69 +1,65 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requirePermissionDynamic } from "@/lib/api-helpers";
-import { store } from "@/lib/db";
-import { writeAuditLog } from "@/lib/audit";
-import { prisma } from "@/lib/db";
+import { z } from "zod";
+import { requirePermission } from "@/lib/auth";
+import { getQuote, updateQuote, deleteQuote } from "@/services/quotes.service";
 
-export const GET = requirePermissionDynamic<{ id: string }>("quote:read")(async (req, ctx, { params }) => {
-  const quote = await store.quotes.find(params.id, ctx.tenantId);
-  if (!quote) {
-    return NextResponse.json({ error: "Quote not found" }, { status: 404 });
-  }
-  return NextResponse.json({ quote });
-});
+const UpdateQuoteSchema = z.object({
+  status: z.enum(["DRAFT", "SENT", "VIEWED", "ACCEPTED", "REJECTED", "EXPIRED", "CONVERTED"]).optional(),
+  notes: z.string().optional().nullable(),
+  terms: z.string().optional().nullable(),
+  validUntil: z.string().datetime().optional().nullable(),
+  taxRate: z.coerce.number().min(0).max(100).optional(),
+  treatmentPlan: z.string().optional().nullable(),
+  hospitalName: z.string().optional().nullable(),
+  lineItems: z.array(z.object({
+    description: z.string().min(1),
+    quantity: z.coerce.number().min(0.01),
+    unitPrice: z.coerce.number().min(0),
+    category: z.enum(["SURGERY", "HOSPITAL", "HOTEL", "TRANSPORT", "VISA", "SERVICE", "OTHER"]).optional(),
+  })).optional(),
+}).strict();
 
-export const PATCH = requirePermissionDynamic<{ id: string }>("quote:update")(async (req, ctx, { params }) => {
-  const body = await req.json();
-  const { status, notes, terms } = body;
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requirePermission(req, "quote:read");
+  if (!auth.ok) return auth.response;
 
-  const existing = await store.quotes.find(params.id, ctx.tenantId);
-  if (!existing) {
-    return NextResponse.json({ error: "Quote not found" }, { status: 404 });
-  }
+  const { id } = await params;
+  const quote = await getQuote(auth.user.tenantId, id);
+  if (!quote) return NextResponse.json({ error: "Quote not found" }, { status: 404 });
 
-  const updateData: any = {};
-  if (status !== undefined) {
-    updateData.status = status;
-    if (status === "SENT") updateData.sentAt = new Date().toISOString();
-    if (status === "VIEWED") updateData.viewedAt = new Date().toISOString();
-    if (status === "ACCEPTED") updateData.acceptedAt = new Date().toISOString();
-    if (status === "REJECTED") updateData.rejectedAt = new Date().toISOString();
-  }
-  if (notes !== undefined) updateData.notes = notes;
-  if (terms !== undefined) updateData.terms = terms;
+  return NextResponse.json({ data: quote });
+}
 
-  const quote = await store.quotes.update(params.id, updateData, ctx.tenantId);
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requirePermission(req, "quote:update");
+  if (!auth.ok) return auth.response;
 
-  if (prisma) {
-    await writeAuditLog(prisma, {
-      tenantId: ctx.tenantId,
-      userId: ctx.user.id,
-      action: "UPDATE",
-      entityType: "Quote",
-      entityId: params.id,
-    });
-  }
+  const { id } = await params;
+  const body = await req.json().catch(() => null);
+  if (!body) return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
 
-  return NextResponse.json({ quote });
-});
-
-export const DELETE = requirePermissionDynamic<{ id: string }>("quote:delete")(async (req, ctx, { params }) => {
-  const existing = await store.quotes.find(params.id, ctx.tenantId);
-  if (!existing) {
-    return NextResponse.json({ error: "Quote not found" }, { status: 404 });
+  const parsed = UpdateQuoteSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Validation failed", details: parsed.error.flatten() }, { status: 422 });
   }
 
-  await store.quotes.delete(params.id, ctx.tenantId);
-
-  if (prisma) {
-    await writeAuditLog(prisma, {
-      tenantId: ctx.tenantId,
-      userId: ctx.user.id,
-      action: "DELETE",
-      entityType: "Quote",
-      entityId: params.id,
-    });
+  try {
+    const updated = await updateQuote(auth.user.tenantId, id, parsed.data, auth.user.id);
+    return NextResponse.json({ data: updated });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message ?? "Failed to update quote" }, { status: 400 });
   }
+}
 
-  return NextResponse.json({ message: "Quote deleted" });
-});
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requirePermission(req, "quote:delete");
+  if (!auth.ok) return auth.response;
+
+  const { id } = await params;
+  try {
+    await deleteQuote(auth.user.tenantId, id, auth.user.id);
+    return NextResponse.json({ success: true });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message ?? "Failed to delete quote" }, { status: 400 });
+  }
+}

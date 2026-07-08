@@ -1,12 +1,18 @@
+import "@/env";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { store } from "@/lib/db";
 import type { Role } from "@/types";
 
-const SECRET = new TextEncoder().encode(
-  process.env.NEXTAUTH_SECRET || "fallback-dev-secret-change-in-production-please"
-);
+const jwtSecret = process.env.NEXTAUTH_SECRET;
+if (!jwtSecret) {
+  throw new Error(
+    "[auth] NEXTAUTH_SECRET is not set. Run: openssl rand -base64 32\n" +
+      "Set it in your .env or deployment environment."
+  );
+}
+const SECRET = new TextEncoder().encode(jwtSecret);
 const COOKIE_NAME = "sc-ops-session";
 const SESSION_DURATION_HOURS = 24;
 
@@ -87,7 +93,7 @@ export async function authenticate(email: string, password: string, tenantId: st
   } else {
     // No hash set (mock mode or new user) — fall back to a hardcoded default
     // for backward compatibility with the seeded demo data
-    if (password !== "demo" && password !== "He@lInd!a2026") return null;
+    if (password !== "demo") return null;
   }
 
   // Update lastActiveAt (fire and forget)
@@ -115,4 +121,42 @@ export async function authenticate(email: string, password: string, tenantId: st
 export function hasRole(session: Session | null, ...allowedRoles: Role[]): boolean {
   if (!session) return false;
   return allowedRoles.includes(session.user.role);
+}
+
+// ─── Route helper: result-object pattern ─────────────────────────────────────
+// Usage in routes:
+//   const auth = await requirePermission(req, "patients:read");
+//   if (!auth.ok) return auth.response;
+
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { can } from "@/lib/permissions";
+
+type AuthOk = { ok: true; user: SessionUser; response?: never };
+type AuthFail = { ok: false; user?: never; response: NextResponse };
+export type AuthResult = AuthOk | AuthFail;
+
+export async function requirePermission(
+  req: NextRequest,
+  permission: string
+): Promise<AuthResult> {
+  const session = await getSession();
+  if (!session) {
+    return {
+      ok: false,
+      response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+    };
+  }
+
+  if (!can(session.user, permission)) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { error: "Forbidden", required: permission },
+        { status: 403 }
+      ),
+    };
+  }
+
+  return { ok: true, user: session.user };
 }

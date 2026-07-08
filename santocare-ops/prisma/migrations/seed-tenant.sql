@@ -36,13 +36,14 @@ async function seedTenant() {
 async function seedTenantUsers() {
   console.log("Seeding tenant users...");
 
+  const defaultPassword = process.env.SEED_USER_PASSWORD || "demo";
+
   const users = [
     {
       email: "admin@santos.care",
       name: "Admin User",
       phone: "+1234567890",
       role: "SUPER_ADMIN",
-      password: "He@lInd!a2026",
       isActive: true,
     },
     {
@@ -50,7 +51,6 @@ async function seedTenantUsers() {
       name: "Priya Sharma",
       phone: "+1234567891",
       role: "COORDINATOR",
-      password: "He@lInd!a2026",
       isActive: true,
     },
     {
@@ -58,7 +58,6 @@ async function seedTenantUsers() {
       name: "Rahul Kumar",
       phone: "+1234567892",
       role: "COORDINATOR",
-      password: "He@lInd!a2026",
       isActive: true,
     },
     {
@@ -66,7 +65,6 @@ async function seedTenantUsers() {
       name: "Sarah Johnson",
       phone: "+1234567893",
       role: "FINANCE",
-      password: "He@lInd!a2026",
       isActive: true,
     },
   ];
@@ -83,7 +81,7 @@ async function seedTenantUsers() {
       continue;
     }
 
-    const passwordHash = await bcrypt.hash(userData.password, 10);
+    const passwordHash = await bcrypt.hash(defaultPassword, 10);
 
     await prisma.user.create({
       data: {

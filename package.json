@@ -8,13 +8,19 @@
     "dev:ops": "cd santocare-ops && npm run dev",
     "build:public": "cd public-site && npm run build",
     "build:ops": "cd santocare-ops && npm run build",
+    "build": "npm run build:public && npm run build:ops",
     "lint:public": "cd public-site && npm run lint",
     "lint:ops": "cd santocare-ops && npm run lint",
+    "lint": "npm run lint:public && npm run lint:ops",
+    "typecheck:public": "cd public-site && npm run typecheck",
+    "typecheck:ops": "cd santocare-ops && npm run typecheck",
+    "typecheck": "npm run typecheck:public && npm run typecheck:ops",
+    "test:ops": "cd santocare-ops && npm run test",
+    "test": "npm run test:ops",
     "install:all": "cd public-site && npm install && cd ../santocare-ops && npm install",
     "db:push": "cd santocare-ops && npm run db:push",
     "db:seed": "cd santocare-ops && npm run db:seed",
-    "db:studio": "cd santocare-ops && npm run db:studio",
-    "typecheck": "cd public-site && npx tsc --noEmit && cd ../santocare-ops && npx tsc --noEmit"
+    "db:studio": "cd santocare-ops && npm run db:studio"
   },
   "engines": {
     "node": ">=20"

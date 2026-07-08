@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { fetchWithAuth } from "@/lib/fetch-client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,485 +11,408 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogFooter } from "@/components/ui/dialog";
 import {
-  Search,
-  Plus,
-  Download,
-  Eye,
-  FileText,
-  File,
-  Upload,
-  X,
-  Trash2,
-  Folder,
-  ExternalLink,
+  Search, Plus, Download, Eye, FileText, File, Upload, X, Trash2, Folder, Loader2, AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const CATEGORIES = [
-  "All",
-  "Operations Manual",
-  "Email Templates",
-  "WhatsApp Scripts",
-  "Hospital Partners",
-  "Ayurveda",
-  "Marketing",
-  "Blog Content",
-  "Transportation",
-  "Post-Treatment",
-  "Medication/Equipment",
-];
-
-interface Document {
+interface DocItem {
   id: string;
   title: string;
   category: string;
-  size: string;
-  uploadDate: string;
-  type: "MD" | "PDF" | "DOCX";
+  fileType: string | null;
+  size: number | null;
+  createdAt: string;
+  uploadedBy?: { name: string };
 }
 
-const MOCK_DOCUMENTS: Document[] = [
-  { id: "1", title: "HEAL_INDIA_OPERATIONS_MANUAL.md", category: "Operations Manual", size: "90KB", uploadDate: "2026-06-01", type: "MD" },
-  { id: "2", title: "EMAIL_TEMPLATES_HOSPITAL_OUTREACH.md", category: "Email Templates", size: "21KB", uploadDate: "2026-06-01", type: "MD" },
-  { id: "3", title: "WHATSAPP_MESSAGE_TEMPLATES.md", category: "WhatsApp Scripts", size: "42KB", uploadDate: "2026-06-01", type: "MD" },
-  { id: "4", title: "WEBSITE_CODE_SNIPPETS.md", category: "Marketing", size: "42KB", uploadDate: "2026-06-01", type: "MD" },
-  { id: "5", title: "BLOG_STRATEGY_CONTENT_CALENDAR.md", category: "Blog Content", size: "19KB", uploadDate: "2026-06-01", type: "MD" },
-  { id: "6", title: "Ayush Prana Partnership Agreement", category: "Ayurveda", size: "245KB", uploadDate: "2026-06-15", type: "PDF" },
-  { id: "7", title: "TRANSPORTATION_NETWORK_GUIDE.md", category: "Transportation", size: "12KB", uploadDate: "2026-06-01", type: "MD" },
-  { id: "8", title: "POST_TREATMENT_SUPPORT_NETWORK.md", category: "Post-Treatment", size: "15KB", uploadDate: "2026-06-01", type: "MD" },
+const CATEGORIES = [
+  "All", "Operations Manual", "Email Templates", "WhatsApp Scripts",
+  "Hospital Partners", "Ayurveda", "Marketing", "Blog Content",
+  "Transportation", "Post-Treatment", "Medication/Equipment",
 ];
 
-const typeIcons: Record<string, React.ElementType> = {
-  MD: FileText,
-  PDF: File,
-  DOCX: File,
+const typeIcon = (ft: string | null) => {
+  if (!ft) return File;
+  if (ft.includes("pdf")) return File;
+  if (ft.includes("md") || ft.includes("markdown")) return FileText;
+  return File;
 };
 
-const typeColors: Record<string, string> = {
-  MD: "bg-blue-100 text-blue-800",
-  PDF: "bg-red-100 text-red-800",
-  DOCX: "bg-indigo-100 text-indigo-800",
+const typeColor = (ft: string | null) => {
+  if (!ft) return "bg-gray-100 text-gray-800";
+  if (ft.includes("pdf")) return "bg-red-100 text-red-800";
+  if (ft.includes("md")) return "bg-blue-100 text-blue-800";
+  if (ft.includes("docx") || ft.includes("doc")) return "bg-indigo-100 text-indigo-800";
+  return "bg-gray-100 text-gray-800";
+};
+
+const typeLabel = (ft: string | null) => {
+  if (!ft) return "FILE";
+  if (ft.includes("pdf")) return "PDF";
+  if (ft.includes("md")) return "MD";
+  if (ft.includes("docx")) return "DOCX";
+  return ft.split("/").pop()?.toUpperCase() || "FILE";
+};
+
+const fmtSize = (bytes: number | null) => {
+  if (!bytes) return "?";
+  if (bytes < 1024) return `${bytes}B`;
+  return `${Math.round(bytes / 1024)}KB`;
 };
 
 export default function DocumentsPage() {
+  const [items, setItems] = React.useState<DocItem[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState("All");
-  const [documents, setDocuments] = React.useState<Document[]>(MOCK_DOCUMENTS);
-  const [uploadModalOpen, setUploadModalOpen] = React.useState(false);
-  const [previewModalOpen, setPreviewModalOpen] = React.useState(false);
-  const [selectedDocument, setSelectedDocument] = React.useState<Document | null>(null);
+
+  const [uploadOpen, setUploadOpen] = React.useState(false);
   const [dragActive, setDragActive] = React.useState(false);
   const [newDocTitle, setNewDocTitle] = React.useState("");
   const [newDocCategory, setNewDocCategory] = React.useState("");
-  const [newDocDescription, setNewDocDescription] = React.useState("");
+  const [uploadFile, setUploadFile] = React.useState<File | null>(null);
   const [uploading, setUploading] = React.useState(false);
+  const [uploadError, setUploadError] = React.useState<string | null>(null);
 
-  // Load real documents from API
-  const loadDocuments = React.useCallback(async () => {
+  const [previewOpen, setPreviewOpen] = React.useState(false);
+  const [previewDoc, setPreviewDoc] = React.useState<DocItem | null>(null);
+  const [previewContent, setPreviewContent] = React.useState<string | null>(null);
+  const [previewLoading, setPreviewLoading] = React.useState(false);
+
+  const [deleteTarget, setDeleteTarget] = React.useState<DocItem | null>(null);
+  const [deleting, setDeleting] = React.useState(false);
+
+  const load = React.useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    const params = new URLSearchParams();
+    if (searchQuery) params.set("search", searchQuery);
+    if (selectedCategory !== "All") params.set("category", selectedCategory);
+    params.set("limit", "100");
     try {
-      const res = await fetch("/api/documents", {
-        headers: { Authorization: "Basic " + btoa("santos:He@lInd!a2026") },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const mapped = (data.documents || []).map((d: any) => ({
-          id: d.id,
-          title: d.title,
-          category: d.category,
-          size: d.size ? `${Math.round(d.size / 1024)}KB` : "?",
-          uploadDate: d.createdAt?.split("T")[0] || "",
-          type: (d.fileType?.includes("pdf") ? "PDF" : d.fileType?.includes("md") ? "MD" : "DOCX") as Document["type"],
-        }));
-        if (mapped.length > 0) setDocuments(mapped);
-      }
-    } catch (err) {
-      console.error("Failed to load documents:", err);
+      const res = await fetchWithAuth(`/api/documents?${params}`);
+      if (!res.ok) throw new Error("Failed to load documents");
+      const json = await res.json();
+      setItems(json.data ?? []);
+    } catch (e: any) {
+      setError(e.message ?? "Error loading documents");
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  }, [searchQuery, selectedCategory]);
 
-  React.useEffect(() => {
-    loadDocuments();
-  }, [loadDocuments]);
+  React.useEffect(() => { load(); }, [load]);
 
-  const uploadFile = async (file: File) => {
+  const openUpload = () => {
+    setUploadOpen(true);
+    setUploadFile(null);
+    setNewDocTitle("");
+    setNewDocCategory("");
+    setDragActive(false);
+    setUploadError(null);
+  };
+
+  const handleFileDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragActive(false);
+    const f = e.dataTransfer.files?.[0];
+    if (f) {
+      setUploadFile(f);
+      if (!newDocTitle) setNewDocTitle(f.name);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (f) {
+      setUploadFile(f);
+      if (!newDocTitle) setNewDocTitle(f.name);
+    }
+  };
+
+  const submitUpload = async () => {
+    if (!uploadFile) return;
     setUploading(true);
+    setUploadError(null);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("title", newDocTitle || file.name);
-      formData.append("category", newDocCategory || "Operations Manual");
-      const res = await fetch("/api/documents/upload", {
-        method: "POST",
-        headers: { Authorization: "Basic " + btoa("santos:He@lInd!a2026") },
-        body: formData,
-      });
-      if (res.ok) {
-        await loadDocuments();
-        setUploadModalOpen(false);
-        setNewDocTitle("");
-        setNewDocCategory("");
-        setNewDocDescription("");
-      } else {
-        const err = await res.json();
-        alert(err.error || "Upload failed");
+      const fd = new FormData();
+      fd.append("file", uploadFile);
+      fd.append("title", newDocTitle || uploadFile.name);
+      fd.append("category", newDocCategory || "Uncategorized");
+      const res = await fetchWithAuth("/api/documents/upload", { method: "POST", body: fd });
+      if (!res.ok) {
+        const j = await res.json();
+        throw new Error(j.error ?? "Upload failed");
       }
-    } catch (err) {
-      console.error("Upload error:", err);
-      alert("Upload failed");
+      setUploadOpen(false);
+      setUploadFile(null);
+      await load();
+    } catch (e: any) {
+      setUploadError(e.message ?? "Upload failed");
     } finally {
       setUploading(false);
     }
   };
 
-  const filteredDocuments = documents.filter((doc) => {
-    const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || doc.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+  const openPreview = async (doc: DocItem) => {
+    setPreviewDoc(doc);
+    setPreviewContent(null);
+    setPreviewLoading(true);
+    setPreviewOpen(true);
+    try {
+      const res = await fetchWithAuth(`/api/documents/${doc.id}`);
+      if (!res.ok) throw new Error("Failed to load document");
+      const json = await res.json();
+      // Try to render text from file URL
+      if (json.data?.filePath?.startsWith("data:")) {
+        const match = json.data.filePath.match(/^data:[^;]+;base64,(.+)$/);
+        if (match) {
+          const decoded = atob(match[1]);
+          setPreviewContent(decoded);
+        }
+      }
+    } catch {
+      setPreviewContent(null);
+    } finally {
+      setPreviewLoading(false);
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      const res = await fetchWithAuth(`/api/documents/${deleteTarget.id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const j = await res.json();
+        throw new Error(j.error ?? "Failed to delete document");
+      }
+      setDeleteTarget(null);
+      if (previewDoc?.id === deleteTarget.id) { setPreviewOpen(false); setPreviewDoc(null); }
+      await load();
+    } catch (e: any) {
+      // ignore
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const filtered = items.filter((doc) => {
+    if (selectedCategory !== "All" && doc.category !== selectedCategory) return false;
+    if (searchQuery && !doc.title.toLowerCase().includes(searchQuery.toLowerCase()) && !doc.category.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    return true;
   });
-
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      uploadFile(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      uploadFile(e.target.files[0]);
-    }
-  };
-
-  const handleDelete = (id: string) => {
-    setDocuments(documents.filter((doc) => doc.id !== id));
-    if (selectedDocument?.id === id) {
-      setPreviewModalOpen(false);
-      setSelectedDocument(null);
-    }
-  };
-
-  const openPreview = (doc: Document) => {
-    setSelectedDocument(doc);
-    setPreviewModalOpen(true);
-  };
-
-  const getFilePreviewContent = (doc: Document) => {
-    const previewTexts: Record<string, string> = {
-      "1": `# HEAL INDIA OPERATIONS MANUAL
-
-## Overview
-This manual outlines the standard operating procedures for Heal India Medi Tourism.
-
-## Patient Intake Process
-1. Initial inquiry received via WhatsApp/Website/Referral
-2. Qualification call within 24 hours
-3. Treatment plan preparation
-4. Hospital coordination
-5. Visa assistance
-6. Travel arrangements
-7. Reception at airport
-8. Hospital admission
-9. Treatment process
-10. Ayurveda recovery (if applicable)
-11. Follow-up care
-
-## Coordinator Responsibilities
-- Respond to inquiries within 2 hours during business hours
-- Maintain patient records in the CRM
-- Coordinate with hospital partners
-- Arrange transportation
-- Monitor patient satisfaction
-
-## Quality Standards
-- Response time: < 2 hours
-- Patient satisfaction target: > 4.5/5
-- Conversion rate target: > 25%`,
-      "2": `# EMAIL TEMPLATES - HOSPITAL OUTREACH
-
-## Initial Contact Email
-Subject: Partnership Opportunity - Heal India Medical Tourism
-
-Dear [Hospital Name] Team,
-
-We are Heal India Medi Tourism, a medical tourism company facilitating international patients seeking quality healthcare in India...
-
-## Follow-up Email
-Subject: Re: Partnership Opportunity
-
-Dear [Name],
-
-I wanted to follow up on my previous email regarding our partnership proposal...
-
-## Template Variables
-- {{hospital_name}} - Partner hospital name
-- {{contact_name}} - Primary contact
-- {{patient_name}} - Patient full name
-- {{treatment_type}} - Required treatment
-- {{estimated_cost}} - Estimated procedure cost`,
-      "3": `# WHATSAPP MESSAGE TEMPLATES
-
-## Initial Response
-Hello {{patient_name}}! Thank you for contacting Heal India Medi Tourism. I'm {{coordinator_name}}, and I'll be your personal coordinator. How can I assist you today?
-
-## Treatment Information
-Here's information about {{treatment_type}}:
-- Estimated duration: {{duration}}
-- Top hospitals: {{hospitals}}
-- Cost range: {{cost_range}}
-
-## Follow-up Message
-Hello {{patient_name}}! Just checking in. How are you feeling? Do you have any questions about the treatment plan?`,
-    };
-    return previewTexts[doc.id] || `# Preview: ${doc.title}\n\nThis is a preview of the document content. The full document would be displayed here in a production environment.`;
-  };
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Documents</h1>
-          <p className="text-muted-foreground">
-            Manage operations manuals, templates, and resources
-          </p>
+          <p className="text-muted-foreground">Manage operations manuals, templates, and resources</p>
         </div>
-        <Button onClick={() => setUploadModalOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add Document
-        </Button>
+        <Button onClick={openUpload}><Plus className="h-4 w-4 mr-2" /> Add Document</Button>
       </div>
 
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search documents..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-          />
+          <Input placeholder="Search documents..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-9" />
         </div>
       </div>
 
       <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
         <TabsList className="flex flex-wrap h-auto">
-          {CATEGORIES.map((category) => (
-            <TabsTrigger key={category} value={category} className="text-xs">
-              {category}
-            </TabsTrigger>
+          {CATEGORIES.map((cat) => (
+            <TabsTrigger key={cat} value={cat} className="text-xs">{cat}</TabsTrigger>
           ))}
         </TabsList>
       </Tabs>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredDocuments.map((doc) => {
-          const Icon = typeIcons[doc.type] || File;
-          return (
-            <Card key={doc.id} className="group hover:border-primary/50 transition-colors">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <Icon className="h-5 w-5 text-muted-foreground" />
-                    <Badge variant="outline" className={cn("text-xs", typeColors[doc.type])}>
-                      {doc.type}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => openPreview(doc)}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-destructive"
-                      onClick={() => handleDelete(doc.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                <CardTitle className="text-sm font-medium line-clamp-2 leading-tight">
-                  {doc.title}
-                </CardTitle>
-                <CardDescription className="flex items-center gap-2 text-xs">
-                  <Folder className="h-3 w-3" />
-                  {doc.category}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>{doc.size}</span>
-                  <span>{doc.uploadDate}</span>
-                </div>
-                <Button variant="outline" size="sm" className="w-full mt-3 h-8">
-                  <Download className="h-3 w-3 mr-2" />
-                  Download
-                </Button>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+      {error && (
+        <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          <AlertCircle className="h-4 w-4" /> {error}
+        </div>
+      )}
 
-      {filteredDocuments.length === 0 && (
+      {loading && (
+        <div className="flex items-center justify-center py-12 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin mr-2" /> Loading documents...
+        </div>
+      )}
+
+      {!loading && (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((doc) => {
+            const Icon = typeIcon(doc.fileType);
+            return (
+              <Card key={doc.id} className="group hover:border-primary/50 transition-colors">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-5 w-5 text-muted-foreground" />
+                      <Badge variant="outline" className={cn("text-xs", typeColor(doc.fileType))}>{typeLabel(doc.fileType)}</Badge>
+                    </div>
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openPreview(doc)}>
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => setDeleteTarget(doc)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  <CardTitle className="text-sm font-medium line-clamp-2 leading-tight">{doc.title}</CardTitle>
+                  <CardDescription className="flex items-center gap-2 text-xs">
+                    <Folder className="h-3 w-3" /> {doc.category}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{fmtSize(doc.size)}</span>
+                    <span>{doc.createdAt ? new Date(doc.createdAt).toLocaleDateString() : ""}</span>
+                  </div>
+                  <Button variant="outline" size="sm" className="w-full mt-3 h-8" onClick={() => openPreview(doc)}>
+                    <Download className="h-3 w-3 mr-2" /> View
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      {!loading && filtered.length === 0 && (
         <div className="text-center py-12 border-2 border-dashed rounded-lg">
           <FileText className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
           <h3 className="text-lg font-medium mb-1">No documents found</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            {searchQuery
-              ? "Try adjusting your search or filter"
-              : "Add your first document to get started"}
+            {searchQuery ? "Try adjusting your search or filter" : "Upload your first document to get started"}
           </p>
-          <Button onClick={() => setUploadModalOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add Document
-          </Button>
+          <Button onClick={openUpload}><Plus className="h-4 w-4 mr-2" /> Add Document</Button>
         </div>
       )}
 
-      <Dialog
-        open={uploadModalOpen}
-        onClose={() => setUploadModalOpen(false)}
-        title="Upload Document"
-        className="max-w-lg"
-      >
+      <Dialog open={uploadOpen} onClose={() => setUploadOpen(false)} title="Upload Document">
         <div className="space-y-4">
           <div
             className={cn(
-              "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
-              dragActive ? "border-primary bg-primary/5" : "border-muted-foreground/25"
+              "border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer",
+              dragActive ? "border-primary bg-primary/5" : "border-muted-foreground/25",
+              uploadFile ? "bg-green-50 border-green-300" : ""
             )}
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
+            onDragEnter={(e) => { e.preventDefault(); setDragActive(true); }}
+            onDragLeave={() => setDragActive(false)}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={handleFileDrop}
+            onClick={() => document.getElementById("doc-file-input")?.click()}
           >
-            <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-4" />
-            <p className="text-sm text-muted-foreground mb-2">
-              Drag and drop your file here, or click to select
-            </p>
-            <input
-              type="file"
-              accept=".md,.pdf,.docx"
-              onChange={handleFileSelect}
-              className="hidden"
-              id="file-upload"
-            />
-            <Button variant="outline" onClick={() => document.getElementById("file-upload")?.click()}>
-              Select File
-            </Button>
-            <p className="text-xs text-muted-foreground mt-2">
-              Supported: MD, PDF, DOCX
-            </p>
+            {uploadFile ? (
+              <div className="flex items-center justify-center gap-2">
+                <FileText className="h-6 w-6 text-green-600" />
+                <span className="text-sm font-medium">{uploadFile.name}</span>
+                <span className="text-xs text-muted-foreground">({fmtSize(uploadFile.size)})</span>
+                <Button variant="ghost" size="icon" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); setUploadFile(null); }}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Upload className="h-10 w-10 mx-auto text-muted-foreground mb-4" />
+                <p className="text-sm text-muted-foreground mb-2">Drag & drop or click to select</p>
+                <p className="text-xs text-muted-foreground">Supported: MD, PDF, DOCX (max 5 MB)</p>
+              </>
+            )}
+            <input id="doc-file-input" type="file" accept=".md,.pdf,.docx,.doc,.txt" onChange={handleFileSelect} className="hidden" />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="doc-title">Document Title</Label>
-            <Input
-              id="doc-title"
-              placeholder="Enter document title"
-              value={newDocTitle}
-              onChange={(e) => setNewDocTitle(e.target.value)}
-            />
+            <Input id="doc-title" value={newDocTitle} onChange={(e) => setNewDocTitle(e.target.value)} placeholder="Enter document title" />
           </div>
-
           <div className="space-y-2">
             <Label htmlFor="doc-category">Category</Label>
             <select
               id="doc-category"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               value={newDocCategory}
               onChange={(e) => setNewDocCategory(e.target.value)}
             >
               <option value="">Select a category</option>
-              {CATEGORIES.filter((c) => c !== "All").map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
+              {CATEGORIES.filter((c) => c !== "All").map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="doc-description">Description</Label>
-            <Textarea
-              id="doc-description"
-              placeholder="Brief description of the document"
-              rows={3}
-              value={newDocDescription}
-              onChange={(e) => setNewDocDescription(e.target.value)}
-            />
-          </div>
+          {uploadError && (
+            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              <AlertCircle className="h-4 w-4" /> {uploadError}
+            </div>
+          )}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setUploadModalOpen(false)}>
-            Cancel
-          </Button>
-          <Button onClick={() => setUploadModalOpen(false)}>
-            Upload Document
+          <Button variant="outline" onClick={() => setUploadOpen(false)} disabled={uploading}>Cancel</Button>
+          <Button onClick={submitUpload} disabled={uploading || !uploadFile}>
+            {uploading ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Uploading...</> : "Upload"}
           </Button>
         </DialogFooter>
       </Dialog>
 
-      <Dialog
-        open={previewModalOpen}
-        onClose={() => setPreviewModalOpen(false)}
-        title={selectedDocument?.title}
-        className="max-w-3xl"
-      >
-        {selectedDocument && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 pb-4 border-b">
-              <Badge variant="outline" className={cn(typeColors[selectedDocument.type])}>
-                {selectedDocument.type}
-              </Badge>
-              <span className="text-sm text-muted-foreground">{selectedDocument.category}</span>
-              <span className="text-sm text-muted-foreground">•</span>
-              <span className="text-sm text-muted-foreground">{selectedDocument.size}</span>
-              <span className="text-sm text-muted-foreground">•</span>
-              <span className="text-sm text-muted-foreground">{selectedDocument.uploadDate}</span>
-            </div>
-            <div className="bg-muted/50 rounded-lg p-4 max-h-[400px] overflow-y-auto">
-              <pre className="text-sm whitespace-pre-wrap font-mono">
-                {getFilePreviewContent(selectedDocument)}
-              </pre>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" className="flex-1">
-                <Download className="h-4 w-4 mr-2" />
-                Download
-              </Button>
-              <Button variant="outline" className="flex-1">
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Open in New Tab
-              </Button>
-              <Button
-                variant="outline"
-                className="text-destructive"
-                onClick={() => handleDelete(selectedDocument.id)}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </Button>
-            </div>
-          </div>
-        )}
+      <Dialog open={previewOpen} onClose={() => setPreviewOpen(false)} title={previewDoc?.title}>
+        <div className="space-y-4 max-w-3xl">
+          {previewDoc && (
+            <>
+              <div className="flex items-center gap-3 pb-4 border-b">
+                <Badge variant="outline" className={cn(typeColor(previewDoc.fileType))}>{typeLabel(previewDoc.fileType)}</Badge>
+                <span className="text-sm text-muted-foreground">{previewDoc.category}</span>
+                <span className="text-sm text-muted-foreground">•</span>
+                <span className="text-sm text-muted-foreground">{fmtSize(previewDoc.size)}</span>
+              </div>
+              {previewLoading ? (
+                <div className="flex items-center justify-center py-8 text-muted-foreground">
+                  <Loader2 className="h-5 w-5 animate-spin mr-2" /> Loading...
+                </div>
+              ) : previewContent ? (
+                <div className="bg-muted/50 rounded-lg p-4 max-h-[400px] overflow-y-auto">
+                  <pre className="text-sm whitespace-pre-wrap font-mono">{previewContent}</pre>
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <FileText className="h-10 w-10 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">Preview not available for this file type.</p>
+                  <a
+                    href={`/api/documents/${previewDoc.id}/file`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-primary underline mt-2 inline-block"
+                  >
+                    Open file directly
+                  </a>
+                </div>
+              )}
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1">
+                  <a href={`/api/documents/${previewDoc.id}/file`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                    <Download className="h-4 w-4" /> Download
+                  </a>
+                </Button>
+                <Button variant="destructive" onClick={() => { setPreviewOpen(false); setDeleteTarget(previewDoc); }}>
+                  <Trash2 className="h-4 w-4 mr-2" /> Delete
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+      </Dialog>
+
+      <Dialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Delete Document">
+        <p className="text-sm">Are you sure you want to delete <strong>{deleteTarget?.title}</strong>? This permanently removes the document.</p>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleting}>Cancel</Button>
+          <Button onClick={confirmDelete} disabled={deleting} className="bg-red-600 hover:bg-red-700">
+            {deleting ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Deleting...</> : "Delete"}
+          </Button>
+        </DialogFooter>
       </Dialog>
     </div>
   );

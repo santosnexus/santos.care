@@ -1,0 +1,41 @@
+# Heal India Medi Tourism — AI Discovery
+> https://santos.care
+
+Heal India Medi Tourism connects international patients with JCI-accredited hospitals in India for affordable, world-class medical treatments.
+
+## About
+Medical tourism facilitator based in Aluva, Kochi, Kerala. Specializes in cardiac surgery, orthopedics, IVF, oncology, cosmetic surgery, and dental treatments with Ayurveda recovery options.
+
+## Key pages
+- Home: https://santos.care
+- Treatments: https://santos.care/treatments
+- Countries: https://santos.care/countries
+- Blog: https://santos.care/blog
+- FAQ: https://santos.care/faq
+- Visa Guide: https://santos.care/visa-guide
+- Contact: https://santos.care/contact
+- About: https://santos.care/about
+
+## Blog articles
+- Heart Bypass Surgery Cost in India 2026: https://santos.care/blog/heart-bypass-surgery-cost-in-india
+- IVF Treatment in India Cost & Success Rates: https://santos.care/blog/ivf-treatment-cost-india-international-patients
+- Knee & Hip Replacement Cost India: https://santos.care/blog/knee-hip-replacement-cost-india-uk-uae
+- India Medical Visa Guide Kenya Tanzania: https://santos.care/blog/india-medical-visa-guide-kenya-tanzania
+- Cosmetic Surgery Cost India: https://santos.care/blog/cosmetic-surgery-cost-india-international-patients
+- Affordable IVF India UK Europe: https://santos.care/blog/affordable-ivf-treatment-india-uk-europe
+- Cardiac Bypass Surgery Africa: https://santos.care/blog/cardiac-bypass-surgery-africa
+- Joint Replacement Oman GCC: https://santos.care/blog/joint-replacement-oman-gcc
+- Dental Tourism Kerala: https://santos.care/blog/dental-tourism-kerala
+- Cancer Treatment India Africa: https://santos.care/blog/cancer-treatment-africa
+
+## Contact
+- WhatsApp: https://wa.me/919995768668
+- Email: contact@santos.care
+- Phone: +91 999 576 8668
+- Address: Aluva, Kochi, Kerala, India
+
+## Structured data
+- MedicalOrganization schema on all pages
+- Article schema on all blog posts
+- FAQ schema on pages with Q&A sections
+- BreadcrumbList on all pages

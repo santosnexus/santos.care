@@ -1,26 +1,15 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
+import { requirePermissionDynamic } from "@/lib/api-helpers";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
-  return NextResponse.json({ task: { id } });
-}
+export const GET = requirePermissionDynamic<{ id: string }>("task:read")(async (req, ctx, extra) => {
+  return NextResponse.json({ task: { id: extra.params.id } });
+});
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
-  const body = await request.json();
-  return NextResponse.json({ task: { id, ...body } });
-}
+export const PUT = requirePermissionDynamic<{ id: string }>("task:update")(async (req, ctx, extra) => {
+  const body = await req.json();
+  return NextResponse.json({ task: { id: extra.params.id, ...body } });
+});
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params;
-  return NextResponse.json({ success: true, id });
-}
+export const DELETE = requirePermissionDynamic<{ id: string }>("task:delete")(async (req, ctx, extra) => {
+  return NextResponse.json({ success: true, id: extra.params.id });
+});
