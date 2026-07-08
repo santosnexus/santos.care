@@ -66,7 +66,97 @@
   .prose blockquote {
     @apply border-l-4 border-brand-300 pl-4 italic text-gray-600 my-6;
   }
+  .prose blockquote p:last-child {
+    @apply mb-0;
+  }
   .prose strong {
     @apply font-semibold text-gray-900;
+  }
+
+  .prose table {
+    @apply w-full border-collapse my-8 rounded-xl overflow-hidden shadow-sm;
+  }
+  .prose table thead {
+    @apply bg-brand-600;
+  }
+  .prose table th {
+    @apply text-white text-left px-4 py-3 text-sm font-semibold;
+  }
+  .prose table td {
+    @apply px-4 py-3 text-sm text-gray-600 border-b border-gray-100;
+  }
+  .prose table tbody tr:hover {
+    @apply bg-brand-50;
+  }
+  .prose table tbody tr:nth-child(even) {
+    @apply bg-gray-50;
+  }
+  .prose table tbody tr:nth-child(even):hover {
+    @apply bg-brand-50;
+  }
+
+  .prose .patient-quote {
+    @apply bg-brand-50 border-l-4 border-brand-500 rounded-r-xl px-6 py-5 my-8 not-italic;
+  }
+  .prose .patient-quote p {
+    @apply text-gray-700 mb-2;
+  }
+  .prose .patient-quote cite {
+    @apply text-sm text-brand-600 font-medium not-italic;
+  }
+
+  .prose .doctor-callout {
+    @apply bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl px-6 py-5 my-8 text-white;
+  }
+  .prose .doctor-callout p {
+    @apply text-white/90 mb-2;
+  }
+  .prose .doctor-callout strong {
+    @apply text-white font-semibold;
+  }
+
+  .prose .cost-table {
+    @apply my-8;
+  }
+  .prose .cost-table .cost-row {
+    @apply flex justify-between items-center py-3 px-4 border-b border-gray-100;
+  }
+  .prose .cost-table .cost-row:first-child {
+    @apply bg-brand-600 text-white font-semibold rounded-t-lg border-b-0;
+  }
+  .prose .cost-table .cost-row:nth-child(even) {
+    @apply bg-gray-50;
+  }
+
+  .prose .cta-box {
+    @apply bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl px-6 py-6 my-8 text-center;
+  }
+  .prose .cta-box h3 {
+    @apply text-white text-xl font-bold mb-2;
+  }
+  .prose .cta-box p {
+    @apply text-white/80 mb-4;
+  }
+  .prose .cta-box a {
+    @apply inline-block bg-white text-brand-700 px-6 py-2.5 rounded-lg font-medium no-underline hover:bg-brand-50 transition-colors;
+  }
+
+  .prose .faq-section {
+    @apply my-8 space-y-4;
+  }
+  .prose .faq-item {
+    @apply border border-gray-200 rounded-xl overflow-hidden;
+  }
+  .prose .faq-item summary {
+    @apply px-5 py-3.5 font-semibold text-gray-900 cursor-pointer hover:bg-gray-50 transition-colors list-none flex items-center justify-between;
+  }
+  .prose .faq-item summary::-webkit-details-marker {
+    @apply hidden;
+  }
+  .prose .faq-item[open] summary {
+    @apply bg-brand-50 text-brand-700;
+  }
+  .prose .faq-item .faq-answer {
+    @apply px-5 py-4 text-gray-600 text-sm leading-relaxed border-t border-gray-100;
   }
 }

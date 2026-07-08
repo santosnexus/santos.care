@@ -37,7 +37,25 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   };
 }
 
-const mdxComponents = {};
+const mdxComponents = {
+  table: (props: React.HTMLAttributes<HTMLTableElement>) => (
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse my-8 rounded-xl overflow-hidden shadow-sm" {...props} />
+    </div>
+  ),
+  thead: (props: React.HTMLAttributes<HTMLTableSectionElement>) => (
+    <thead className="bg-brand-600 text-white" {...props} />
+  ),
+  th: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
+    <th className="text-left px-4 py-3 text-sm font-semibold" {...props} />
+  ),
+  td: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
+    <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-100" {...props} />
+  ),
+  blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
+    <blockquote className="bg-brand-50 border-l-4 border-brand-500 rounded-r-xl px-6 py-5 my-8 not-italic" {...props} />
+  ),
+};
 
 export default function BlogArticlePage({ params }: { params: { slug: string } }) {
   const post = getBlogPost(params.slug);
@@ -64,8 +82,16 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
         />
       </div>
 
-      <section className="bg-gradient-to-br from-brand-800 to-brand-900 pt-32 pb-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative pt-32 pb-16 overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={frontmatter.image}
+            alt={frontmatter.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-800/90 to-brand-700/80" />
+        </div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <nav className="flex items-center gap-2 text-sm text-brand-300 mb-6">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <span>/</span>
@@ -82,7 +108,7 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
               <Clock className="w-4 h-4" />
               {frontmatter.readTime}
             </span>
-            <span className="bg-brand-700 text-brand-200 px-2 py-0.5 rounded text-xs font-medium">
+            <span className="bg-white/20 text-white px-2 py-0.5 rounded text-xs font-medium backdrop-blur">
               {frontmatter.category}
             </span>
           </div>
