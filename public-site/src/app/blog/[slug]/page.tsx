@@ -9,8 +9,6 @@ import { getWhatsAppUrl } from "@/lib/utils";
 import { JsonLd, articleSchema, breadcrumbSchema } from "@/components/json-ld";
 import TableOfContents from "@/components/TableOfContents";
 
-export const dynamic = "force-dynamic";
-
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const post = getBlogPost(params.slug);
   if (!post) return {};
@@ -103,6 +101,8 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
                       remarkPlugins: [remarkGfm],
                       rehypePlugins: [rehypeSlug],
                     },
+                    blockJS: false,
+                    blockDangerousJS: false,
                   }}
                 />
               </div>
