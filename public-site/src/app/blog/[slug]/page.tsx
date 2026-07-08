@@ -105,8 +105,6 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
                       remarkPlugins: [remarkGfm],
                       rehypePlugins: [rehypeSlug],
                     },
-                    blockJS: false,
-                    blockDangerousJS: false,
                   }}
                 />
               </div>
