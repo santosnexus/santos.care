@@ -3,11 +3,30 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-brand: #0d7377;
+    --color-brand-light: #7dd9d9;
+    --color-accent: #ff6b6b;
+    --color-surface: #ffffff;
+    --color-surface-soft: #f7f8fa;
+    --color-ink: #1d1d1f;
+    --color-ink-muted: #6a6a6a;
+    --radius-card: 14px;
+    --radius-button: 8px;
+    --radius-pill: 9999px;
+  }
+
   html {
     scroll-behavior: smooth;
   }
+
   body {
-    @apply text-gray-800 antialiased;
+    @apply text-ink antialiased bg-surface;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    @apply bg-brand-200 text-brand-900;
   }
 }
 
@@ -20,6 +39,19 @@
   }
   .animate-fade-in-up {
     animation: fadeInUp 0.6s ease-out forwards;
+  }
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out forwards;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-grid {
+    background-image: linear-gradient(rgba(13, 115, 119, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(13, 115, 119, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
 }
 
@@ -38,75 +70,88 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
-@layer base {
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@layer components {
   .prose {
     @apply max-w-none;
   }
   .prose h2 {
-    @apply text-2xl font-bold text-gray-900 mt-10 mb-4;
+    @apply text-display-h2 text-ink mt-12 mb-4;
   }
   .prose h3 {
-    @apply text-xl font-semibold text-gray-900 mt-8 mb-3;
+    @apply text-display-h3 text-ink mt-10 mb-3;
   }
   .prose p {
-    @apply text-gray-600 leading-relaxed mb-4;
+    @apply text-body-lg text-ink-muted leading-relaxed mb-5;
   }
   .prose ul {
-    @apply list-disc pl-6 mb-4 space-y-1;
+    @apply list-disc pl-6 mb-5 space-y-2;
   }
   .prose ol {
-    @apply list-decimal pl-6 mb-4 space-y-1;
+    @apply list-decimal pl-6 mb-5 space-y-2;
   }
   .prose li {
-    @apply text-gray-600;
+    @apply text-body-lg text-ink-muted;
   }
   .prose a {
-    @apply text-brand-600 underline hover:text-brand-700;
+    @apply text-brand-600 underline decoration-brand-300 decoration-2 underline-offset-2 hover:text-brand-700 transition-colors;
   }
   .prose blockquote {
-    @apply border-l-4 border-brand-300 pl-4 italic text-gray-600 my-6;
+    @apply border-l-4 border-brand-300 pl-5 italic text-ink-muted my-8 text-body-lg;
   }
   .prose blockquote p:last-child {
     @apply mb-0;
   }
   .prose strong {
-    @apply font-semibold text-gray-900;
+    @apply font-semibold text-ink;
   }
 
   .prose table {
-    @apply w-full border-collapse my-8 rounded-xl overflow-hidden shadow-sm;
+    @apply w-full border-collapse my-8 rounded-card overflow-hidden shadow-card;
   }
   .prose table thead {
     @apply bg-brand-600;
   }
   .prose table th {
-    @apply text-white text-left px-4 py-3 text-sm font-semibold;
+    @apply text-white text-left px-5 py-3.5 text-sm font-semibold;
   }
   .prose table td {
-    @apply px-4 py-3 text-sm text-gray-600 border-b border-gray-100;
+    @apply px-5 py-3.5 text-sm text-ink-muted border-b border-gray-100;
   }
   .prose table tbody tr:hover {
     @apply bg-brand-50;
   }
   .prose table tbody tr:nth-child(even) {
-    @apply bg-gray-50;
+    @apply bg-surface-soft;
   }
   .prose table tbody tr:nth-child(even):hover {
     @apply bg-brand-50;
   }
 
+  .prose img {
+    @apply rounded-card shadow-card my-8;
+  }
+
+  .prose hr {
+    @apply my-10 border-gray-200;
+  }
+
   .prose .patient-quote {
-    @apply bg-brand-50 border-l-4 border-brand-500 rounded-r-xl px-6 py-5 my-8 not-italic;
+    @apply bg-brand-50 border-l-4 border-brand-500 rounded-r-card px-6 py-6 my-8 not-italic;
   }
   .prose .patient-quote p {
-    @apply text-gray-700 mb-2;
+    @apply text-body-lg text-ink-muted mb-2;
   }
   .prose .patient-quote cite {
     @apply text-sm text-brand-600 font-medium not-italic;
   }
 
   .prose .doctor-callout {
-    @apply bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl px-6 py-5 my-8 text-white;
+    @apply bg-gradient-to-r from-brand-600 to-brand-700 rounded-card px-6 py-6 my-8 text-white;
   }
   .prose .doctor-callout p {
     @apply text-white/90 mb-2;
@@ -119,36 +164,36 @@
     @apply my-8;
   }
   .prose .cost-table .cost-row {
-    @apply flex justify-between items-center py-3 px-4 border-b border-gray-100;
+    @apply flex justify-between items-center py-3.5 px-4 border-b border-gray-100;
   }
   .prose .cost-table .cost-row:first-child {
-    @apply bg-brand-600 text-white font-semibold rounded-t-lg border-b-0;
+    @apply bg-brand-600 text-white font-semibold rounded-t-card border-b-0;
   }
   .prose .cost-table .cost-row:nth-child(even) {
-    @apply bg-gray-50;
+    @apply bg-surface-soft;
   }
 
   .prose .cta-box {
-    @apply bg-gradient-to-r from-brand-600 to-brand-700 rounded-xl px-6 py-6 my-8 text-center;
+    @apply bg-gradient-to-r from-brand-600 to-brand-700 rounded-card p-8 my-8 text-center;
   }
   .prose .cta-box h3 {
-    @apply text-white text-xl font-bold mb-2;
+    @apply text-white text-display-h3 font-bold mb-2;
   }
   .prose .cta-box p {
     @apply text-white/80 mb-4;
   }
   .prose .cta-box a {
-    @apply inline-block bg-white text-brand-700 px-6 py-2.5 rounded-lg font-medium no-underline hover:bg-brand-50 transition-colors;
+    @apply inline-flex items-center gap-2 bg-white text-brand-700 px-6 py-3 rounded-button font-medium no-underline hover:bg-brand-50 transition-all shadow-float;
   }
 
   .prose .faq-section {
     @apply my-8 space-y-4;
   }
   .prose .faq-item {
-    @apply border border-gray-200 rounded-xl overflow-hidden;
+    @apply border border-gray-200 rounded-card overflow-hidden;
   }
   .prose .faq-item summary {
-    @apply px-5 py-3.5 font-semibold text-gray-900 cursor-pointer hover:bg-gray-50 transition-colors list-none flex items-center justify-between;
+    @apply px-5 py-4 font-semibold text-ink cursor-pointer hover:bg-surface-soft transition-colors list-none flex items-center justify-between;
   }
   .prose .faq-item summary::-webkit-details-marker {
     @apply hidden;
@@ -157,6 +202,32 @@
     @apply bg-brand-50 text-brand-700;
   }
   .prose .faq-item .faq-answer {
-    @apply px-5 py-4 text-gray-600 text-sm leading-relaxed border-t border-gray-100;
+    @apply px-5 py-4 text-ink-muted text-body-sm leading-relaxed border-t border-gray-100;
+  }
+
+  .prose .savings-badge {
+    @apply inline-flex items-center gap-1 bg-savings-light text-savings px-3 py-1 rounded-pill text-sm font-semibold;
+  }
+
+  .prose .price-bar-group {
+    @apply space-y-3 my-6;
+  }
+  .prose .price-bar {
+    @apply flex items-center gap-4;
+  }
+  .prose .price-bar .bar-label {
+    @apply w-20 text-sm font-medium text-ink-muted flex-shrink-0;
+  }
+  .prose .price-bar .bar-track {
+    @apply flex-1 h-8 bg-surface-soft rounded-pill overflow-hidden relative;
+  }
+  .prose .price-bar .bar-fill {
+    @apply h-full rounded-pill transition-all duration-700;
+  }
+  .prose .price-bar .bar-value {
+    @apply w-28 text-right text-sm font-semibold text-ink;
+  }
+  .prose .price-bar .bar-savings {
+    @apply w-16 text-right text-xs font-semibold text-savings;
   }
 }
