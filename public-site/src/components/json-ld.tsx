@@ -17,7 +17,7 @@ export function siteSchema() {
     description:
       "Medical tourism facilitator connecting international patients with JCI-accredited hospitals in India for cardiac, orthopedic, IVF, oncology, cosmetic, and dental treatments.",
     url: "https://santos.care",
-    telephone: "+91-9995768668",
+    telephone: "+91-8089084080",
     email: "contact@santos.care",
     address: {
       "@type": "PostalAddress",

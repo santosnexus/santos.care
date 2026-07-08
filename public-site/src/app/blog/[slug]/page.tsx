@@ -8,6 +8,7 @@ import { ArrowLeft, Calendar, Clock, MessageCircle, Share2 } from "lucide-react"
 import { getBlogPost, getRelatedPosts } from "@/lib/mdx";
 import { getWhatsAppUrl } from "@/lib/utils";
 import { JsonLd, articleSchema, breadcrumbSchema } from "@/components/json-ld";
+import TableOfContents from "@/components/TableOfContents";
 
 export const dynamicParams = false;
 
@@ -92,19 +93,24 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
       </section>
 
       <article className="py-12 bg-white">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-gray max-w-none">
-            <MDXRemote
-              source={content}
-              components={mdxComponents}
-              options={{
-                mdxOptions: {
-                  remarkPlugins: [remarkGfm],
-                  rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
-                },
-              }}
-            />
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:flex lg:gap-10">
+            <aside className="hidden lg:block w-56 flex-shrink-0">
+              <TableOfContents />
+            </aside>
+            <div className="flex-1 min-w-0 max-w-3xl">
+              <div className="prose prose-gray max-w-none">
+                <MDXRemote
+                  source={content}
+                  components={mdxComponents}
+                  options={{
+                    mdxOptions: {
+                      remarkPlugins: [remarkGfm],
+                      rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+                    },
+                  }}
+                />
+              </div>
 
           <div className="mt-12 pt-8 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -185,8 +191,10 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
                 </div>
               </div>
             </div>
+            </div>
           </div>
         </div>
+      </div>
       </article>
 
       {related.length > 0 && (

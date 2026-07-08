@@ -2,23 +2,25 @@
 
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import { Search, Calendar, Clock, ArrowRight, Tag } from "lucide-react";
+import { Search, Calendar, Clock, ArrowRight } from "lucide-react";
 import type { BlogFrontmatter } from "@/lib/mdx";
-
-const categories = [
-  "All",
-  "Cardiac Surgery",
-  "Orthopedics",
-  "Fertility",
-  "Oncology",
-  "Dental",
-  "Cosmetic Surgery",
-  "Visas & Travel",
-];
 
 const ITEMS_PER_PAGE = 6;
 
 export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) {
+  const categories = useMemo(() => {
+    const cats = new Set(posts.map((p) => p.category));
+    return ["All", ...Array.from(cats).sort()];
+  }, [posts]);
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    posts.forEach((p) => {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    });
+    return counts;
+  }, [posts]);
+
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
@@ -40,10 +42,6 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
   const featured = visiblePosts.length > 0 ? visiblePosts[0] : null;
   const rest = featured ? visiblePosts.slice(1) : visiblePosts;
 
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + ITEMS_PER_PAGE);
-  };
-
   const handleCategoryChange = (cat: string) => {
     setActiveCategory(cat);
     setVisibleCount(ITEMS_PER_PAGE);
@@ -56,8 +54,9 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
 
   return (
     <>
-      <section className="bg-gradient-to-br from-brand-800 to-brand-900 pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-gradient-to-br from-brand-800 to-brand-900 pt-32 pb-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-40" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             Medical Tourism Blog
           </h1>
@@ -83,6 +82,9 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                   }`}
                 >
                   {cat}
+                  {cat !== "All" && (
+                    <span className="ml-1.5 text-xs opacity-70">({categoryCounts[cat] || 0})</span>
+                  )}
                 </button>
               ))}
             </div>
@@ -99,6 +101,8 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
           </div>
           <p className="text-xs text-gray-400 mt-3">
             {filtered.length} {filtered.length === 1 ? "article" : "articles"} found
+            {activeCategory !== "All" && ` in ${activeCategory}`}
+            {searchQuery && ` matching "${searchQuery}"`}
           </p>
         </div>
       </section>
@@ -109,9 +113,15 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
             <div className="text-center py-20">
               <div className="text-6xl mb-4">🔍</div>
               <h2 className="text-xl font-semibold text-gray-900 mb-2">No articles found</h2>
-              <p className="text-gray-500">
+              <p className="text-gray-500 mb-6">
                 Try adjusting your search or filter to find what you&apos;re looking for.
               </p>
+              <button
+                onClick={() => { setActiveCategory("All"); setSearchQuery(""); }}
+                className="bg-brand-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-brand-700 transition-colors"
+              >
+                Clear all filters
+              </button>
             </div>
           ) : (
             <>
@@ -121,10 +131,15 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                   className="group block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all mb-10"
                 >
                   <div className="grid md:grid-cols-2">
-                    <div className="bg-gradient-to-br from-brand-500 to-brand-800 min-h-[280px] flex items-center justify-center p-8">
-                      <div className="text-center">
-                        <div className="text-5xl font-bold text-white/20 mb-2">{featured.category.split(" ")[0]}</div>
-                        <span className="inline-block bg-white/20 text-white text-sm px-3 py-1 rounded-full">
+                    <div className="relative min-h-[280px] overflow-hidden">
+                      <img
+                        src={featured.image}
+                        alt={featured.title}
+                        className="w-full h-full absolute inset-0 object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                      <div className="absolute bottom-4 left-4">
+                        <span className="inline-block bg-brand-600 text-white text-sm px-3 py-1 rounded-full">
                           Featured Article
                         </span>
                       </div>
@@ -163,15 +178,15 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                       href={`/blog/${post.slug}`}
                       className="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all flex flex-col"
                     >
-                      <div className="relative h-40 overflow-hidden">
+                      <div className="relative h-44 overflow-hidden">
                         <img
                           src={post.image}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           loading="lazy"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                        <span className="absolute top-3 left-3 bg-brand-600/90 text-white text-xs px-2 py-0.5 rounded-full backdrop-blur">
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                        <span className="absolute top-3 left-3 bg-white/90 text-gray-800 text-xs px-2 py-0.5 rounded-full font-medium backdrop-blur shadow-sm">
                           {post.category}
                         </span>
                       </div>
@@ -204,7 +219,7 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
               {hasMore && (
                 <div className="text-center mt-10">
                   <button
-                    onClick={handleLoadMore}
+                    onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
                     className="bg-white border border-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 hover:border-brand-300 transition-all"
                   >
                     Load More Articles ({filtered.length - visibleCount} remaining)

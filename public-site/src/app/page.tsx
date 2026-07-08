@@ -5,6 +5,7 @@ import { hospitals } from "@/data/hospitals";
 import { testimonials } from "@/data/testimonials";
 import { getWhatsAppUrl, WHATSAPP_NUMBER } from "@/lib/utils";
 import LeadForm from "@/components/LeadForm";
+import FadeInView from "@/components/FadeInView";
 
 const stats = [
   { label: "Partner Hospitals", value: "5+" },
@@ -23,11 +24,18 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-40" />
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&q=80"
+            alt="Modern hospital operating room"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-800/90 to-brand-700/80" />
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
+            <div className="animate-fade-in-up">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur rounded-full px-4 py-1.5 mb-6">
                 <Shield className="w-4 h-4 text-green-400" />
                 <span className="text-sm text-green-300 font-medium">JCI & NABH Accredited</span>
@@ -62,26 +70,13 @@ export default function Home() {
                 <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-green-400" /> No Obligation</span>
               </div>
             </div>
-            <div className="hidden lg:block">
-              <div className="bg-white/5 backdrop-blur rounded-2xl p-8 border border-white/10">
-                <h3 className="text-white text-xl font-semibold mb-4">Get Your Free Treatment Plan</h3>
+            <div className="hidden lg:block animate-slide-up">
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                <h3 className="text-white text-xl font-semibold mb-2">Get Your Free Treatment Plan</h3>
                 <p className="text-gray-400 text-sm mb-6">
                   Share your details and medical reports. We&apos;ll respond within 24 hours.
                 </p>
-                <div className="space-y-3">
-                  <input type="text" placeholder="Full Name" className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500" />
-                  <input type="email" placeholder="Email Address" className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500" />
-                  <input type="tel" placeholder="Phone Number" className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500" />
-                  <select className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500">
-                    <option value="" className="text-gray-900">Select Treatment</option>
-                    {treatmentList.map((t) => (
-                      <option key={t.slug} value={t.title} className="text-gray-900">{t.title}</option>
-                    ))}
-                  </select>
-                  <button className="w-full bg-brand-500 hover:bg-brand-400 text-white py-3 rounded-lg font-semibold transition-all">
-                    Submit →
-                  </button>
-                </div>
+                <LeadForm source="HERO" />
               </div>
             </div>
           </div>
@@ -103,6 +98,7 @@ export default function Home() {
       </section>
 
       {/* Why Choose Heal India */}
+      <FadeInView>
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -153,8 +149,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </FadeInView>
 
       {/* Treatments */}
+      <FadeInView>
       <section className="py-20 bg-white" id="treatments">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -181,8 +179,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </FadeInView>
 
       {/* Partner Hospitals */}
+      <FadeInView>
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -210,8 +210,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </FadeInView>
 
       {/* Testimonials */}
+      <FadeInView>
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -238,8 +240,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </FadeInView>
 
       {/* CTA with Lead Form */}
+      <FadeInView>
       <section className="py-20 bg-gradient-to-br from-brand-800 to-brand-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -290,8 +294,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </FadeInView>
 
       {/* Bottom CTA */}
+      <FadeInView>
       <section className="py-16 bg-white text-center">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
@@ -318,6 +324,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </FadeInView>
     </>
   );
 }
