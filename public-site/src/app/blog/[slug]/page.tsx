@@ -37,25 +37,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   };
 }
 
-const mdxComponents = {
-  table: (props: React.HTMLAttributes<HTMLTableElement>) => (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse my-8 rounded-xl overflow-hidden shadow-sm" {...props} />
-    </div>
-  ),
-  thead: (props: React.HTMLAttributes<HTMLTableSectionElement>) => (
-    <thead className="bg-brand-600 text-white" {...props} />
-  ),
-  th: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
-    <th className="text-left px-4 py-3 text-sm font-semibold" {...props} />
-  ),
-  td: (props: React.HTMLAttributes<HTMLTableCellElement>) => (
-    <td className="px-4 py-3 text-sm text-gray-600 border-b border-gray-100" {...props} />
-  ),
-  blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
-    <blockquote className="bg-brand-50 border-l-4 border-brand-500 rounded-r-xl px-6 py-5 my-8 not-italic" {...props} />
-  ),
-};
+const mdxComponents = {};
 
 export default function BlogArticlePage({ params }: { params: { slug: string } }) {
   const post = getBlogPost(params.slug);

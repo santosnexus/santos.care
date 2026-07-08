@@ -14,6 +14,7 @@ const withMDX = createMDX({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  staticPageGenerationTimeout: 180,
 };
 
 export default withMDX(nextConfig);
