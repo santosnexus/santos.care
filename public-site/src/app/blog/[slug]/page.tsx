@@ -4,7 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import { ArrowLeft, Calendar, Clock, MessageCircle, Share2 } from "lucide-react";
-import { getBlogPost, getRelatedPosts } from "@/lib/mdx";
+import { getBlogPost, getAllBlogPosts, getRelatedPosts } from "@/lib/mdx";
 import { getWhatsAppUrl } from "@/lib/utils";
 import { JsonLd, articleSchema, breadcrumbSchema } from "@/components/json-ld";
 import TableOfContents from "@/components/TableOfContents";
@@ -23,6 +23,10 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
 }
 
 const mdxComponents = {};
+
+export function generateStaticParams() {
+  return getAllBlogPosts().map((post) => ({ slug: post.frontmatter.slug }));
+}
 
 export default function BlogArticlePage({ params }: { params: { slug: string } }) {
   const post = getBlogPost(params.slug);
