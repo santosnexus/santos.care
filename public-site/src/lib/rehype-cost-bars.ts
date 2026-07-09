@@ -65,22 +65,35 @@ interface CostRow {
 }
 
 function buildPriceBars(table: Element): Element {
-  const rows = table.children.filter(
-    (c): c is Element => c.type === "element" && (c.tagName === "tr" || c.tagName === "thead")
-  );
-  const headerRow = rows.find((r) => r.tagName === "thead");
-  const bodyRows = rows.filter((r) => r.tagName !== "thead");
+  // Collect every <tr> nested under the table (remark-rehype nests rows in <thead>/<tbody>).
+  const trs: Element[] = [];
+  for (const child of table.children) {
+    if (child.type !== "element") continue;
+    if (child.tagName === "tr") {
+      trs.push(child);
+    } else {
+      for (const sub of child.children) {
+        if (sub.type === "element" && sub.tagName === "tr") trs.push(sub);
+      }
+    }
+  }
+  const headerRow = trs[0];
+  const bodyRows = trs.slice(1);
 
-  const parsed: CostRow[] = bodyRows.map((row) => {
-    const cells = row.children.filter((c): c is Element => c.type === "element" && c.tagName === "td");
-    if (cells.length < 2) return null;
-    const country = getText(cells[0]).trim();
-    const costText = getText(cells[1]).trim();
-    const cost = parseCost(costText);
-    const extra = cells[2] ? getText(cells[2]).trim() : "";
-    if (cost === null) return null;
-    return { country, cost, costText, extra, flag: getFlag(country) };
-  }).filter((c): c is CostRow => c !== null);
+  const parsed: CostRow[] = bodyRows
+    .map((row) => {
+      const cells = row.children.filter(
+        (c): c is Element => c.type === "element" && c.tagName === "td"
+      );
+      if (cells.length < 2) return null;
+      const country = getText(cells[0]).trim();
+      const costText = getText(cells[1]).trim();
+      const cost = parseCost(costText);
+      const extra = cells[2] ? getText(cells[2]).trim() : "";
+      if (cost === null) return null;
+      return { country, cost, costText, extra, flag: getFlag(country) };
+    })
+    .filter((c): c is CostRow => c !== null);
 
   if (parsed.length < 2) return table;
 
