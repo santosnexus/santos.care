@@ -100,7 +100,7 @@ export default function ContactPage() {
                       href={getWhatsAppUrl()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-whatsapp-light0 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-whatsapp-hover transition-colors"
+                      className="inline-flex items-center gap-2 bg-whatsapp text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-whatsapp-hover transition-colors"
                     >
                       <MessageCircle className="w-4 h-4" /> Chat Now
                     </a>

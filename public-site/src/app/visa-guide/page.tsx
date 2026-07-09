@@ -109,7 +109,7 @@ export default function VisaGuidePage() {
               <Link href="/contact" className="bg-brand-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-700 transition-colors">
                 Get Free Consultation <ArrowRight className="w-4 h-4 inline ml-1" />
               </Link>
-              <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="bg-whatsapp-light0 text-white px-8 py-3 rounded-lg font-semibold hover:bg-whatsapp-hover transition-colors">
+              <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="bg-whatsapp text-white px-8 py-3 rounded-lg font-semibold hover:bg-whatsapp-hover transition-colors">
                 <MessageCircle className="w-4 h-4 inline mr-1" /> WhatsApp
               </a>
             </div>

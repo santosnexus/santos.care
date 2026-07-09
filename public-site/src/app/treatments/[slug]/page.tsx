@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, CheckCircle, Clock, Hospital, TrendingDown, Star, MessageCircle, ShieldCheck, Stethoscope, Award } from "lucide-react";
+import { ArrowLeft, CheckCircle, Clock, Hospital, TrendingDown, Star, MessageCircle, ShieldCheck, Stethoscope, Award, BookOpen } from "lucide-react";
 import { treatments, treatmentList } from "@/data/treatments";
 import { getWhatsAppUrl } from "@/lib/utils";
+import { getPostsByTreatment } from "@/lib/mdx";
 import LeadForm from "@/components/LeadForm";
 import { JsonLd, productSchema } from "@/components/json-ld";
 import { Section, Container } from "@/components/ui/Section";
@@ -30,6 +31,7 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
   const t = treatments[params.slug];
   if (!t) notFound();
 
+  const relatedPosts = getPostsByTreatment(t.slug, 4);
   const maxCost = Math.max(...t.costComparison.map((c) => c.to));
   const india = t.costComparison.find((c) => c.country === "India")!;
   const topWestern = t.costComparison[0];
@@ -118,7 +120,7 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
               <h2 className="text-display-h2 text-ink mt-4 mb-6">Procedures We Offer</h2>
               <div className="grid sm:grid-cols-2 gap-3 mb-12">
                 {t.procedures.map((p) => (
-                  <div key={p} className="flex items-start gap-2.5 bg-surface-soft rounded-card p-3.5 border border-gray-100/60">
+                  <div key={p} className="flex items-start gap-2.5 bg-surface-soft rounded-card p-3.5 border border-surface-muted/60">
                     <CheckCircle className="w-5 h-5 text-brand-600 mt-0.5 flex-shrink-0" />
                     <span className="text-body-base text-ink">{p}</span>
                   </div>
@@ -143,7 +145,7 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
                         </div>
                         <div className="flex-1 h-9 bg-surface-soft rounded-pill overflow-hidden">
                           <div
-                            className={`h-full rounded-pill transition-all duration-700 ${isIndia ? "bg-gradient-to-r from-brand-500 to-brand-700" : "bg-gray-300"}`}
+                            className={`h-full rounded-pill transition-all duration-700 ${isIndia ? "bg-gradient-to-r from-brand-500 to-brand-700" : "bg-surface-muted"}`}
                             style={{ width: `${Math.max(pct, 6)}%` }}
                           />
                         </div>
@@ -156,7 +158,7 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
                     );
                   })}
                 </div>
-                <div className="mt-6 flex flex-wrap items-center gap-3 pt-5 border-t border-gray-100">
+                <div className="mt-6 flex flex-wrap items-center gap-3 pt-5 border-t border-surface-muted">
                   <Badge variant="savings" size="lg">You save up to {savingsPct}%</Badge>
                   <span className="text-body-sm text-ink-muted">
                     vs {topWestern.country} prices for the same quality of care.
@@ -170,13 +172,13 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
 
             {/* Sticky lead form */}
             <div>
-              <div className="bg-surface rounded-card border border-gray-100/60 shadow-card p-7 sticky top-24">
+              <div className="bg-surface rounded-card border border-surface-muted/60 shadow-card p-7 sticky top-24">
                 <h3 className="font-semibold text-ink mb-1 text-display-h3">Get a Free Treatment Plan</h3>
                 <p className="text-body-sm text-ink-muted mb-5">
                   Share your medical reports and receive a personalized plan within 24 hours.
                 </p>
                 <LeadForm treatmentInterest={t.title} source="TREATMENT_PAGE" />
-                <div className="mt-5 pt-5 border-t border-gray-200">
+                <div className="mt-5 pt-5 border-t border-surface-muted">
                   <a
                     href={getWhatsAppUrl(`Hi! I'm interested in ${t.title} in India.`)}
                     target="_blank"
@@ -191,6 +193,38 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
           </div>
         </Container>
       </Section>
+
+      {/* ───── RELATED GUIDES ───── */}
+      {relatedPosts.length > 0 && (
+        <Section variant="default" padding="lg">
+          <Container>
+            <h2 className="text-display-h2 text-ink mb-2">Related Guides</h2>
+            <p className="text-body-base text-ink-muted mb-8 max-w-2xl">
+              Deeper reads on {t.title.toLowerCase()} costs, hospitals, and patient experiences in India.
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {relatedPosts.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  className="group bg-surface-soft rounded-card p-5 border border-surface-muted hover:border-brand-200 hover:shadow-card-hover transition-all"
+                >
+                  <div className="w-10 h-10 rounded-button bg-brand-50 flex items-center justify-center mb-4">
+                    <BookOpen className="w-5 h-5 text-brand-600" />
+                  </div>
+                  <h3 className="font-semibold text-ink group-hover:text-brand-700 transition-colors line-clamp-2 mb-2">
+                    {post.title}
+                  </h3>
+                  <p className="text-sm text-ink-muted line-clamp-3 mb-3">{post.excerpt}</p>
+                  <span className="inline-flex items-center gap-1 text-xs text-ink-light">
+                    <Clock className="w-3 h-3" /> {post.readTime}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </Container>
+        </Section>
+      )}
 
       {/* ───── BOTTOM CTA ───── */}
       <Section variant="brand" padding="xl">

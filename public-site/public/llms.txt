@@ -4,29 +4,48 @@
 Heal India Medi Tourism connects international patients with JCI-accredited hospitals in India for affordable, world-class medical treatments.
 
 ## About
-Medical tourism facilitator based in Aluva, Kochi, Kerala. Specializes in cardiac surgery, orthopedics, IVF, oncology, cosmetic surgery, and dental treatments with Ayurveda recovery options.
+Medical tourism facilitator based in Aluva, Kochi, Kerala. Specializes in cardiac surgery, orthopedics, IVF, oncology, cosmetic surgery, dental treatments, weight-loss surgery, neurology, and Ayurveda recovery options.
 
 ## Key pages
 - Home: https://santos.care
 - Treatments: https://santos.care/treatments
 - Countries: https://santos.care/countries
+- Hospitals: https://santos.care/hospitals
 - Blog: https://santos.care/blog
 - FAQ: https://santos.care/faq
 - Visa Guide: https://santos.care/visa-guide
 - Contact: https://santos.care/contact
 - About: https://santos.care/about
 
-## Blog articles
-- Heart Bypass Surgery Cost in India 2026: https://santos.care/blog/heart-bypass-surgery-cost-in-india
-- IVF Treatment in India Cost & Success Rates: https://santos.care/blog/ivf-treatment-cost-india-international-patients
-- Knee & Hip Replacement Cost India: https://santos.care/blog/knee-hip-replacement-cost-india-uk-uae
-- India Medical Visa Guide Kenya Tanzania: https://santos.care/blog/india-medical-visa-guide-kenya-tanzania
-- Cosmetic Surgery Cost India: https://santos.care/blog/cosmetic-surgery-cost-india-international-patients
-- Affordable IVF India UK Europe: https://santos.care/blog/affordable-ivf-treatment-india-uk-europe
-- Cardiac Bypass Surgery Africa: https://santos.care/blog/cardiac-bypass-surgery-africa
-- Joint Replacement Oman GCC: https://santos.care/blog/joint-replacement-oman-gcc
-- Dental Tourism Kerala: https://santos.care/blog/dental-tourism-kerala
-- Cancer Treatment India Africa: https://santos.care/blog/cancer-treatment-africa
+## Blog articles (28)
+- Cancer Treatment in India: Doctor Profiles & Top Hospital Comparisons for African Patients (2026): https://santos.care/blog/cancer-treatment-india-doctor-profiles-hospitals
+- Dental Tourism in Kerala: Complete Guide for UK & European Patients (2026): https://santos.care/blog/dental-tourism-kerala-full-guide
+- Orthopedic Surgery in India: Hip, Knee, and Spine Treatments Compared (2026): https://santos.care/blog/orthopedic-surgery-india-hip-knee-spine-comparison
+- IVF Success Rates in India: What the Data Actually Shows (2026): https://santos.care/blog/ivf-success-rates-india-data
+- How I Saved $40,000 Coming to India for Surgery: A Patient's Story: https://santos.care/blog/patient-story-saved-40000-india-surgery
+- Medical Tourism from Uganda to India: Your Complete Guide (2026): https://santos.care/blog/medical-tourism-uganda-india-guide
+- Brain Tumor Surgery in India: Top Hospitals, Costs & What to Expect (2026): https://santos.care/blog/brain-tumor-surgery-india-cost-hospitals
+- The Real Cost of Medical Treatment in India: Transparent Pricing Guide (2026): https://santos.care/blog/real-cost-medical-treatment-india-transparent-pricing
+- Medical Tourism from Tanzania to India: Your Complete Guide (2026): https://santos.care/blog/medical-tourism-tanzania-india-guide
+- Multiple Sclerosis and Ayurveda: How Kerala's Ayush Prana is Helping MS Patients Worldwide: https://santos.care/blog/ms-ayurveda-treatment-kerala
+- Margaret's Heart Surgery Journey: From Nairobi to a Successful Recovery in Kochi: https://santos.care/blog/patient-story-margaret-heart-surgery-kenya
+- How to Choose the Right Hospital in India for Your Medical Treatment (2026): https://santos.care/blog/how-to-choose-right-hospital-india
+- Spine Surgery in India: Cost, Best Hospitals & Recovery Timeline (2026): https://santos.care/blog/spine-surgery-india-cost-hospitals-recovery
+- Medical Tourism: India vs Thailand vs Turkey — 2026 Comparison Guide: https://santos.care/blog/medical-tourism-india-vs-thailand-turkey
+- Ayush Prana: Post-Surgery Ayurveda Recovery in Kerala — Complete Guide: https://santos.care/blog/ayush-prana-post-surgery-ayurveda-recovery
+- Why Thousands of Europeans Are Choosing India for Surgery in 2026: https://santos.care/blog/why-europeans-choose-india-surgery
+- How to Plan Your Medical Trip to India from Kenya: Complete Guide (2026): https://santos.care/blog/medical-trip-india-from-kenya-guide
+- MS Treatment in India: Complete Cost Guide for International Patients (2026): https://santos.care/blog/ms-treatment-india-cost-guide
+- Advanced Cancer Treatment in India: Navigating Oncology Care from Africa: https://santos.care/blog/cancer-treatment-africa
+- Dental Tourism in Kerala: Combine World-Class Dental Implants with a Holiday: https://santos.care/blog/dental-tourism-kerala
+- Joint Replacement Surgery in Kerala: Why Omani & GCC Patients Choose Kochi: https://santos.care/blog/joint-replacement-oman-gcc
+- Affordable Cardiac Bypass Surgery in India: Quality Care for East African Patients: https://santos.care/blog/cardiac-bypass-surgery-africa
+- Affordable IVF Treatment in India: A Complete Guide for UK & European Patients: https://santos.care/blog/affordable-ivf-treatment-india-uk-europe
+- Cosmetic Surgery in India: Cost, Safety & What International Patients Need to Know (2026): https://santos.care/blog/cosmetic-surgery-cost-india-international-patients
+- India Medical Visa Guide for Kenyan & Tanzanian Patients (2026): https://santos.care/blog/india-medical-visa-guide-kenya-tanzania
+- Knee & Hip Replacement Surgery in India: A Cost Comparison Guide for UK, UAE & Gulf Patients (2026): https://santos.care/blog/knee-hip-replacement-cost-india-uk-uae
+- IVF Treatment in India: Cost, Success Rates & What International Patients Need to Know (2026): https://santos.care/blog/ivf-treatment-cost-india-international-patients
+- Heart Bypass Surgery Cost in India 2026: A Complete Guide for International Patients: https://santos.care/blog/heart-bypass-surgery-cost-in-india
 
 ## Contact
 - WhatsApp: https://wa.me/919995768668

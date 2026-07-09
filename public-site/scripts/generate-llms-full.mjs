@@ -5,7 +5,8 @@ import path from "path";
 import matter from "gray-matter";
 
 const BLOG_DIR = path.join(process.cwd(), "src/content/blog");
-const OUT = path.join(process.cwd(), "public/llms-full.txt");
+const OUT_FULL = path.join(process.cwd(), "public/llms-full.txt");
+const OUT_DISCOVERY = path.join(process.cwd(), "public/llms.txt");
 
 const posts = fs
   .readdirSync(BLOG_DIR)
@@ -67,5 +68,42 @@ for (const post of posts) {
   out += `---\n\n`;
 }
 
-fs.writeFileSync(OUT, out);
-console.log(`Wrote ${OUT} (${out.length} bytes, ${posts.length} posts)`);
+fs.writeFileSync(OUT_FULL, out);
+console.log(`Wrote ${OUT_FULL} (${out.length} bytes, ${posts.length} posts)`);
+
+// ───── Generate llms.txt (discovery index) ─────
+let discovery = `# Heal India Medi Tourism — AI Discovery\n`;
+discovery += `> https://santos.care\n\n`;
+discovery += `Heal India Medi Tourism connects international patients with JCI-accredited hospitals in India for affordable, world-class medical treatments.\n\n`;
+discovery += `## About\n`;
+discovery += `Medical tourism facilitator based in Aluva, Kochi, Kerala. Specializes in cardiac surgery, orthopedics, IVF, oncology, cosmetic surgery, dental treatments, weight-loss surgery, neurology, and Ayurveda recovery options.\n\n`;
+discovery += `## Key pages\n`;
+discovery += `- Home: https://santos.care\n`;
+discovery += `- Treatments: https://santos.care/treatments\n`;
+discovery += `- Countries: https://santos.care/countries\n`;
+discovery += `- Hospitals: https://santos.care/hospitals\n`;
+discovery += `- Blog: https://santos.care/blog\n`;
+discovery += `- FAQ: https://santos.care/faq\n`;
+discovery += `- Visa Guide: https://santos.care/visa-guide\n`;
+discovery += `- Contact: https://santos.care/contact\n`;
+discovery += `- About: https://santos.care/about\n\n`;
+discovery += `## Blog articles (${posts.length})\n`;
+for (const post of posts) {
+  const fm = post.data;
+  discovery += `- ${fm.title}: https://santos.care/blog/${fm.slug}\n`;
+}
+discovery += `\n## Contact\n`;
+discovery += `- WhatsApp: https://wa.me/919995768668\n`;
+discovery += `- Email: contact@santos.care\n`;
+discovery += `- Phone: +91 999 576 8668\n`;
+discovery += `- Address: Aluva, Kochi, Kerala, India\n\n`;
+discovery += `## Full content\n`;
+discovery += `- Read the complete site content (all pages + blog articles) at: https://santos.care/llms-full.txt\n\n`;
+discovery += `## Structured data\n`;
+discovery += `- MedicalOrganization schema on all pages\n`;
+discovery += `- Article schema on all blog posts\n`;
+discovery += `- FAQ schema on pages with Q&A sections\n`;
+discovery += `- BreadcrumbList on all pages\n`;
+
+fs.writeFileSync(OUT_DISCOVERY, discovery);
+console.log(`Wrote ${OUT_DISCOVERY} (${discovery.length} bytes, ${posts.length} posts)`);

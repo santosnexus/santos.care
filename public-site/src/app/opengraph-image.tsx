@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 
+export const revalidate = 86400;
 export const alt = "Heal India Medi Tourism — World-Class Treatment in India";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
