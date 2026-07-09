@@ -7,6 +7,7 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import { rehypeCostBars } from "./rehype-cost-bars";
+import { remarkPullquote } from "./remark-pullquote";
 
 const BLOG_DIR = path.join(process.cwd(), "src/content/blog");
 
@@ -36,7 +37,7 @@ export interface BlogFrontmatter {
 export function precompileMdxToHtml(mdx: string): string {
   const cached = _htmlCache.get(mdx);
   if (cached) return cached;
-  const html = String(unified().use(remarkParse).use(remarkGfm).use(remarkRehype).use(rehypeCostBars).use(rehypeStringify).processSync(mdx));
+  const html = String(unified().use(remarkParse).use(remarkGfm).use(remarkPullquote).use(remarkRehype).use(rehypeCostBars).use(rehypeStringify).processSync(mdx));
   _htmlCache.set(mdx, html);
   return html;
 }

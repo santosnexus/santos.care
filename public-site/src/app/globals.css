@@ -369,14 +369,32 @@
 
 /* Oversized, screenshot-shareable editorial pull quote (.pullquote) */
 .pullquote {
-  @apply my-10 px-2 sm:px-6 py-2;
+  position: relative;
+  margin: 2.75rem 0;
+  padding: 0.25rem 0;
+}
+.pullquote::before {
+  content: "\201C";
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 4rem;
+  line-height: 0.5;
+  color: #7dd9d9;
+  margin-bottom: 0.75rem;
 }
 .pullquote p {
-  @apply text-2xl sm:text-3xl font-semibold leading-snug text-ink tracking-[-0.01em] not-italic;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #0f1724;
+  font-style: normal;
+  margin: 0;
 }
-.pullquote .pq-mark {
-  @apply text-5xl leading-none text-brand-300 font-serif block mb-2;
-}
-.pullquote footer {
-  @apply mt-4 text-sm font-medium text-ink-muted not-italic;
+.pullquote .pq-attr {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #5b6472;
+  font-style: normal;
 }

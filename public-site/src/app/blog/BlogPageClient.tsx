@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useMemo } from "react";
 import { Search, Calendar, Clock, ArrowRight } from "lucide-react";
 import type { BlogFrontmatter } from "@/lib/mdx";
+import NewsletterBand from "@/components/NewsletterBand";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -136,52 +137,54 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
             </div>
           ) : (
             <>
-              {featured && activeCategory === "All" && searchQuery === "" && (
-                <Link
-                  href={`/blog/${featured.slug}`}
-                  className="group block bg-white rounded-card overflow-hidden border border-gray-100/60 shadow-card hover:shadow-card-hover transition-all mb-10"
-                >
-                  <div className="grid md:grid-cols-2">
-                       <div className="relative min-h-[280px] overflow-hidden">
-                       <Image
-                         src={featured.image}
-                         alt={featured.title}
-                         fill
-                         sizes="(max-width: 768px) 100vw, 50vw"
-                         className="object-cover group-hover:scale-105 transition-transform duration-500"
-                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                      <div className="absolute bottom-4 left-4">
-                        <span className="inline-block bg-brand-600 text-white text-sm px-3 py-1 rounded-full">
-                          Featured Article
-                        </span>
-                      </div>
-                    </div>
-                    <div className="p-8 flex flex-col justify-center">
-                      <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {featured.date}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {featured.readTime}
-                        </span>
-                        <span className="bg-brand-100 text-brand-700 px-2 py-0.5 rounded text-xs font-medium">
-                          {featured.category}
-                        </span>
-                      </div>
-                      <h2 className="text-2xl font-bold text-gray-900 group-hover:text-brand-700 transition-colors mb-3">
-                        {featured.title}
-                      </h2>
-                      <p className="text-gray-600 mb-4 line-clamp-3">{featured.excerpt}</p>
-                      <span className="text-sm font-medium text-brand-600 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                        Read Full Article <ArrowRight className="w-4 h-4" />
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              )}
+               {featured && activeCategory === "All" && searchQuery === "" && (
+                 <Link
+                   href={`/blog/${featured.slug}`}
+                   className="group block bg-white rounded-card overflow-hidden border border-gray-100/60 shadow-card hover:shadow-card-hover transition-all mb-10"
+                 >
+                   <div className="grid md:grid-cols-2">
+                        <div className="relative min-h-[280px] overflow-hidden">
+                        <Image
+                          src={featured.image}
+                          alt={featured.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                       <div className="absolute bottom-4 left-4">
+                         <span className="inline-block bg-brand-600 text-white text-sm px-3 py-1 rounded-full">
+                           Featured Article
+                         </span>
+                       </div>
+                     </div>
+                     <div className="p-8 flex flex-col justify-center">
+                       <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+                         <span className="flex items-center gap-1">
+                           <Calendar className="w-3 h-3" />
+                           {featured.date}
+                         </span>
+                         <span className="flex items-center gap-1">
+                           <Clock className="w-3 h-3" />
+                           {featured.readTime}
+                         </span>
+                         <span className="bg-brand-100 text-brand-700 px-2 py-0.5 rounded text-xs font-medium">
+                           {featured.category}
+                         </span>
+                       </div>
+                       <h2 className="text-2xl font-bold text-gray-900 group-hover:text-brand-700 transition-colors mb-3">
+                         {featured.title}
+                       </h2>
+                       <p className="text-gray-600 mb-4 line-clamp-3">{featured.excerpt}</p>
+                       <span className="text-sm font-medium text-brand-600 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                         Read Full Article <ArrowRight className="w-4 h-4" />
+                       </span>
+                     </div>
+                   </div>
+                 </Link>
+               )}
+
+              <NewsletterBand />
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {(activeCategory !== "All" || searchQuery !== "" ? visiblePosts : rest).map(
