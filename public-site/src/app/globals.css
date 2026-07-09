@@ -76,6 +76,34 @@
 }
 
 @layer components {
+  .cost-comparison-wrapper {
+    @apply my-8 bg-white rounded-card border border-gray-100/50 shadow-card p-5;
+  }
+  .cost-comparison-wrapper .price-row {
+    @apply flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-b-0;
+  }
+  .cost-comparison-wrapper .price-flag {
+    @apply w-7 text-lg flex-shrink-0;
+  }
+  .cost-comparison-wrapper .price-country {
+    @apply w-16 text-sm font-medium text-ink-muted flex-shrink-0;
+  }
+  .cost-comparison-wrapper .price-track {
+    @apply flex-1 h-7 bg-surface-soft rounded-pill overflow-hidden;
+  }
+  .cost-comparison-wrapper .price-fill {
+    @apply h-full rounded-pill bg-brand-200 transition-all duration-700;
+  }
+  .cost-comparison-wrapper .price-fill.cheapest {
+    @apply bg-savings;
+  }
+  .cost-comparison-wrapper .price-value {
+    @apply w-28 text-right text-sm font-semibold text-ink tabular-nums;
+  }
+  .cost-comparison-wrapper .price-savings {
+    @apply w-20 text-right text-xs font-semibold text-savings;
+  }
+
   .prose {
     @apply max-w-none;
   }
@@ -111,25 +139,22 @@
   }
 
   .prose table {
-    @apply w-full border-collapse my-8 rounded-card overflow-hidden shadow-card;
+    @apply w-full border-collapse my-6 rounded-lg overflow-hidden shadow-sm text-sm;
   }
   .prose table thead {
-    @apply bg-brand-600;
+    @apply bg-gray-800;
   }
   .prose table th {
-    @apply text-white text-left px-5 py-3.5 text-sm font-semibold;
+    @apply text-white text-left px-4 py-2.5 text-xs font-semibold uppercase tracking-wider;
   }
   .prose table td {
-    @apply px-5 py-3.5 text-sm text-ink-muted border-b border-gray-100;
+    @apply px-4 py-2.5 text-ink-muted border-b border-gray-100;
   }
   .prose table tbody tr:hover {
-    @apply bg-brand-50;
+    @apply bg-gray-50;
   }
   .prose table tbody tr:nth-child(even) {
-    @apply bg-surface-soft;
-  }
-  .prose table tbody tr:nth-child(even):hover {
-    @apply bg-brand-50;
+    @apply bg-gray-50/50;
   }
 
   .prose img {
