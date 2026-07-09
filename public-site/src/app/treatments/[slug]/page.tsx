@@ -238,7 +238,7 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/contact"
-              className="bg-white text-brand-700 px-8 py-4 rounded-pill font-semibold hover:bg-brand-50 transition-all active:scale-95"
+              className="bg-surface text-brand-700 px-8 py-4 rounded-pill font-semibold hover:bg-surface-soft transition-all active:scale-95"
             >
               Get Free Consultation
             </Link>

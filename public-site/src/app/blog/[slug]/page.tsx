@@ -58,7 +58,7 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
       />
       <ArticleShareRail title={frontmatter.title} />
 
-      <div className="fixed top-16 left-0 right-0 h-1 bg-gray-200 z-40">
+      <div className="fixed top-16 left-0 right-0 h-1 bg-surface-muted z-40">
         <div
           className="h-full bg-gradient-to-r from-brand-500 to-accent transition-all duration-150"
           style={{ width: "0%" }}
@@ -115,15 +115,15 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
             </aside>
             <div className="flex-1 min-w-0 max-w-[44rem]">
               <div
-                className="prose prose-gray blog-content"
+                className="prose prose blog-content"
                 dangerouslySetInnerHTML={{ __html: before }}
               />
               <InlineArticleCTA source="BLOG_MID" />
               <div
-                className="prose prose-gray blog-content"
+                className="prose prose blog-content"
                 dangerouslySetInnerHTML={{ __html: after }}
               />
-              <div className="mt-8 flex items-center gap-3 border-t border-gray-100 pt-6">
+              <div className="mt-8 flex items-center gap-3 border-t border-surface-muted pt-6">
                 <Share2 className="w-4 h-4 text-ink-light" />
                 <span className="text-sm text-ink-muted">Found this useful? Share it with someone who needs it.</span>
                 <a
@@ -158,7 +158,7 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
                 <Link
                   key={r.slug}
                   href={`/blog/${r.slug}`}
-                  className="group bg-surface rounded-card border border-gray-100/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden"
+                  className="group bg-surface rounded-card border border-surface-muted/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden"
                 >
                   <div className="relative h-44 overflow-hidden">
                     <Image
@@ -169,7 +169,7 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
-                    <span className="absolute top-3 left-3 bg-white/90 text-ink text-xs px-2.5 py-1 rounded-full font-medium backdrop-blur shadow-sm">
+                    <span className="absolute top-3 left-3 bg-surface/90 text-ink text-xs px-2.5 py-1 rounded-full font-medium backdrop-blur shadow-sm">
                       {r.category}
                     </span>
                   </div>

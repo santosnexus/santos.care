@@ -67,85 +67,83 @@ export default function Home() {
       <ScrollProgress />
 
       {/* ───── HERO ───── */}
-      <Section variant="mesh" padding="none" className="relative min-h-screen flex items-center overflow-hidden animate-gradient-pan">
-        <div className="absolute inset-0 bg-grid opacity-20" />
-
-        {/* floating patient-outcome photo — gaze-direction priming toward the CTA card */}
-        <div className="hidden lg:block absolute right-[44%] top-24 w-44 h-44 rounded-full overflow-hidden border-4 border-white/20 shadow-float animate-float-slow">
+      <Section variant="dark" padding="none" className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Background image + cinematic overlays */}
+        <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80"
-            alt="A happy patient who recovered through treatment in India"
-            width={176}
-            height={176}
-            className="object-cover w-full h-full"
+            src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1920&q=80"
+            alt="Modern hospital corridor with natural light"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
-        </div>
-        <div className="hidden lg:block absolute left-[6%] bottom-24 glass rounded-2xl px-5 py-3 shadow-float border border-white/20 animate-float-slow [animation-delay:1.5s]">
-          <div className="flex items-center gap-3">
-            <div className="flex -space-x-2">
-              {["KE", "GB", "AE", "US"].map((c) => (
-                <span key={c} className="w-7 h-7 rounded-full bg-brand-500/80 border-2 border-white/70 flex items-center justify-center text-[10px] font-bold text-white">
-                  {c}
-                </span>
-              ))}
-            </div>
-            <p className="text-white/90 text-sm font-medium leading-tight">
-              Patients from<br />15+ countries
-            </p>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-950/95 via-brand-900/80 to-brand-900/60" />
+          <div className="absolute inset-0 bg-mesh opacity-30 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-grid opacity-10" />
         </div>
 
-        <Container className="pt-36 pb-28 relative">
-          <div className="grid lg:grid-cols-2 gap-14 items-center">
-            <Reveal variant="slide-up" duration={800}>
-              <Badge variant="white" size="lg" className="mb-6">
-                <Shield className="w-4 h-4 text-whatsapp mr-1" />
-                JCI & NABH Accredited
-              </Badge>
-              <h1 className="text-display-hero text-white leading-tight mb-6 text-balance">
-                Your Healing Journey,
-                <span className="block text-gradient mt-2">Handled End-to-End</span>
-              </h1>
-              <p className="text-body-lg text-white/75 mb-8 max-w-xl leading-relaxed">
-                From your first enquiry to post-treatment follow-ups back home, we handle the doctors, visas,
-                travel, and recovery — so you can focus on healing. JCI-accredited hospitals in Kerala, with a
-                dedicated care team by your side.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button as="a" href="/contact" size="xl">
-                  Get Free Treatment Plan <ArrowRight className="w-5 h-5" />
-                </Button>
-                <Button as="a" href={getWhatsAppUrl()} variant="savings" size="xl" target="_blank" rel="noopener noreferrer">
-                  <MessageCircle className="w-5 h-5" /> Chat on WhatsApp
-                </Button>
-              </div>
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-8 text-sm text-white/60">
-                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> Free Quote</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> 24hr Response</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> No Obligation</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> 12,000+ Patients</span>
-              </div>
-            </Reveal>
-
-            <Reveal variant="slide-up" delay={200} duration={800}>
-              <div className="relative">
-                <div className="absolute -inset-6 -top-10 -bottom-4 -z-10 opacity-80 pointer-events-none">
-                  <HealIndiaOrb />
+        <Container className="relative z-10 pt-32 pb-28 lg:pt-36 lg:pb-32">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            {/* Text column */}
+            <div className="lg:col-span-6">
+              <Reveal variant="slide-up" duration={800}>
+                <Badge variant="white" size="lg" className="mb-6">
+                  <Shield className="w-4 h-4 text-whatsapp mr-1" />
+                  JCI & NABH Accredited
+                </Badge>
+                <h1 className="text-display-hero text-white leading-[1.05] mb-6 text-balance">
+                  Your Healing Journey,
+                  <span className="block text-gradient mt-2">Handled End-to-End</span>
+                </h1>
+                <p className="text-body-lg text-white/75 mb-8 max-w-xl leading-relaxed">
+                  From your first enquiry to post-treatment follow-ups back home, we handle the doctors, visas,
+                  travel, and recovery — so you can focus on healing. JCI-accredited hospitals in Kerala, with a
+                  dedicated care team by your side.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button as="a" href="/contact" size="xl">
+                    Get Free Treatment Plan <ArrowRight className="w-5 h-5" />
+                  </Button>
+                  <Button as="a" href={getWhatsAppUrl()} variant="savings" size="xl" target="_blank" rel="noopener noreferrer">
+                    <MessageCircle className="w-5 h-5" /> Chat on WhatsApp
+                  </Button>
                 </div>
-                <div className="relative bg-white/10 backdrop-blur-xl rounded-card p-8 border border-white/20 shadow-float">
-                  <h3 className="text-white text-display-h3 mb-2">Get Your Free Treatment Plan</h3>
-                  <p className="text-white/60 text-body-sm mb-6">
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-8 text-sm text-white/60">
+                  <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> Free Quote</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> 24hr Response</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> No Obligation</span>
+                  <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> 12,000+ Patients</span>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* 3D lotus visual */}
+            <div className="lg:col-span-6 h-[320px] sm:h-[420px] lg:h-[520px]">
+              <Reveal variant="scale" delay={200} duration={1000}>
+                <HealIndiaOrb />
+              </Reveal>
+            </div>
+          </div>
+
+          {/* Lead form band */}
+          <Reveal variant="slide-up" delay={400} duration={800}>
+            <div className="mt-10 lg:mt-14 bg-white/10 backdrop-blur-xl rounded-card p-6 lg:p-8 border border-white/20 shadow-float">
+              <div className="grid lg:grid-cols-[1fr,2fr] gap-6 items-center">
+                <div>
+                  <h3 className="text-white text-display-h3 mb-1">Get Your Free Treatment Plan</h3>
+                  <p className="text-white/60 text-body-sm">
                     Share your details and medical reports. We&apos;ll respond within 24 hours.
                   </p>
-                  <LeadForm source="HERO" />
                 </div>
+                <LeadForm source="HERO" />
               </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
         </Container>
 
-        {/* floating trust strip — authority + social-proof priming */}
-        <div className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-black/10 backdrop-blur-sm">
+        {/* floating trust strip */}
+        <div className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-black/20 backdrop-blur-sm z-10">
           <Container className="py-4">
             <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-white/70 text-sm">
               <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-savings" /> JCI Accredited</span>
@@ -260,7 +258,7 @@ export default function Home() {
               { step: "04", title: "Recovery & Home Follow-Up", desc: "Ayurveda recovery in Kerala, then scheduled follow-up calls and report reviews after you return home." },
             ].map((s, i) => (
               <Reveal key={s.step} variant="slide-up" delay={i * 80}>
-                <div className="relative h-full bg-surface rounded-card border border-gray-100/60 shadow-card p-7 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300">
+                <div className="relative h-full bg-surface rounded-card border border-surface-muted/60 shadow-card p-7 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300">
                   <span className="text-5xl font-bold text-brand-100 tracking-tight">{s.step}</span>
                   <h3 className="text-display-h3 text-ink mt-3 mb-2">{s.title}</h3>
                   <p className="text-body-sm text-ink-muted leading-relaxed">{s.desc}</p>
@@ -317,7 +315,7 @@ export default function Home() {
               <Link
                 key={t.slug}
                 href={`/treatments/${t.slug}`}
-                className="group relative bg-surface rounded-card p-6 border border-gray-100/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 hover:border-brand-200 transition-all duration-300"
+                className="group relative bg-surface rounded-card p-6 border border-surface-muted/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 hover:border-brand-200 transition-all duration-300"
               >
                 <div className="absolute top-4 right-4">
                   <Badge variant="savings" size="sm">Save up to 90%</Badge>

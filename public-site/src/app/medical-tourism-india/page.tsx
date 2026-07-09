@@ -85,7 +85,7 @@ export default function MedicalTourismIndiaPage() {
         <div className="absolute inset-0 bg-grid opacity-[0.15]" />
         <Container className="relative">
           <Reveal>
-            <span className="inline-flex items-center gap-2 bg-white/10 text-brand-100 px-4 py-1.5 rounded-full text-sm font-medium mb-6 backdrop-blur">
+            <span className="inline-flex items-center gap-2 bg-surface/10 text-brand-100 px-4 py-1.5 rounded-full text-sm font-medium mb-6 backdrop-blur">
               <Globe2 className="w-4 h-4" /> Medical Tourism Explained
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-4xl">
@@ -149,7 +149,7 @@ export default function MedicalTourismIndiaPage() {
             {PILLARS.map((p) => {
               const Icon = p.icon;
               return (
-                <div key={p.title} className="bg-white rounded-card border border-gray-100 shadow-card p-6">
+                <div key={p.title} className="bg-surface rounded-card border border-surface-muted shadow-card p-6">
                   <div className="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center mb-4">
                     <Icon className="w-6 h-6" />
                   </div>
@@ -172,7 +172,7 @@ export default function MedicalTourismIndiaPage() {
           </Reveal>
           <StaggerReveal className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" staggerDelay={80}>
             {STEPS.map((s) => (
-              <div key={s.step} className="relative bg-white rounded-card border border-gray-100 shadow-card p-6">
+              <div key={s.step} className="relative bg-surface rounded-card border border-surface-muted shadow-card p-6">
                 <div className="w-10 h-10 rounded-full bg-brand-600 text-white font-bold flex items-center justify-center mb-4">
                   {s.step}
                 </div>
@@ -189,19 +189,19 @@ export default function MedicalTourismIndiaPage() {
       <Section variant="soft">
         <Container>
           <div className="grid md:grid-cols-3 gap-6">
-            <Link href="/treatments" className="group bg-white rounded-card border border-gray-100 shadow-card p-6 hover:shadow-card-hover hover:-translate-y-1 transition-all">
+            <Link href="/treatments" className="group bg-surface rounded-card border border-surface-muted shadow-card p-6 hover:shadow-card-hover hover:-translate-y-1 transition-all">
               <Stethoscope className="w-7 h-7 text-brand-600 mb-3" />
               <h3 className="font-semibold text-ink mb-1 group-hover:text-brand-700 transition-colors">Explore Treatments</h3>
               <p className="text-sm text-ink-muted mb-3">Cardiac, orthopedic, IVF, oncology, dental & more.</p>
               <span className="text-sm font-medium text-brand-600 inline-flex items-center gap-1 group-hover:gap-2 transition-all">Browse <ArrowRight className="w-4 h-4" /></span>
             </Link>
-            <Link href="/hospitals" className="group bg-white rounded-card border border-gray-100 shadow-card p-6 hover:shadow-card-hover hover:-translate-y-1 transition-all">
+            <Link href="/hospitals" className="group bg-surface rounded-card border border-surface-muted shadow-card p-6 hover:shadow-card-hover hover:-translate-y-1 transition-all">
               <ShieldCheck className="w-7 h-7 text-brand-600 mb-3" />
               <h3 className="font-semibold text-ink mb-1 group-hover:text-brand-700 transition-colors">Partner Hospitals</h3>
               <p className="text-sm text-ink-muted mb-3">JCI & NABH-accredited hospitals in Kochi, Kerala.</p>
               <span className="text-sm font-medium text-brand-600 inline-flex items-center gap-1 group-hover:gap-2 transition-all">View <ArrowRight className="w-4 h-4" /></span>
             </Link>
-            <Link href="/visa-guide" className="group bg-white rounded-card border border-gray-100 shadow-card p-6 hover:shadow-card-hover hover:-translate-y-1 transition-all">
+            <Link href="/visa-guide" className="group bg-surface rounded-card border border-surface-muted shadow-card p-6 hover:shadow-card-hover hover:-translate-y-1 transition-all">
               <Plane className="w-7 h-7 text-brand-600 mb-3" />
               <h3 className="font-semibold text-ink mb-1 group-hover:text-brand-700 transition-colors">Visa Guide</h3>
               <p className="text-sm text-ink-muted mb-3">Step-by-step India medical visa guidance.</p>
@@ -216,7 +216,7 @@ export default function MedicalTourismIndiaPage() {
           <h2 className="text-3xl font-bold text-ink text-center mb-8">Frequently asked questions</h2>
           <div className="max-w-3xl mx-auto space-y-4">
             {FAQS.map((f) => (
-              <details key={f.question} className="group bg-white rounded-card border border-gray-100 p-5">
+              <details key={f.question} className="group bg-surface rounded-card border border-surface-muted p-5">
                 <summary className="font-medium text-ink cursor-pointer list-none flex items-center justify-between">
                   {f.question}
                   <span className="text-brand-500 group-open:rotate-180 transition-transform">▾</span>
@@ -241,7 +241,7 @@ export default function MedicalTourismIndiaPage() {
               <Button as="a" href="/contact" variant="accent" size="lg">
                 Get Free Plan
               </Button>
-              <Button as="a" href={getWhatsAppUrl()} variant="outline" size="lg" className="border-white/40 text-white hover:bg-white/10">
+              <Button as="a" href={getWhatsAppUrl()} variant="outline" size="lg" className="border-white/40 text-white hover:bg-surface/10">
                 WhatsApp Us
               </Button>
             </div>

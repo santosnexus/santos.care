@@ -70,7 +70,7 @@ export default function TreatmentsIndexPage() {
                 <Link
                   key={t.slug}
                   href={`/treatments/${t.slug}`}
-                  className="group relative bg-surface rounded-card border border-gray-100/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col"
+                  className="group relative bg-surface rounded-card border border-surface-muted/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col"
                 >
                   <div className="absolute top-5 right-5">
                     <Badge variant="savings" size="sm">Save {savingsPct}%</Badge>
@@ -82,7 +82,7 @@ export default function TreatmentsIndexPage() {
                     {t.title}
                   </h2>
                   <p className="text-body-sm text-ink-muted mb-5 flex-1">{t.tagline}</p>
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div className="flex items-center justify-between pt-4 border-t border-surface-muted">
                     <div className="flex items-baseline gap-1.5">
                       <span className="text-body-sm text-ink-light">From</span>
                       <span className="text-lg font-bold text-brand-700">${t.costRange.from.toLocaleString()}</span>

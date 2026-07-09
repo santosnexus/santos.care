@@ -26,7 +26,7 @@ export default function HospitalsPage() {
         <div className="absolute inset-0 bg-grid opacity-[0.15]" />
         <Container className="relative">
           <Reveal>
-            <span className="inline-flex items-center gap-2 bg-white/10 text-brand-100 px-4 py-1.5 rounded-full text-sm font-medium mb-6 backdrop-blur">
+            <span className="inline-flex items-center gap-2 bg-surface/10 text-brand-100 px-4 py-1.5 rounded-full text-sm font-medium mb-6 backdrop-blur">
               <Building2 className="w-4 h-4" /> {hospitals.length} Accredited Hospitals
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-4xl">
@@ -46,7 +46,7 @@ export default function HospitalsPage() {
             {hospitals.map((h) => (
               <div
                 key={h.slug}
-                className="bg-white rounded-card border border-gray-100 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 p-7 flex flex-col"
+                className="bg-surface rounded-card border border-surface-muted shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 p-7 flex flex-col"
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div>
@@ -75,7 +75,7 @@ export default function HospitalsPage() {
                     );
                   })}
                 </div>
-                <div className="flex items-center gap-1.5 text-sm text-ink-muted pt-4 border-t border-gray-100 mt-auto">
+                <div className="flex items-center gap-1.5 text-sm text-ink-muted pt-4 border-t border-surface-muted mt-auto">
                   <BedDouble className="w-4 h-4 text-brand-500" />
                   <span className="font-semibold text-ink">{h.beds}</span> beds
                 </div>

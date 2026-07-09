@@ -79,7 +79,7 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
         </div>
       </section>
 
-      <section className="bg-white border-b border-gray-100 sticky top-16 z-30">
+      <section className="bg-surface border-b border-surface-muted sticky top-16 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex flex-wrap gap-2">
@@ -90,7 +90,7 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                   className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
                     activeCategory === cat
                       ? "bg-brand-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      : "bg-surface-muted text-ink-light hover:bg-surface"
                   }`}
                 >
                   {cat}
@@ -101,17 +101,17 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
               ))}
             </div>
             <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink-light" />
               <input
                 type="text"
                 placeholder="Search articles..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-surface-muted text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
               />
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-3">
+          <p className="text-xs text-ink-light mt-3">
             {filtered.length} {filtered.length === 1 ? "article" : "articles"} found
             {activeCategory !== "All" && ` in ${activeCategory}`}
             {searchQuery && ` matching "${searchQuery}"`}
@@ -119,13 +119,13 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
         </div>
       </section>
 
-      <section className="py-12 bg-gray-50 min-h-[50vh]">
+      <section className="py-12 bg-surface-soft min-h-[50vh]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {filtered.length === 0 ? (
             <div className="text-center py-20">
               <div className="text-6xl mb-4">🔍</div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">No articles found</h2>
-              <p className="text-gray-500 mb-6">
+              <h2 className="text-xl font-semibold text-ink mb-2">No articles found</h2>
+              <p className="text-ink-muted mb-6">
                 Try adjusting your search or filter to find what you&apos;re looking for.
               </p>
               <button
@@ -140,7 +140,7 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                {featured && activeCategory === "All" && searchQuery === "" && (
                  <Link
                    href={`/blog/${featured.slug}`}
-                   className="group block bg-white rounded-card overflow-hidden border border-gray-100/60 shadow-card hover:shadow-card-hover transition-all mb-10"
+                   className="group block bg-surface rounded-card overflow-hidden border border-surface-muted/60 shadow-card hover:shadow-card-hover transition-all mb-10"
                  >
                    <div className="grid md:grid-cols-2">
                         <div className="relative min-h-[280px] overflow-hidden">
@@ -159,7 +159,7 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                        </div>
                      </div>
                      <div className="p-8 flex flex-col justify-center">
-                       <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+                       <div className="flex items-center gap-3 text-xs text-ink-muted mb-3">
                          <span className="flex items-center gap-1">
                            <Calendar className="w-3 h-3" />
                            {featured.date}
@@ -172,10 +172,10 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                            {featured.category}
                          </span>
                        </div>
-                       <h2 className="text-2xl font-bold text-gray-900 group-hover:text-brand-700 transition-colors mb-3">
+                       <h2 className="text-2xl font-bold text-ink group-hover:text-brand-700 transition-colors mb-3">
                          {featured.title}
                        </h2>
-                       <p className="text-gray-600 mb-4 line-clamp-3">{featured.excerpt}</p>
+                       <p className="text-ink-light mb-4 line-clamp-3">{featured.excerpt}</p>
                        <span className="text-sm font-medium text-brand-600 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
                          Read Full Article <ArrowRight className="w-4 h-4" />
                        </span>
@@ -192,7 +192,7 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                     <Link
                       key={post.slug}
                       href={`/blog/${post.slug}`}
-                      className="group bg-white rounded-card overflow-hidden border border-gray-100/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                      className="group bg-surface rounded-card overflow-hidden border border-surface-muted/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex flex-col"
                     >
                        <div className="relative h-44 overflow-hidden">
                          <Image
@@ -204,12 +204,12 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                            loading="lazy"
                          />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                        <span className="absolute top-3 left-3 bg-white/90 text-gray-800 text-xs px-2 py-0.5 rounded-full font-medium backdrop-blur shadow-sm">
+                        <span className="absolute top-3 left-3 bg-surface/90 text-ink text-xs px-2 py-0.5 rounded-full font-medium backdrop-blur shadow-sm">
                           {post.category}
                         </span>
                       </div>
                       <div className="p-5 flex-1 flex flex-col">
-                        <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
+                        <div className="flex items-center gap-3 text-xs text-ink-muted mb-2">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
                             {post.date}
@@ -219,10 +219,10 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                             {post.readTime}
                           </span>
                         </div>
-                        <h2 className="font-semibold text-gray-900 group-hover:text-brand-700 transition-colors mb-2 line-clamp-2 flex-1">
+                        <h2 className="font-semibold text-ink group-hover:text-brand-700 transition-colors mb-2 line-clamp-2 flex-1">
                           {post.title}
                         </h2>
-                        <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                        <p className="text-sm text-ink-light line-clamp-2 mb-3">
                           {post.excerpt}
                         </p>
                         <span className="text-sm font-medium text-brand-600 inline-flex items-center gap-1 group-hover:gap-2 transition-all mt-auto">
@@ -238,7 +238,7 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                 <div className="text-center mt-10">
                 <button
                   onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
-                  className="bg-white border border-gray-200 text-gray-700 px-7 py-3.5 rounded-pill font-medium hover:bg-surface-soft hover:border-brand-300 transition-all"
+                  className="bg-surface border border-surface-muted text-ink px-7 py-3.5 rounded-pill font-medium hover:bg-surface-soft hover:border-brand-300 transition-all"
                 >
                   Load More Articles ({filtered.length - visibleCount} remaining)
                 </button>
@@ -262,13 +262,13 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/contact"
-              className="bg-white text-brand-700 px-8 py-4 rounded-pill font-semibold hover:bg-brand-50 transition-all active:scale-95 inline-flex items-center justify-center gap-2"
+              className="bg-surface text-brand-700 px-8 py-4 rounded-pill font-semibold hover:bg-brand-50 transition-all active:scale-95 inline-flex items-center justify-center gap-2"
             >
               Get Free Consultation <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/treatments"
-              className="bg-white/10 text-white px-8 py-4 rounded-pill font-semibold hover:bg-white/20 transition-all active:scale-95 inline-flex items-center justify-center gap-2 border border-white/30"
+              className="bg-surface/10 text-white px-8 py-4 rounded-pill font-semibold hover:bg-surface/20 transition-all active:scale-95 inline-flex items-center justify-center gap-2 border border-white/30"
             >
               Browse Treatments
             </Link>

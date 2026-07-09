@@ -109,7 +109,7 @@ function buildPriceBars(table: Element): Element {
     const savings = Math.round((1 - cheapest.cost / maxCost) * 100);
     children.push(
       el("div", { className: "flex items-center justify-between mb-4" },
-        el("span", { className: "text-sm font-semibold text-gray-500 uppercase tracking-wider" }, txt(title)),
+        el("span", { className: "text-sm font-semibold text-ink-light uppercase tracking-wider" }, txt(title)),
         el("span", { className: "inline-flex items-center gap-1 bg-savings-light text-savings px-3 py-1 rounded-full text-xs font-semibold" }, txt(`Save up to ${savings}%`))
       )
     );

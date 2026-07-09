@@ -20,15 +20,15 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-surface">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-gray max-w-none">
-            <p className="text-lg text-gray-700 leading-relaxed">
+          <div className="prose max-w-none">
+            <p className="text-lg text-ink-muted leading-relaxed">
               Heal India Medi Tourism is a division of <strong>{COMPANY}</strong> (est. 2009), based in {ADDRESS}.
               We bridge the gap between international patients seeking quality, affordable healthcare and India&apos;s
               world-class medical infrastructure.
             </p>
-            <p className="text-gray-700 leading-relaxed">
+            <p className="text-ink-muted leading-relaxed">
               Our unique value proposition combines treatment at JCI-accredited hospitals in Kochi with post-operative
               Ayurveda recovery at premium wellness retreats in Kerala. We believe that healing should not end at
               the hospital door — our integrated approach addresses the whole patient, not just the procedure.
@@ -42,21 +42,21 @@ export default function AboutPage() {
               { icon: <Users className="w-6 h-6" />, number: "15+", label: "Countries Served" },
               { icon: <Heart className="w-6 h-6" />, number: "70-90%", label: "Cost Savings" },
             ].map((s) => (
-              <div key={s.label} className="bg-gray-50 rounded-xl p-5 text-center">
+              <div key={s.label} className="bg-surface-soft rounded-card p-5 text-center">
                 <div className="text-brand-600 mb-2 flex justify-center">{s.icon}</div>
-                <div className="text-2xl font-bold text-gray-900">{s.number}</div>
-                <div className="text-sm text-gray-500">{s.label}</div>
+                <div className="text-2xl font-bold text-ink">{s.number}</div>
+                <div className="text-sm text-ink-light">{s.label}</div>
               </div>
             ))}
           </div>
 
           <div className="mt-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Our Mission</h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
+            <h2 className="text-2xl font-bold text-ink mb-6">Our Mission</h2>
+            <p className="text-ink-muted leading-relaxed mb-4">
               To make world-class healthcare accessible and affordable for every patient, regardless of where they live.
               We believe that quality medical treatment should not be a privilege reserved for the wealthy.
             </p>
-            <h2 className="text-2xl font-bold text-gray-900 mt-10 mb-6">Our Values</h2>
+            <h2 className="text-2xl font-bold text-ink mt-10 mb-6">Our Values</h2>
             <div className="grid sm:grid-cols-2 gap-4">
               {[
                 { title: "Transparency", desc: "Clear, itemized pricing with no hidden costs. You deserve to know exactly what you're paying for." },
@@ -64,23 +64,23 @@ export default function AboutPage() {
                 { title: "Compassion", desc: "Every patient is treated with dignity, respect, and personalized attention." },
                 { title: "Integrity", desc: "We recommend treatments based on medical need, not commission. Your health comes first." },
               ].map((v) => (
-                <div key={v.title} className="bg-gray-50 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-1">{v.title}</h3>
-                  <p className="text-sm text-gray-600">{v.desc}</p>
+                <div key={v.title} className="bg-surface-soft rounded-button p-4">
+                  <h3 className="font-semibold text-ink mb-1">{v.title}</h3>
+                  <p className="text-sm text-ink-muted">{v.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="mt-16 bg-gray-50 rounded-xl p-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Ready to Begin Your Journey?</h2>
-            <p className="text-gray-600 mb-6">
+          <div className="mt-16 bg-surface-soft rounded-card p-8 text-center">
+            <h2 className="text-2xl font-bold text-ink mb-4">Ready to Begin Your Journey?</h2>
+            <p className="text-ink-muted mb-6">
               Get a free, no-obligation treatment plan within 24 hours.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/contact"
-                className="bg-brand-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-700 transition-colors"
+                className="bg-brand-600 text-white px-8 py-3 rounded-button font-semibold hover:bg-brand-700 transition-colors"
               >
                 Free Consultation <ArrowRight className="w-4 h-4 inline ml-1" />
               </Link>
@@ -88,7 +88,7 @@ export default function AboutPage() {
                 href={getWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-whatsapp text-white px-8 py-3 rounded-lg font-semibold hover:bg-whatsapp-hover transition-colors"
+                className="bg-whatsapp text-white px-8 py-3 rounded-button font-semibold hover:bg-whatsapp-hover transition-colors"
               >
                 <MessageCircle className="w-4 h-4 inline mr-1" /> WhatsApp Us
               </a>

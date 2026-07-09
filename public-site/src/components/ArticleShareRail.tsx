@@ -33,7 +33,7 @@ export default function ArticleShareRail({ title }: { title: string }) {
   };
 
   const btn =
-    "w-10 h-10 rounded-full flex items-center justify-center text-ink-muted hover:text-white transition-all duration-200 bg-white shadow-card border border-gray-100 hover:bg-brand-600 hover:border-brand-600 hover:shadow-glow";
+    "w-10 h-10 rounded-full flex items-center justify-center text-ink-muted hover:text-white transition-all duration-200 bg-surface shadow-card border border-surface-muted hover:bg-brand-600 hover:border-brand-600 hover:shadow-glow";
 
   return (
     <div className="hidden xl:flex flex-col items-center gap-3 fixed right-6 top-1/2 -translate-y-1/2 z-30">

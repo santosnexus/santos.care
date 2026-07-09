@@ -20,7 +20,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-surface">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12">
             <div>
@@ -33,14 +33,14 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
+              <h2 className="text-2xl font-bold text-ink mb-6">Contact Information</h2>
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-whatsapp-light flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-card bg-whatsapp-light flex items-center justify-center flex-shrink-0">
                     <Phone className="w-6 h-6 text-whatsapp" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Phone / WhatsApp</h3>
+                    <h3 className="font-semibold text-ink">Phone / WhatsApp</h3>
                     <a
                       href={getWhatsAppUrl()}
                       target="_blank"
@@ -49,16 +49,16 @@ export default function ContactPage() {
                     >
                       {WHATSAPP_NUMBER}
                     </a>
-                    <p className="text-sm text-gray-500">{PHONE}</p>
+                    <p className="text-sm text-ink-light">{PHONE}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-card bg-brand-50 flex items-center justify-center flex-shrink-0">
                     <Mail className="w-6 h-6 text-brand-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Email</h3>
+                    <h3 className="font-semibold text-ink">Email</h3>
                     <a href={`mailto:${EMAIL}`} className="text-brand-600 hover:text-brand-700">
                       {EMAIL}
                     </a>
@@ -66,41 +66,41 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-gray-600" />
+                  <div className="w-12 h-12 rounded-card bg-surface-soft flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-6 h-6 text-ink-muted" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Address</h3>
-                    <p className="text-gray-600">{COMPANY}</p>
-                    <p className="text-gray-600">{ADDRESS}</p>
+                    <h3 className="font-semibold text-ink">Address</h3>
+                    <p className="text-ink-muted">{COMPANY}</p>
+                    <p className="text-ink-muted">{ADDRESS}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-card bg-purple-50 flex items-center justify-center flex-shrink-0">
                     <Clock className="w-6 h-6 text-purple-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Response Time</h3>
-                    <p className="text-gray-600">Within 24 hours for treatment plans</p>
-                    <p className="text-sm text-gray-500">WhatsApp: Immediate for urgent inquiries</p>
+                    <h3 className="font-semibold text-ink">Response Time</h3>
+                    <p className="text-ink-muted">Within 24 hours for treatment plans</p>
+                    <p className="text-sm text-ink-light">WhatsApp: Immediate for urgent inquiries</p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-10 bg-whatsapp-light rounded-xl p-6">
+              <div className="mt-10 bg-whatsapp-light rounded-card p-6">
                 <div className="flex items-start gap-3">
                   <MessageCircle className="w-6 h-6 text-whatsapp mt-0.5 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Fastest Response: WhatsApp</h3>
-                    <p className="text-sm text-gray-600 mb-3">
+                    <h3 className="font-semibold text-ink mb-1">Fastest Response: WhatsApp</h3>
+                    <p className="text-sm text-ink-muted mb-3">
                       Send your medical reports directly on WhatsApp for the fastest response.
                     </p>
                     <a
                       href={getWhatsAppUrl()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-whatsapp text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-whatsapp-hover transition-colors"
+                      className="inline-flex items-center gap-2 bg-whatsapp text-white px-5 py-2.5 rounded-button text-sm font-medium hover:bg-whatsapp-hover transition-colors"
                     >
                       <MessageCircle className="w-4 h-4" /> Chat Now
                     </a>

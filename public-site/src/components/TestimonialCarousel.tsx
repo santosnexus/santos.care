@@ -63,7 +63,7 @@ export function TestimonialCarousel({
                 <blockquote className="text-body-lg text-ink leading-relaxed mb-6">
                   &ldquo;{item.content}&rdquo;
                 </blockquote>
-                <div className="flex items-center gap-3 pt-5 border-t border-gray-100">
+                <div className="flex items-center gap-3 pt-5 border-t border-surface-muted">
                   <div className="w-11 h-11 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center text-white font-semibold text-sm">
                     {item.name.charAt(0)}
                   </div>
@@ -85,14 +85,14 @@ export function TestimonialCarousel({
           <button
             onClick={prev}
             aria-label="Previous testimonial"
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 w-10 h-10 rounded-full bg-white border border-gray-100 shadow-card flex items-center justify-center text-ink-muted hover:text-brand-600 hover:border-brand-200 transition-all active:scale-95"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 w-10 h-10 rounded-full bg-surface border border-surface-muted shadow-card flex items-center justify-center text-ink-muted hover:text-brand-600 hover:border-brand-200 transition-all active:scale-95"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={next}
             aria-label="Next testimonial"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 w-10 h-10 rounded-full bg-white border border-gray-100 shadow-card flex items-center justify-center text-ink-muted hover:text-brand-600 hover:border-brand-200 transition-all active:scale-95"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 w-10 h-10 rounded-full bg-surface border border-surface-muted shadow-card flex items-center justify-center text-ink-muted hover:text-brand-600 hover:border-brand-200 transition-all active:scale-95"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -104,7 +104,7 @@ export function TestimonialCarousel({
                 aria-label={`Go to testimonial ${i + 1}`}
                 className={cn(
                   "w-2 h-2 rounded-full transition-all",
-                  i === index ? "bg-brand-600 w-5" : "bg-gray-300 hover:bg-brand-300"
+                  i === index ? "bg-brand-600 w-5" : "bg-surface-muted hover:bg-brand-300"
                 )}
               />
             ))}

@@ -48,7 +48,7 @@ export default function LeadForm({ treatmentInterest, source = "WEBSITE", classN
   });
 
   const inputCls =
-    "w-full px-4 py-3 rounded-button border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-body-base bg-white";
+    "w-full px-4 py-3 rounded-button border border-surface-muted focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-body-base bg-surface";
 
   const canAdvance =
     (step === 1 && form.treatment) ||
@@ -130,13 +130,13 @@ export default function LeadForm({ treatmentInterest, source = "WEBSITE", classN
                   "w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-colors",
                   done && "bg-brand-600 text-white",
                   active && "bg-brand-600 text-white ring-4 ring-brand-100",
-                  !active && !done && "bg-gray-100 text-ink-light"
+                  !active && !done && "bg-surface-muted text-ink-light"
                 )}
               >
                 <Icon className="w-3.5 h-3.5" />
               </div>
               {i < STEPS.length - 1 && (
-                <div className={cn("h-0.5 flex-1 rounded-full transition-colors", done ? "bg-brand-600" : "bg-gray-100")} />
+                <div className={cn("h-0.5 flex-1 rounded-full transition-colors", done ? "bg-brand-600" : "bg-surface-muted")} />
               )}
             </div>
           );

@@ -33,7 +33,7 @@ export default function NewsletterBand() {
   };
 
   return (
-    <div className="bg-surface-warm border border-gray-100/70 rounded-card p-7 sm:p-9 my-10">
+    <div className="bg-surface-warm border border-surface-muted/70 rounded-card p-7 sm:p-9 my-10">
       <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between">
         <div className="max-w-xl">
           <div className="inline-flex items-center gap-2 bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-xs font-semibold mb-3">
@@ -58,7 +58,7 @@ export default function NewsletterBand() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@email.com"
-                className="flex-1 px-4 py-3 rounded-pill border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-body-base bg-white"
+                className="flex-1 px-4 py-3 rounded-pill border border-surface-muted focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-body-base bg-surface"
               />
               <button
                 type="submit"

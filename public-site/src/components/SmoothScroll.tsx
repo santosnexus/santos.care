@@ -15,9 +15,11 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     if (prefersReducedMotion) return;
 
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.2,
     });
     lenisRef.current = lenis;
 
@@ -27,7 +29,11 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
+    // Refresh ScrollTrigger after fonts/layout settle
+    const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 150);
+
     return () => {
+      clearTimeout(refreshTimer);
       gsap.ticker.remove(raf);
       lenis.destroy();
       lenisRef.current = null;

@@ -6,8 +6,8 @@ const variants = {
   accent: "bg-accent-50 text-accent-600",
   success: "bg-savings-light text-savings",
   warning: "bg-amber-100 text-amber-700",
-  neutral: "bg-gray-100 text-gray-700",
-  outline: "bg-transparent border border-gray-200 text-ink-muted",
+  neutral: "bg-surface-muted text-ink-muted",
+  outline: "bg-transparent border border-surface-muted text-ink-muted",
   white: "bg-white/20 text-white backdrop-blur",
 };
 

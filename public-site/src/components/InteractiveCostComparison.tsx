@@ -176,7 +176,7 @@ export function InteractiveCostComparison() {
 
           return (
             <Reveal key={proc.procedure} variant="slide-up" delay={i * 100}>
-              <div className="bg-surface rounded-card p-6 border border-gray-100 shadow-card">
+              <div className="bg-surface rounded-card p-6 border border-surface-muted shadow-card">
                 <div className="flex items-center justify-between mb-5">
                   <h4 className="font-semibold text-ink">{proc.procedure}</h4>
                   <Badge variant="savings" size="lg">
@@ -193,7 +193,7 @@ export function InteractiveCostComparison() {
                     />
                   ))}
                 </div>
-                <div className="mt-4 pt-3 border-t border-gray-100 text-xs text-ink-muted">
+                <div className="mt-4 pt-3 border-t border-surface-muted text-xs text-ink-muted">
                   Cheapest: <strong className="text-savings">{cheapest.flag} {cheapest.country}</strong> — ${cheapest.cost.toLocaleString()}
                 </div>
               </div>

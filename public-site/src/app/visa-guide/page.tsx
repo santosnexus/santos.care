@@ -20,9 +20,9 @@ export default function VisaGuidePage() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-surface">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="prose prose-gray max-w-none">
+          <div className="prose prose max-w-none">
             <h2>What is an Indian Medical Visa?</h2>
             <p>
               The Indian Medical Visa (M-visa) is a special visa category for foreign nationals seeking medical treatment
@@ -100,16 +100,16 @@ export default function VisaGuidePage() {
             </ul>
           </div>
 
-          <div className="mt-12 bg-brand-50 rounded-xl p-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Ready to Start Your Visa Process?</h2>
-            <p className="text-gray-600 mb-6">
+          <div className="mt-12 bg-brand-50 rounded-card p-8 text-center">
+            <h2 className="text-2xl font-bold text-ink mb-4">Ready to Start Your Visa Process?</h2>
+            <p className="text-ink-muted mb-6">
               Share your medical reports and we&apos;ll help with your treatment plan and hospital invitation letter.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/contact" className="bg-brand-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-700 transition-colors">
+              <Link href="/contact" className="bg-brand-600 text-white px-8 py-3 rounded-button font-semibold hover:bg-brand-700 transition-colors">
                 Get Free Consultation <ArrowRight className="w-4 h-4 inline ml-1" />
               </Link>
-              <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="bg-whatsapp text-white px-8 py-3 rounded-lg font-semibold hover:bg-whatsapp-hover transition-colors">
+              <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" className="bg-whatsapp text-white px-8 py-3 rounded-button font-semibold hover:bg-whatsapp-hover transition-colors">
                 <MessageCircle className="w-4 h-4 inline mr-1" /> WhatsApp
               </a>
             </div>

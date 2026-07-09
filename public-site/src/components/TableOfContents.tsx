@@ -46,18 +46,18 @@ export default function TableOfContents() {
       {/* Mobile toggle */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-20 right-6 z-50 lg:hidden p-3 rounded-full bg-white border border-gray-200 shadow-lg"
+        className="fixed bottom-20 right-6 z-50 lg:hidden p-3 rounded-full bg-surface border border-surface-muted shadow-lg"
         aria-label="Table of contents"
       >
-        <List className="w-5 h-5 text-gray-700" />
+        <List className="w-5 h-5 text-ink-muted" />
       </button>
 
       {/* Desktop sidebar */}
       <nav className="hidden lg:block sticky top-24 w-56 flex-shrink-0 max-h-[calc(100vh-8rem)] overflow-y-auto">
-        <h3 className="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider">
+        <h3 className="text-sm font-semibold text-ink mb-3 uppercase tracking-wider">
           On this page
         </h3>
-        <ul className="space-y-1 border-l-2 border-gray-100">
+        <ul className="space-y-1 border-l-2 border-surface-muted">
           {items.map((item) => (
             <li key={item.id}>
               <a
@@ -71,7 +71,7 @@ export default function TableOfContents() {
                 } ${
                   activeId === item.id
                     ? "text-brand-600 border-l-2 -ml-0.5 border-brand-600 font-medium"
-                    : "text-gray-500 hover:text-gray-800 border-l-2 -ml-0.5 border-transparent"
+                    : "text-ink-light hover:text-ink border-l-2 -ml-0.5 border-transparent"
                 }`}
               >
                 {item.text}
@@ -85,12 +85,12 @@ export default function TableOfContents() {
       {open && (
         <>
           <div className="fixed inset-0 bg-black/30 z-40 lg:hidden" onClick={() => setOpen(false)} />
-          <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl z-50 lg:hidden max-h-[50vh] overflow-y-auto p-6">
+          <div className="fixed bottom-0 left-0 right-0 bg-surface rounded-t-2xl shadow-xl z-50 lg:hidden max-h-[50vh] overflow-y-auto p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+              <h3 className="text-sm font-semibold text-ink uppercase tracking-wider">
                 On this page
               </h3>
-              <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600">
+              <button onClick={() => setOpen(false)} className="text-ink-light hover:text-ink-muted">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </button>
             </div>
@@ -107,7 +107,7 @@ export default function TableOfContents() {
                     className={`block text-sm py-1.5 ${
                       item.level === 3 ? "pl-4" : ""
                     } ${
-                      activeId === item.id ? "text-brand-600 font-medium" : "text-gray-600"
+                      activeId === item.id ? "text-brand-600 font-medium" : "text-ink-muted"
                     }`}
                   >
                     {item.text}

@@ -19,7 +19,7 @@ export default function InlineArticleCTA({ source }: { source?: string }) {
         <div className="flex-shrink-0">
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 bg-white text-brand-700 px-7 py-3.5 rounded-pill font-semibold hover:bg-brand-50 transition-all active:scale-95 whitespace-nowrap"
+            className="inline-flex items-center gap-2 bg-surface text-brand-700 px-7 py-3.5 rounded-pill font-semibold hover:bg-surface-soft transition-all active:scale-95 whitespace-nowrap"
           >
             Get Free Consultation <ArrowRight className="w-4 h-4" />
           </Link>

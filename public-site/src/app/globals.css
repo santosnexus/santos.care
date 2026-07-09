@@ -18,7 +18,20 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
   }
 
   body {
@@ -156,10 +169,10 @@ html.dark .glass {
 
 @layer components {
   .cost-comparison-wrapper {
-    @apply my-8 bg-white rounded-card border border-gray-100/50 shadow-card p-5;
+    @apply my-8 bg-surface rounded-card border border-surface-muted/50 shadow-card p-5;
   }
   .cost-comparison-wrapper .price-row {
-    @apply flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-b-0;
+    @apply flex items-center gap-3 py-2.5 border-b border-surface-muted/40 last:border-b-0;
   }
   .cost-comparison-wrapper .price-flag {
     @apply w-7 text-lg flex-shrink-0;
@@ -221,19 +234,19 @@ html.dark .glass {
     @apply w-full border-collapse my-6 rounded-lg overflow-hidden shadow-sm text-sm;
   }
   .prose table thead {
-    @apply bg-gray-800;
+    @apply bg-ink;
   }
   .prose table th {
     @apply text-white text-left px-4 py-2.5 text-xs font-semibold uppercase tracking-wider;
   }
   .prose table td {
-    @apply px-4 py-2.5 text-ink-muted border-b border-gray-100;
+    @apply px-4 py-2.5 text-ink-muted border-b border-surface-muted;
   }
   .prose table tbody tr:hover {
-    @apply bg-gray-50;
+    @apply bg-surface-soft;
   }
   .prose table tbody tr:nth-child(even) {
-    @apply bg-gray-50/50;
+    @apply bg-surface-soft/50;
   }
 
   .prose img {
@@ -241,7 +254,7 @@ html.dark .glass {
   }
 
   .prose hr {
-    @apply my-10 border-gray-200;
+    @apply my-10 border-surface-muted;
   }
 
 }
@@ -252,7 +265,7 @@ html.dark .glass {
    Tailwind typography plugin via higher specificity. */
 @layer components {
   .blog-content {
-    @apply text-[1.125rem] leading-[1.8] text-[#374151] tracking-[0.003em];
+    @apply text-[1.125rem] leading-[1.8] text-ink-muted tracking-[0.003em];
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
   .blog-content :is(h2, h3) {
@@ -265,7 +278,7 @@ html.dark .glass {
     @apply text-[1.3rem] font-semibold text-ink leading-snug mt-9 mb-3 tracking-[-0.005em];
   }
   .blog-content p {
-    @apply text-[1.125rem] leading-[1.8] text-[#374151] mb-6;
+    @apply text-[1.125rem] leading-[1.8] text-ink-muted mb-6;
   }
   .blog-content a {
     @apply text-brand-600 font-medium underline decoration-brand-300 decoration-2 underline-offset-2 hover:text-brand-700 transition-colors;
@@ -277,7 +290,7 @@ html.dark .glass {
     @apply list-decimal pl-6 mb-6 space-y-2.5;
   }
   .blog-content li {
-    @apply text-[1.125rem] leading-[1.8] text-[#374151];
+    @apply text-[1.125rem] leading-[1.8] text-ink-muted;
   }
   .blog-content li::marker {
     @apply text-brand-400;
@@ -295,7 +308,7 @@ html.dark .glass {
     @apply rounded-card shadow-card my-9;
   }
   .blog-content hr {
-    @apply my-12 border-gray-200;
+    @apply my-12 border-surface-muted;
   }
   .blog-content code {
     @apply bg-surface-muted text-brand-700 px-1.5 py-0.5 rounded-md text-[0.95em] font-medium;
@@ -310,7 +323,7 @@ html.dark .glass {
     @apply text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider;
   }
   .blog-content td {
-    @apply px-4 py-3 text-[#374151] border-b border-gray-100;
+    @apply px-4 py-3 text-ink-muted border-b border-surface-muted;
   }
   .blog-content tbody tr:nth-child(even) {
     @apply bg-surface-soft;

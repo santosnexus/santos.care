@@ -21,23 +21,23 @@ export default function CountriesPage() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-surface">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-6">
             {countryList.map((c) => (
               <Link
                 key={c.slug}
                 href={`/countries/${c.slug}`}
-                className="bg-gray-50 rounded-xl p-6 border border-gray-100 hover:border-brand-200 hover:shadow-md transition-all"
+                className="bg-surface-soft rounded-card p-6 border border-surface-muted hover:border-brand-200 hover:shadow-md transition-all"
               >
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-2xl">{c.flag}</span>
                   <div>
-                    <h2 className="font-semibold text-gray-900">{c.name}</h2>
-                    <p className="text-sm text-gray-500">{c.region}</p>
+                    <h2 className="font-semibold text-ink">{c.name}</h2>
+                    <p className="text-sm text-ink-light">{c.region}</p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600 mb-3 line-clamp-2">{c.overview}</p>
+                <p className="text-sm text-ink-muted mb-3 line-clamp-2">{c.overview}</p>
                 <div className="flex flex-wrap gap-2">
                   {c.treatments.map((t) => (
                     <span key={t} className="text-xs bg-brand-100 text-brand-700 px-2 py-0.5 rounded">{t}</span>

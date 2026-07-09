@@ -11,7 +11,7 @@ export default function AuthorBio({ author }: { author?: string }) {
     .toUpperCase();
 
   return (
-    <div className="mt-12 rounded-card bg-surface-warm border border-gray-100/70 p-7">
+    <div className="mt-12 rounded-card bg-surface-warm border border-surface-muted/70 p-7">
       <div className="flex flex-col sm:flex-row gap-5">
         <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center flex-shrink-0 shadow-glow">
           <span className="font-bold text-lg">{initials}</span>

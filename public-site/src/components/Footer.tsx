@@ -5,7 +5,7 @@ import { treatmentList } from "@/data/treatments";
 
 export default function Footer() {
   return (
-    <footer className="bg-brand-950 text-gray-300">
+    <footer className="bg-brand-950 text-white/70">
       {/* CTA band — priming the final action */}
       <div className="border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -43,7 +43,7 @@ export default function Footer() {
               </div>
               <span className="font-bold text-lg text-white">Heal India</span>
             </div>
-            <p className="text-sm leading-relaxed text-gray-400 mb-4">
+            <p className="text-sm leading-relaxed text-white/60 mb-4">
               Your trusted partner for world-class medical treatment in India. JCI-accredited hospitals, expert surgeons,
               and holistic Ayurveda recovery in Kerala.
             </p>
@@ -111,7 +111,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+        <div className="border-t border-white/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-white/50">
           <p>© {new Date().getFullYear()} {COMPANY}. All rights reserved.</p>
           <p className="text-xs">Your health journey, our commitment. Heal India Medi Tourism by {COMPANY}.</p>
           <p className="text-xs">

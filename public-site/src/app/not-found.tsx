@@ -7,8 +7,8 @@ export default function NotFound() {
       <div className="text-center px-4 max-w-lg">
         <Stethoscope className="w-20 h-20 text-brand-300 mx-auto mb-6" />
         <h1 className="text-7xl font-bold text-white mb-4">404</h1>
-        <p className="text-xl text-gray-300 mb-2">Page Not Found</p>
-        <p className="text-gray-400 mb-8">
+        <p className="text-xl text-brand-200 mb-2">Page Not Found</p>
+        <p className="text-brand-200/80 mb-8">
           This page doesn&apos;t exist or may have been moved. Let us help you find what you need.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

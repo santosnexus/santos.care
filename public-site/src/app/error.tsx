@@ -17,7 +17,7 @@ export default function Error({
         </div>
         <div>
           <h1 className="text-3xl font-bold text-brand-800 mb-2">Something went wrong</h1>
-          <p className="text-gray-600">
+          <p className="text-ink-light">
             {error.message || "An unexpected error occurred. Please try again."}
           </p>
         </div>
@@ -30,7 +30,7 @@ export default function Error({
           </button>
           <Link
             href="/"
-            className="px-5 py-2.5 bg-white text-brand-700 border border-brand-200 rounded-lg hover:bg-brand-50 transition-colors font-medium"
+            className="px-5 py-2.5 bg-surface text-brand-700 border border-brand-200 rounded-lg hover:bg-surface-soft transition-colors font-medium"
           >
             Back to home
           </Link>

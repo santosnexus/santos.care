@@ -7,7 +7,7 @@ const variants = {
   primary:
     "bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 shadow-sm hover:shadow-glow",
   secondary:
-    "bg-surface-soft text-ink hover:bg-surface-muted active:bg-gray-200 border border-gray-200",
+    "bg-surface-soft text-ink hover:bg-surface-muted active:bg-surface-muted border border-surface-muted",
   outline:
     "border-2 border-brand-600 text-brand-600 hover:bg-brand-50 active:bg-brand-100",
   ghost:
