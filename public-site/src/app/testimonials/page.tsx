@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Star, Quote } from "lucide-react";
+import { Star } from "lucide-react";
 import { testimonials } from "@/data/testimonials";
-import { Reveal, StaggerReveal } from "@/components/Reveal";
+import { TestimonialCarousel } from "@/components/TestimonialCarousel";
+import { Reveal } from "@/components/Reveal";
 import { Section, Container } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
 import { JsonLd, reviewSchema } from "@/components/json-ld";
@@ -16,15 +17,6 @@ export const metadata: Metadata = {
     description:
       "Real patient stories from Kenya, UAE, UK, Nigeria, Oman, and Tanzania who chose India for life-changing treatment.",
   },
-};
-
-const FLAGS: Record<string, string> = {
-  Kenya: "🇰🇪",
-  UAE: "🇦🇪",
-  "United Kingdom": "🇬🇧",
-  Nigeria: "🇳🇬",
-  Oman: "🇴🇲",
-  Tanzania: "🇹🇿",
 };
 
 export default function TestimonialsPage() {
@@ -45,7 +37,7 @@ export default function TestimonialsPage() {
         <Container className="relative">
           <Reveal>
             <span className="inline-flex items-center gap-2 bg-white/10 text-brand-100 px-4 py-1.5 rounded-full text-sm font-medium mb-6 backdrop-blur">
-              <Star className="w-4 h-4 fill-current" /> {testimonials.length} Verified Patients
+              <Star className="w-4 h-4 fill-current" /> {testimonials.length} Patient Stories
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-4xl">
               Real Stories. Real Savings. Real Care.
@@ -60,32 +52,7 @@ export default function TestimonialsPage() {
 
       <Section>
         <Container>
-          <StaggerReveal className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" staggerDelay={80}>
-            {testimonials.map((t) => (
-              <figure
-                key={t.name}
-                className="bg-white rounded-card border border-gray-100 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 p-7 flex flex-col"
-              >
-                <Quote className="w-8 h-8 text-brand-200 mb-4" />
-                <blockquote className="text-ink leading-relaxed mb-6 flex-1">
-                  &ldquo;{t.content}&rdquo;
-                </blockquote>
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <div>
-                    <figcaption className="font-semibold text-ink">{t.name}</figcaption>
-                    <p className="text-sm text-ink-muted flex items-center gap-1.5">
-                      <span>{FLAGS[t.country] || "🌍"}</span> {t.country} · {t.treatment}
-                    </p>
-                  </div>
-                  <div className="flex gap-0.5">
-                    {Array.from({ length: t.rating }).map((_, i) => (
-                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                    ))}
-                  </div>
-                </div>
-              </figure>
-            ))}
-          </StaggerReveal>
+          <TestimonialCarousel testimonials={testimonials} className="max-w-3xl mx-auto" />
         </Container>
       </Section>
 

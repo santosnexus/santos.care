@@ -107,7 +107,7 @@ export default function LeadForm({ treatmentInterest, source = "WEBSITE", classN
           href={getWhatsAppUrl()}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-savings hover:text-green-700 font-medium"
+          className="inline-flex items-center gap-2 text-whatsapp hover:text-whatsapp-hover font-medium"
         >
           <MessageCircle className="w-4 h-4" /> Need a faster response? Chat on WhatsApp
         </a>

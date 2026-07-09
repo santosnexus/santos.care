@@ -15,7 +15,7 @@ const variants = {
   accent:
     "bg-accent text-white hover:bg-accent-600 active:bg-accent-700 shadow-sm hover:shadow-float",
   savings:
-    "bg-savings text-white hover:bg-green-700 active:bg-green-800 shadow-sm hover:shadow-float",
+    "bg-savings text-white hover:bg-savings-hover active:bg-savings-hover shadow-sm hover:shadow-float",
 };
 
 const sizes = {

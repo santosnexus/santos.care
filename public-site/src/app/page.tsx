@@ -10,6 +10,7 @@ import { Reveal, StaggerReveal } from "@/components/Reveal";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { InteractiveCostComparison } from "@/components/InteractiveCostComparison";
+import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -33,22 +34,22 @@ const whyChooseUs = [
     desc: "Our partner hospitals meet international standards for quality, safety, and infection control.",
   },
   {
-    icon: <DollarSign className="w-8 h-8 text-green-500" />,
+    icon: <DollarSign className="w-8 h-8 text-savings" />,
     title: "70–90% Cost Savings",
     desc: "Premium medical care at a fraction of Western prices. Free, transparent quotes with no hidden fees.",
   },
   {
-    icon: <Heart className="w-8 h-8 text-red-500" />,
+    icon: <Heart className="w-8 h-8 text-rose-500" />,
     title: "Ayurveda Recovery",
     desc: "Unique post-treatment Ayurveda therapies at Ayush Prana retreat in Kumarakom for holistic healing.",
   },
   {
-    icon: <Star className="w-8 h-8 text-yellow-500" />,
+    icon: <Star className="w-8 h-8 text-rating" />,
     title: "Top Surgeons",
     desc: "Internationally trained, board-certified surgeons with thousands of successful procedures.",
   },
   {
-    icon: <MessageCircle className="w-8 h-8 text-green-500" />,
+    icon: <MessageCircle className="w-8 h-8 text-whatsapp" />,
     title: "Free Treatment Plan in 24hrs",
     desc: "Send your medical reports on WhatsApp. Get a written plan and cost estimate within one day.",
   },
@@ -97,7 +98,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-14 items-center">
             <Reveal variant="slide-up" duration={800}>
               <Badge variant="white" size="lg" className="mb-6">
-                <Shield className="w-4 h-4 text-green-400 mr-1" />
+                <Shield className="w-4 h-4 text-whatsapp mr-1" />
                 JCI & NABH Accredited
               </Badge>
               <h1 className="text-display-hero text-white leading-tight mb-6 text-balance">
@@ -117,10 +118,10 @@ export default function Home() {
                 </Button>
               </div>
               <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-8 text-sm text-white/60">
-                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-green-400" /> Free Quote</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-green-400" /> 24hr Response</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-green-400" /> No Obligation</span>
-                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-green-400" /> 12,000+ Patients</span>
+                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> Free Quote</span>
+                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> 24hr Response</span>
+                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> No Obligation</span>
+                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-savings" /> 12,000+ Patients</span>
               </div>
             </Reveal>
 
@@ -140,7 +141,7 @@ export default function Home() {
         <div className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-black/10 backdrop-blur-sm">
           <Container className="py-4">
             <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-white/70 text-sm">
-              <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-green-400" /> JCI Accredited</span>
+              <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-savings" /> JCI Accredited</span>
               <span className="hidden sm:inline text-white/20">•</span>
               <span>NABH Certified Hospitals</span>
               <span className="hidden sm:inline text-white/20">•</span>
@@ -334,27 +335,9 @@ export default function Home() {
             </div>
           </Reveal>
 
-          <StaggerReveal variant="slide-up" staggerDelay={80} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {testimonials.map((t) => (
-              <Card key={t.name} surface="soft" padding="md" className="flex flex-col">
-                <div className="flex items-center gap-1 mb-3">
-                  {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-body-sm text-ink-muted mb-4 leading-relaxed flex-1">&ldquo;{t.content}&rdquo;</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                    {t.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-ink text-sm">{t.name}</p>
-                    <p className="text-body-sm text-ink-light">{t.country} &middot; {t.treatment}</p>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </StaggerReveal>
+          <Reveal variant="slide-up">
+            <TestimonialCarousel testimonials={testimonials} className="max-w-3xl mx-auto" />
+          </Reveal>
         </Container>
       </Section>
 
@@ -378,7 +361,7 @@ export default function Home() {
                   { title: "Full Transparency", desc: "No hidden charges, no pressure, no obligation" },
                 ].map((item) => (
                   <div key={item.title} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-savings mt-0.5 flex-shrink-0" />
                     <div>
                       <span className="text-white font-medium">{item.title}</span>
                       <p className="text-sm text-white/60">{item.desc}</p>

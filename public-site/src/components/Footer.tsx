@@ -27,7 +27,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="bg-white/10 text-white px-7 py-3.5 rounded-pill font-semibold hover:bg-white/20 transition-all active:scale-95 inline-flex items-center gap-2"
               >
-                <Phone className="w-4 h-4 text-green-400" /> {WHATSAPP_NUMBER}
+                <Phone className="w-4 h-4 text-whatsapp" /> {WHATSAPP_NUMBER}
               </a>
             </div>
           </div>
@@ -51,8 +51,8 @@ export default function Footer() {
               <ShieldCheck className="w-4 h-4" /> JCI & NABH Accredited
             </div>
             <div className="space-y-2 text-sm">
-              <a href={getWhatsAppUrl()} className="flex items-center gap-2 hover:text-green-400 transition-colors">
-                <Phone className="w-4 h-4 text-green-400" /> {WHATSAPP_NUMBER}
+              <a href={getWhatsAppUrl()} className="flex items-center gap-2 hover:text-whatsapp transition-colors">
+                <Phone className="w-4 h-4 text-whatsapp" /> {WHATSAPP_NUMBER}
               </a>
               <a href={`mailto:${EMAIL}`} className="flex items-center gap-2 hover:text-brand-300 transition-colors">
                 <Mail className="w-4 h-4 text-brand-400" /> {EMAIL}

@@ -86,7 +86,7 @@ export default function FAQPage() {
                 href={getWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors"
+                className="bg-whatsapp-light0 text-white px-8 py-3 rounded-lg font-semibold hover:bg-whatsapp-hover transition-colors"
               >
                 <MessageCircle className="w-4 h-4 inline mr-1" /> WhatsApp
               </a>

@@ -61,8 +61,8 @@ export default function CountryPage({ params }: { params: { slug: string } }) {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Why {c.name} Patients Choose India</h2>
               <div className="space-y-3">
                 {c.whyIndia.map((w, i) => (
-                  <div key={i} className="flex items-start gap-2 bg-green-50 rounded-lg p-3">
-                    <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <div key={i} className="flex items-start gap-2 bg-whatsapp-light rounded-lg p-3">
+                    <CheckCircle className="w-5 h-5 text-savings mt-0.5 flex-shrink-0" />
                     <span className="text-sm text-gray-700">{w}</span>
                   </div>
                 ))}
@@ -107,7 +107,7 @@ export default function CountryPage({ params }: { params: { slug: string } }) {
                 href={getWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-green-500 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors text-center"
+                className="bg-whatsapp-light0 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-whatsapp-hover transition-colors text-center"
               >
                 <MessageCircle className="w-4 h-4 inline mr-1" /> WhatsApp
               </a>

@@ -100,7 +100,7 @@ export default function Navbar() {
               rel="noopener noreferrer"
               className={cn(
                 "flex items-center gap-2 text-sm font-medium transition-colors",
-                scrolled ? "text-savings hover:text-green-700" : "text-white hover:text-white/80"
+                scrolled ? "text-whatsapp hover:text-whatsapp-hover" : "text-white hover:text-white/80"
               )}
             >
               <Phone className="w-4 h-4" />

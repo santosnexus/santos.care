@@ -110,7 +110,7 @@ function buildPriceBars(table: Element): Element {
     children.push(
       el("div", { className: "flex items-center justify-between mb-4" },
         el("span", { className: "text-sm font-semibold text-gray-500 uppercase tracking-wider" }, txt(title)),
-        el("span", { className: "inline-flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-xs font-semibold" }, txt(`Save up to ${savings}%`))
+        el("span", { className: "inline-flex items-center gap-1 bg-savings-light text-savings px-3 py-1 rounded-full text-xs font-semibold" }, txt(`Save up to ${savings}%`))
       )
     );
   }

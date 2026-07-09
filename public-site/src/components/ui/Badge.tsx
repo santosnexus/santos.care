@@ -4,7 +4,7 @@ const variants = {
   default: "bg-brand-100 text-brand-700",
   savings: "bg-savings-light text-savings",
   accent: "bg-accent-50 text-accent-600",
-  success: "bg-green-100 text-green-700",
+  success: "bg-savings-light text-savings",
   warning: "bg-amber-100 text-amber-700",
   neutral: "bg-gray-100 text-gray-700",
   outline: "bg-transparent border border-gray-200 text-ink-muted",

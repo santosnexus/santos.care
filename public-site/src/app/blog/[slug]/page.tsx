@@ -130,7 +130,7 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
                   href={getWhatsAppUrl(`Check out this article: ${frontmatter.title}`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ml-auto inline-flex items-center gap-1.5 text-savings font-medium text-sm hover:text-green-700 transition-colors"
+                  className="ml-auto inline-flex items-center gap-1.5 text-savings font-medium text-sm hover:text-whatsapp-hover transition-colors"
                 >
                   <MessageCircle className="w-4 h-4" /> Share on WhatsApp
                 </a>

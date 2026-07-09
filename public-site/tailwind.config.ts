@@ -51,7 +51,17 @@ const config: Config = {
         },
         savings: {
           DEFAULT: "#1f9d57",
+          hover: "#15753e",
           light: "#e7f6ed",
+        },
+        whatsapp: {
+          DEFAULT: "#22c55e",
+          hover: "#16a34a",
+          light: "#dcfce6",
+        },
+        rating: {
+          DEFAULT: "#fbbf24",
+          light: "#fffbeb",
         },
       },
       fontFamily: {

@@ -59,13 +59,13 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
           </Link>
           <div className="max-w-3xl">
             <Badge variant="white" size="lg" className="mb-5">
-              <ShieldCheck className="w-4 h-4 text-green-400 mr-1" /> JCI & NABH Accredited
+              <ShieldCheck className="w-4 h-4 text-savings mr-1" /> JCI & NABH Accredited
             </Badge>
             <h1 className="text-display-hero text-white mb-4 text-balance">{t.title} in India</h1>
             <p className="text-xl text-brand-100 mb-8">{t.tagline}</p>
             <div className="flex flex-wrap gap-3 text-sm">
               <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-pill">
-                <TrendingDown className="w-4 h-4 text-green-400" />
+                <TrendingDown className="w-4 h-4 text-savings" />
                 Save up to <span className="font-bold">{savingsPct}%</span> vs {topWestern.country}
               </div>
               <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-pill">
@@ -77,7 +77,7 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
                 {t.hospitalStayDays}-day hospital stay
               </div>
               <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-pill">
-                <Star className="w-4 h-4 text-yellow-300" />
+                <Star className="w-4 h-4 text-rating" />
                 {t.successRate} success
               </div>
             </div>
@@ -181,7 +181,7 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
                     href={getWhatsAppUrl(`Hi! I'm interested in ${t.title} in India.`)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 text-savings font-medium text-sm hover:text-green-700 transition-colors"
+                    className="flex items-center justify-center gap-2 text-whatsapp font-medium text-sm hover:text-whatsapp-hover transition-colors"
                   >
                     <MessageCircle className="w-4 h-4" /> Or send reports on WhatsApp
                   </a>
@@ -212,7 +212,7 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
               href={getWhatsAppUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-savings text-white px-8 py-4 rounded-pill font-semibold hover:bg-green-700 transition-all active:scale-95"
+              className="bg-whatsapp text-white px-8 py-4 rounded-pill font-semibold hover:bg-whatsapp-hover transition-all active:scale-95"
             >
               <MessageCircle className="w-4 h-4 inline mr-1" /> WhatsApp Us
             </a>
