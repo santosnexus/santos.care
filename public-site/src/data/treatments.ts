@@ -7,6 +7,7 @@ export interface Treatment {
   icon: string;
   procedures: string[];
   costRange: { from: number; to: number };
+  costComparison: { country: string; flag: string; from: number; to: number }[];
   recoveryDays: number;
   hospitalStayDays: number;
   successRate: string;
@@ -36,6 +37,12 @@ export const treatments: Record<string, Treatment> = {
       "Cardiac Electrophysiology",
     ],
     costRange: { from: 4500, to: 12000 },
+    costComparison: [
+      { country: "USA", flag: "🇺🇸", from: 80000, to: 200000 },
+      { country: "UK", flag: "🇬🇧", from: 50000, to: 120000 },
+      { country: "UAE", flag: "🇦🇪", from: 30000, to: 70000 },
+      { country: "India", flag: "🇮🇳", from: 4500, to: 12000 },
+    ],
     recoveryDays: 30,
     hospitalStayDays: 7,
     successRate: "98.5%",
@@ -63,6 +70,12 @@ export const treatments: Record<string, Treatment> = {
       "Trauma & Fracture Management",
     ],
     costRange: { from: 5500, to: 10000 },
+    costComparison: [
+      { country: "USA", flag: "🇺🇸", from: 40000, to: 100000 },
+      { country: "UK", flag: "🇬🇧", from: 25000, to: 60000 },
+      { country: "UAE", flag: "🇦🇪", from: 20000, to: 45000 },
+      { country: "India", flag: "🇮🇳", from: 5500, to: 10000 },
+    ],
     recoveryDays: 45,
     hospitalStayDays: 5,
     successRate: "97%",
@@ -89,6 +102,12 @@ export const treatments: Record<string, Treatment> = {
       "Male Infertility Treatments",
     ],
     costRange: { from: 3500, to: 8000 },
+    costComparison: [
+      { country: "USA", flag: "🇺🇸", from: 12000, to: 25000 },
+      { country: "UK", flag: "🇬🇧", from: 8000, to: 18000 },
+      { country: "UAE", flag: "🇦🇪", from: 7000, to: 15000 },
+      { country: "India", flag: "🇮🇳", from: 3500, to: 8000 },
+    ],
     recoveryDays: 14,
     hospitalStayDays: 1,
     successRate: "65-75%",
@@ -115,6 +134,12 @@ export const treatments: Record<string, Treatment> = {
       "Screening & Early Detection",
     ],
     costRange: { from: 6000, to: 25000 },
+    costComparison: [
+      { country: "USA", flag: "🇺🇸", from: 60000, to: 300000 },
+      { country: "UK", flag: "🇬🇧", from: 40000, to: 180000 },
+      { country: "UAE", flag: "🇦🇪", from: 30000, to: 120000 },
+      { country: "India", flag: "🇮🇳", from: 6000, to: 25000 },
+    ],
     recoveryDays: 60,
     hospitalStayDays: 10,
     successRate: "Varies by type & stage",
@@ -141,6 +166,12 @@ export const treatments: Record<string, Treatment> = {
       "Scar Revision",
     ],
     costRange: { from: 3000, to: 9000 },
+    costComparison: [
+      { country: "USA", flag: "🇺🇸", from: 8000, to: 30000 },
+      { country: "UK", flag: "🇬🇧", from: 6000, to: 22000 },
+      { country: "UAE", flag: "🇦🇪", from: 5000, to: 18000 },
+      { country: "India", flag: "🇮🇳", from: 3000, to: 9000 },
+    ],
     recoveryDays: 21,
     hospitalStayDays: 3,
     successRate: "95%+",
@@ -167,6 +198,12 @@ export const treatments: Record<string, Treatment> = {
       "Gum Disease Treatment",
     ],
     costRange: { from: 500, to: 7000 },
+    costComparison: [
+      { country: "USA", flag: "🇺🇸", from: 3000, to: 40000 },
+      { country: "UK", flag: "🇬🇧", from: 2500, to: 30000 },
+      { country: "UAE", flag: "🇦🇪", from: 2000, to: 25000 },
+      { country: "India", flag: "🇮🇳", from: 500, to: 7000 },
+    ],
     recoveryDays: 7,
     hospitalStayDays: 1,
     successRate: "98%",
@@ -191,6 +228,12 @@ export const treatments: Record<string, Treatment> = {
       "Metabolic Surgery for Diabetes",
     ],
     costRange: { from: 4500, to: 8000 },
+    costComparison: [
+      { country: "USA", flag: "🇺🇸", from: 15000, to: 35000 },
+      { country: "UK", flag: "🇬🇧", from: 10000, to: 25000 },
+      { country: "UAE", flag: "🇦🇪", from: 9000, to: 20000 },
+      { country: "India", flag: "🇮🇳", from: 4500, to: 8000 },
+    ],
     recoveryDays: 30,
     hospitalStayDays: 4,
     successRate: "90%+",
@@ -217,6 +260,12 @@ export const treatments: Record<string, Treatment> = {
       "Movement Disorder Treatment",
     ],
     costRange: { from: 5000, to: 15000 },
+    costComparison: [
+      { country: "USA", flag: "🇺🇸", from: 30000, to: 150000 },
+      { country: "UK", flag: "🇬🇧", from: 20000, to: 90000 },
+      { country: "UAE", flag: "🇦🇪", from: 18000, to: 70000 },
+      { country: "India", flag: "🇮🇳", from: 5000, to: 15000 },
+    ],
     recoveryDays: 45,
     hospitalStayDays: 8,
     successRate: "95%",

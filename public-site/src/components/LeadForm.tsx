@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Send, CheckCircle, MessageCircle } from "lucide-react";
+import { Send, CheckCircle, MessageCircle, ArrowRight, ArrowLeft, Stethoscope, User, FileText } from "lucide-react";
 import { cn, getWhatsAppUrl } from "@/lib/utils";
 
 interface LeadFormProps {
@@ -10,7 +10,31 @@ interface LeadFormProps {
   className?: string;
 }
 
+const TREATMENTS = [
+  "Cardiac Surgery",
+  "Orthopedic Surgery",
+  "IVF & Fertility",
+  "Cancer Treatment",
+  "Cosmetic Surgery",
+  "Dental Treatment",
+  "Weight Loss Surgery",
+  "Neurology",
+  "Other",
+];
+
+const COUNTRIES = [
+  "Kenya", "Tanzania", "Uganda", "Nigeria", "UAE", "Oman", "Saudi Arabia",
+  "UK", "Germany", "France", "USA", "Australia", "Other",
+];
+
+const STEPS = [
+  { id: 1, label: "Treatment", icon: Stethoscope },
+  { id: 2, label: "Details", icon: User },
+  { id: 3, label: "Message", icon: FileText },
+];
+
 export default function LeadForm({ treatmentInterest, source = "WEBSITE", className }: LeadFormProps) {
+  const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,14 +47,19 @@ export default function LeadForm({ treatmentInterest, source = "WEBSITE", classN
     message: "",
   });
 
+  const inputCls =
+    "w-full px-4 py-3 rounded-button border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-body-base bg-white";
+
+  const canAdvance =
+    (step === 1 && form.treatment) ||
+    (step === 2 && form.name && form.email && form.phone) ||
+    step === 3;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-
     try {
-      // Same-origin proxy (set up in src/app/api/leads/capture/route.ts)
-      // Forwards to ops hub internally — no CORS issues
       const res = await fetch("/api/leads/capture", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -44,12 +73,13 @@ export default function LeadForm({ treatmentInterest, source = "WEBSITE", classN
           message: form.message,
         }),
       });
-
       if (res.ok) {
         setSubmitted(true);
       } else {
-        // Fall back to opening WhatsApp on error
-        window.open(getWhatsAppUrl(`Hi! My name is ${form.name} and I'm interested in ${form.treatment || "treatment"} in India.`), "_blank");
+        window.open(
+          getWhatsAppUrl(`Hi! My name is ${form.name} and I'm interested in ${form.treatment || "treatment"} in India.`),
+          "_blank"
+        );
         setSubmitted(true);
       }
     } catch {
@@ -65,126 +95,181 @@ export default function LeadForm({ treatmentInterest, source = "WEBSITE", classN
 
   if (submitted) {
     return (
-      <div className={cn("text-center py-12", className)}>
-        <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Thank You!</h3>
-        <p className="text-gray-600 mb-4">
+      <div className={cn("text-center py-10", className)}>
+        <div className="w-16 h-16 rounded-full bg-savings-light flex items-center justify-center mx-auto mb-4">
+          <CheckCircle className="w-9 h-9 text-savings" />
+        </div>
+        <h3 className="text-xl font-bold text-ink mb-2">Thank You!</h3>
+        <p className="text-ink-muted text-body-base mb-5">
           We&apos;ve received your inquiry. Our team will contact you within 24 hours with a personalized treatment plan.
         </p>
         <a
           href={getWhatsAppUrl()}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium"
+          className="inline-flex items-center gap-2 text-savings hover:text-green-700 font-medium"
         >
-          <MessageCircle className="w-4 h-4" /> Need faster response? Chat on WhatsApp
+          <MessageCircle className="w-4 h-4" /> Need a faster response? Chat on WhatsApp
         </a>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className={cn("space-y-4", className)}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-          <input
-            type="text"
-            required
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-sm"
-            placeholder="Your full name"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-          <input
-            type="email"
-            required
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-sm"
-            placeholder="your@email.com"
-          />
-        </div>
+    <div className={cn("w-full", className)}>
+      {/* Progress indicator */}
+      <div className="flex items-center gap-2 mb-6">
+        {STEPS.map((s, i) => {
+          const Icon = s.icon;
+          const active = step === s.id;
+          const done = step > s.id;
+          return (
+            <div key={s.id} className="flex-1 flex items-center gap-2">
+              <div
+                className={cn(
+                  "w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-colors",
+                  done && "bg-brand-600 text-white",
+                  active && "bg-brand-600 text-white ring-4 ring-brand-100",
+                  !active && !done && "bg-gray-100 text-ink-light"
+                )}
+              >
+                <Icon className="w-3.5 h-3.5" />
+              </div>
+              {i < STEPS.length - 1 && (
+                <div className={cn("h-0.5 flex-1 rounded-full transition-colors", done ? "bg-brand-600" : "bg-gray-100")} />
+              )}
+            </div>
+          );
+        })}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
-          <input
-            type="tel"
-            required
-            value={form.phone}
-            onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all text-sm"
-            placeholder="+254 712 345 678"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
-          <select
-            value={form.country}
-            onChange={(e) => setForm({ ...form, country: e.target.value })}
-            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all bg-white text-sm"
-          >
-            <option value="">Select your country</option>
-            <option value="Kenya">Kenya</option>
-            <option value="Tanzania">Tanzania</option>
-            <option value="Uganda">Uganda</option>
-            <option value="Nigeria">Nigeria</option>
-            <option value="UAE">UAE</option>
-            <option value="Oman">Oman</option>
-            <option value="Saudi Arabia">Saudi Arabia</option>
-            <option value="UK">United Kingdom</option>
-            <option value="Germany">Germany</option>
-            <option value="France">France</option>
-            <option value="USA">United States</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Treatment Interested In</label>
-        <select
-          value={form.treatment}
-          onChange={(e) => setForm({ ...form, treatment: e.target.value })}
-          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all bg-white text-sm"
-        >
-          <option value="">Select treatment</option>
-          <option value="Cardiac Surgery">Cardiac Surgery</option>
-          <option value="Orthopedic Surgery">Orthopedic Surgery</option>
-          <option value="IVF & Fertility">IVF & Fertility</option>
-          <option value="Cancer Treatment">Cancer Treatment</option>
-          <option value="Cosmetic Surgery">Cosmetic Surgery</option>
-          <option value="Dental Treatment">Dental Treatment</option>
-          <option value="Weight Loss Surgery">Weight Loss Surgery</option>
-          <option value="Neurology">Neurology</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-        <textarea
-          rows={3}
-          value={form.message}
-          onChange={(e) => setForm({ ...form, message: e.target.value })}
-          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all resize-none text-sm"
-          placeholder="Tell us about your condition or ask a question..."
-        />
-      </div>
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <button
-        type="submit"
-        disabled={loading}
-        className={cn(
-          "w-full flex items-center justify-center gap-2 bg-brand-600 text-white px-6 py-3 rounded-lg font-medium transition-all",
-          loading ? "opacity-70 cursor-not-allowed" : "hover:bg-brand-700"
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {step === 1 && (
+          <div className="animate-fade-in-up">
+            <label className="block text-body-sm font-medium text-ink mb-1.5">Which treatment are you considering? *</label>
+            <select
+              required
+              value={form.treatment}
+              onChange={(e) => setForm({ ...form, treatment: e.target.value })}
+              className={inputCls}
+            >
+              <option value="">Select treatment</option>
+              {TREATMENTS.map((tr) => (
+                <option key={tr} value={tr}>{tr}</option>
+              ))}
+            </select>
+          </div>
         )}
-      >
-        {loading ? "Sending..." : "Get Free Treatment Plan"}
-        {!loading && <Send className="w-4 h-4" />}
-      </button>
-    </form>
+
+        {step === 2 && (
+          <div className="space-y-4 animate-fade-in-up">
+            <div>
+              <label className="block text-body-sm font-medium text-ink mb-1.5">Full Name *</label>
+              <input
+                type="text"
+                required
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className={inputCls}
+                placeholder="Your full name"
+              />
+            </div>
+            <div>
+              <label className="block text-body-sm font-medium text-ink mb-1.5">Email *</label>
+              <input
+                type="email"
+                required
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className={inputCls}
+                placeholder="your@email.com"
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-body-sm font-medium text-ink mb-1.5">Phone *</label>
+                <input
+                  type="tel"
+                  required
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  className={inputCls}
+                  placeholder="+254 712 345 678"
+                />
+              </div>
+              <div>
+                <label className="block text-body-sm font-medium text-ink mb-1.5">Country</label>
+                <select
+                  value={form.country}
+                  onChange={(e) => setForm({ ...form, country: e.target.value })}
+                  className={inputCls}
+                >
+                  <option value="">Select country</option>
+                  {COUNTRIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="animate-fade-in-up">
+            <label className="block text-body-sm font-medium text-ink mb-1.5">Anything we should know? (optional)</label>
+            <textarea
+              rows={4}
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
+              className={cn(inputCls, "resize-none")}
+              placeholder="Tell us about your condition, or paste a summary of your medical reports..."
+            />
+            <div className="flex items-center gap-2 mt-3 text-body-sm text-ink-light">
+              <CheckCircle className="w-4 h-4 text-savings" />
+              Free, no-obligation plan within 24 hours.
+            </div>
+          </div>
+        )}
+
+        {error && <p className="text-sm text-red-600">{error}</p>}
+
+        <div className="flex items-center gap-3 pt-1">
+          {step > 1 && (
+            <button
+              type="button"
+              onClick={() => setStep(step - 1)}
+              className="inline-flex items-center gap-1.5 px-4 py-3 rounded-pill text-ink-muted hover:text-ink transition-colors text-body-base font-medium"
+            >
+              <ArrowLeft className="w-4 h-4" /> Back
+            </button>
+          )}
+          {step < 3 ? (
+            <button
+              type="button"
+              onClick={() => canAdvance && setStep(step + 1)}
+              disabled={!canAdvance}
+              className={cn(
+                "flex-1 flex items-center justify-center gap-2 bg-brand-600 text-white px-6 py-3 rounded-pill font-semibold transition-all active:scale-[0.97]",
+                canAdvance ? "hover:bg-brand-700 hover:shadow-glow" : "opacity-50 cursor-not-allowed"
+              )}
+            >
+              Continue <ArrowRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              type="submit"
+              disabled={loading}
+              className={cn(
+                "flex-1 flex items-center justify-center gap-2 bg-brand-600 text-white px-6 py-3 rounded-pill font-semibold transition-all active:scale-[0.97]",
+                loading ? "opacity-70 cursor-not-allowed" : "hover:bg-brand-700 hover:shadow-glow"
+              )}
+            >
+              {loading ? "Sending..." : "Get Free Treatment Plan"}
+              {!loading && <Send className="w-4 h-4" />}
+            </button>
+          )}
+        </div>
+      </form>
+    </div>
   );
 }

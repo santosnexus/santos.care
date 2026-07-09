@@ -1,7 +1,7 @@
 export default function BlogLoading() {
   return (
     <>
-      <section className="bg-gradient-to-br from-brand-800 to-brand-900 pt-32 pb-20">
+      <section className="bg-mesh animate-gradient-pan pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-10 w-64 bg-white/10 rounded-lg animate-pulse mb-4" />
           <div className="h-6 w-96 bg-white/10 rounded-lg animate-pulse" />

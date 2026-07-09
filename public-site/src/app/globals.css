@@ -6,13 +6,13 @@
   :root {
     --color-brand: #0d7377;
     --color-brand-light: #7dd9d9;
-    --color-accent: #ff6b6b;
+    --color-accent: #ff8a5b;
     --color-surface: #ffffff;
-    --color-surface-soft: #f7f8fa;
-    --color-ink: #1d1d1f;
-    --color-ink-muted: #6a6a6a;
-    --radius-card: 14px;
-    --radius-button: 8px;
+    --color-surface-soft: #f6f8f9;
+    --color-ink: #0f1724;
+    --color-ink-muted: #5b6472;
+    --radius-card: 18px;
+    --radius-button: 12px;
     --radius-pill: 9999px;
   }
 
@@ -38,20 +38,59 @@
     animation: slideUp 0.6s ease-out forwards;
   }
   .animate-fade-in-up {
-    animation: fadeInUp 0.6s ease-out forwards;
+    animation: fadeInUp 0.7s ease-out forwards;
   }
   .animate-scale-in {
-    animation: scaleIn 0.3s ease-out forwards;
+    animation: scaleIn 0.4s ease-out forwards;
   }
 
   .text-balance {
     text-wrap: balance;
   }
 
+  /* Stripe-style atmospheric gradient mesh — brand signature */
+  .bg-mesh {
+    background-color: #032e30;
+    background-image:
+      radial-gradient(at 18% 22%, rgba(38, 168, 168, 0.55) 0px, transparent 50%),
+      radial-gradient(at 82% 12%, rgba(255, 138, 91, 0.42) 0px, transparent 45%),
+      radial-gradient(at 68% 78%, rgba(13, 115, 119, 0.6) 0px, transparent 55%),
+      radial-gradient(at 30% 88%, rgba(77, 196, 196, 0.4) 0px, transparent 50%),
+      radial-gradient(at 95% 70%, rgba(244, 236, 225, 0.22) 0px, transparent 45%);
+    background-size: 200% 200%;
+  }
+
+  .bg-mesh-light {
+    background-color: #fbf9f6;
+    background-image:
+      radial-gradient(at 12% 18%, rgba(170, 233, 233, 0.55) 0px, transparent 50%),
+      radial-gradient(at 88% 22%, rgba(255, 199, 172, 0.45) 0px, transparent 48%),
+      radial-gradient(at 70% 82%, rgba(212, 244, 244, 0.6) 0px, transparent 52%);
+    background-size: 180% 180%;
+  }
+
   .bg-grid {
     background-image: linear-gradient(rgba(13, 115, 119, 0.05) 1px, transparent 1px),
       linear-gradient(90deg, rgba(13, 115, 119, 0.05) 1px, transparent 1px);
     background-size: 40px 40px;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+  }
+
+  .text-gradient {
+    background: linear-gradient(100deg, #0d7377 0%, #26a8a8 45%, #ff8a5b 110%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .mask-fade-r {
+    -webkit-mask-image: linear-gradient(to right, black 80%, transparent 100%);
+    mask-image: linear-gradient(to right, black 80%, transparent 100%);
   }
 }
 

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function CountriesPage() {
   return (
     <>
-      <section className="bg-gradient-to-br from-brand-800 to-brand-900 pt-32 pb-20">
+      <section className="bg-mesh animate-gradient-pan pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             Medical Tourism to India

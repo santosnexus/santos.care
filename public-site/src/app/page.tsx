@@ -12,6 +12,7 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { InteractiveCostComparison } from "@/components/InteractiveCostComparison";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
 import { Section, Container } from "@/components/ui/Section";
 
 const icons: Record<string, React.ReactNode> = {
@@ -59,34 +60,48 @@ export default function Home() {
       <ScrollProgress />
 
       {/* ───── HERO ───── */}
-      <Section variant="dark" padding="none" className="relative min-h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0">
+      <Section variant="mesh" padding="none" className="relative min-h-screen flex items-center overflow-hidden animate-gradient-pan">
+        <div className="absolute inset-0 bg-grid opacity-20" />
+
+        {/* floating patient-outcome photo — gaze-direction priming toward the CTA card */}
+        <div className="hidden lg:block absolute right-[44%] top-24 w-44 h-44 rounded-full overflow-hidden border-4 border-white/20 shadow-float animate-float-slow">
           <Image
-            src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&q=80"
-            alt="Modern hospital operating room"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover scale-105 animate-scale-in"
+            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80"
+            alt="A happy patient who recovered through treatment in India"
+            width={176}
+            height={176}
+            className="object-cover w-full h-full"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-800/90 to-brand-700/80" />
-          <div className="absolute inset-0 bg-grid opacity-30" />
+        </div>
+        <div className="hidden lg:block absolute left-[6%] bottom-24 glass rounded-2xl px-5 py-3 shadow-float border border-white/20 animate-float-slow [animation-delay:1.5s]">
+          <div className="flex items-center gap-3">
+            <div className="flex -space-x-2">
+              {["KE", "GB", "AE", "US"].map((c) => (
+                <span key={c} className="w-7 h-7 rounded-full bg-brand-500/80 border-2 border-white/70 flex items-center justify-center text-[10px] font-bold text-white">
+                  {c}
+                </span>
+              ))}
+            </div>
+            <p className="text-white/90 text-sm font-medium leading-tight">
+              Patients from<br />15+ countries
+            </p>
+          </div>
         </div>
 
-        <Container className="py-32 relative">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <Container className="pt-36 pb-28 relative">
+          <div className="grid lg:grid-cols-2 gap-14 items-center">
             <Reveal variant="slide-up" duration={800}>
               <Badge variant="white" size="lg" className="mb-6">
                 <Shield className="w-4 h-4 text-green-400 mr-1" />
                 JCI & NABH Accredited
               </Badge>
               <h1 className="text-display-hero text-white leading-tight mb-6 text-balance">
-                World-Class Medical Treatment in India
-                <span className="block text-brand-300 mt-2">at 70–90% Less Cost</span>
+                World-Class Medical Care in India,
+                <span className="block text-gradient mt-2">at 70–90% Less Cost</span>
               </h1>
-              <p className="text-body-lg text-gray-300 mb-8 max-w-xl leading-relaxed">
+              <p className="text-body-lg text-white/75 mb-8 max-w-xl leading-relaxed">
                 JCI-accredited hospitals, internationally trained surgeons, and holistic Ayurveda recovery in
-                Kerala. Get your free treatment plan within 24 hours.
+                Kerala. Get your free, written treatment plan within 24 hours — no obligation.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button as="a" href="/contact" size="xl">
@@ -96,7 +111,7 @@ export default function Home() {
                   <MessageCircle className="w-5 h-5" /> Chat on WhatsApp
                 </Button>
               </div>
-              <div className="flex flex-wrap items-center gap-6 mt-8 text-sm text-gray-400">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-8 text-sm text-white/60">
                 <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-green-400" /> Free Quote</span>
                 <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-green-400" /> 24hr Response</span>
                 <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-green-400" /> No Obligation</span>
@@ -105,9 +120,9 @@ export default function Home() {
             </Reveal>
 
             <Reveal variant="slide-up" delay={200} duration={800}>
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-float">
+              <div className="bg-white/10 backdrop-blur-xl rounded-card p-8 border border-white/20 shadow-float">
                 <h3 className="text-white text-display-h3 mb-2">Get Your Free Treatment Plan</h3>
-                <p className="text-gray-400 text-body-sm mb-6">
+                <p className="text-white/60 text-body-sm mb-6">
                   Share your details and medical reports. We&apos;ll respond within 24 hours.
                 </p>
                 <LeadForm source="HERO" />
@@ -116,10 +131,21 @@ export default function Home() {
           </div>
         </Container>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white/30 rounded-pill flex justify-center pt-2">
-            <div className="w-1.5 h-3 bg-white/60 rounded-pill animate-pulse" />
-          </div>
+        {/* floating trust strip — authority + social-proof priming */}
+        <div className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-black/10 backdrop-blur-sm">
+          <Container className="py-4">
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-white/70 text-sm">
+              <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-green-400" /> JCI Accredited</span>
+              <span className="hidden sm:inline text-white/20">•</span>
+              <span>NABH Certified Hospitals</span>
+              <span className="hidden sm:inline text-white/20">•</span>
+              <span>1,000+ Surgeries / Year</span>
+              <span className="hidden sm:inline text-white/20">•</span>
+              <span>98%+ Success Rates</span>
+              <span className="hidden sm:inline text-white/20">•</span>
+              <span>End-to-End Concierge</span>
+            </div>
+          </Container>
         </div>
       </Section>
 
@@ -150,16 +176,44 @@ export default function Home() {
 
           <StaggerReveal variant="slide-up" staggerDelay={80} className="grid md:grid-cols-3 gap-6">
             {whyChooseUs.map((item) => (
-              <div
-                key={item.title}
-                className="bg-surface rounded-card p-6 shadow-card border border-gray-100/50 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200"
-              >
+              <Card key={item.title} surface="soft" hover padding="lg" className="group">
                 <div className="mb-4">{item.icon}</div>
-                <h3 className="text-display-h3 text-ink mb-2">{item.title}</h3>
+                <h3 className="text-display-h3 text-ink mb-2 group-hover:text-brand-700 transition-colors">{item.title}</h3>
                 <p className="text-body-sm text-ink-muted leading-relaxed">{item.desc}</p>
-              </div>
+              </Card>
             ))}
           </StaggerReveal>
+        </Container>
+      </Section>
+
+      {/* ───── PATIENT JOURNEY (narrative priming) ───── */}
+      <Section variant="sand" padding="lg" id="journey">
+        <Container>
+          <Reveal variant="slide-up">
+            <div className="text-center mb-14">
+              <Badge variant="default" size="lg" className="mb-4">Your Healing Journey</Badge>
+              <h2 className="text-display-h2 text-ink mb-4 text-balance">Four Steps to World-Class Care</h2>
+              <p className="text-body-lg text-ink-muted max-w-2xl mx-auto">
+                From your first message to a full recovery in Kerala — we handle every detail so you can focus on healing.
+              </p>
+            </div>
+          </Reveal>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { step: "01", title: "Free Consultation", desc: "Send your reports on WhatsApp. Get a written treatment plan with transparent pricing in 24 hours." },
+              { step: "02", title: "Plan & Travel", desc: "We arrange your visa, flights, airport pickup, and accommodation near the hospital." },
+              { step: "03", title: "World-Class Treatment", desc: "Surgery or therapy at a JCI-accredited hospital by internationally trained specialists." },
+              { step: "04", title: "Recovery & Beyond", desc: "Holistic Ayurveda recovery in Kerala, then continued follow-up once you're home." },
+            ].map((s, i) => (
+              <Reveal key={s.step} variant="slide-up" delay={i * 80}>
+                <div className="relative h-full bg-surface rounded-card border border-gray-100/60 shadow-card p-7 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300">
+                  <span className="text-5xl font-bold text-brand-100 tracking-tight">{s.step}</span>
+                  <h3 className="text-display-h3 text-ink mt-3 mb-2">{s.title}</h3>
+                  <p className="text-body-sm text-ink-muted leading-relaxed">{s.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </Container>
       </Section>
 
@@ -209,13 +263,20 @@ export default function Home() {
               <Link
                 key={t.slug}
                 href={`/treatments/${t.slug}`}
-                className="group bg-surface-soft rounded-card p-6 hover:bg-brand-50 border border-gray-100/50 hover:border-brand-200 transition-all duration-200 shadow-card hover:shadow-card-hover"
+                className="group relative bg-surface rounded-card p-6 border border-gray-100/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 hover:border-brand-200 transition-all duration-300"
               >
+                <div className="absolute top-4 right-4">
+                  <Badge variant="savings" size="sm">Save up to 90%</Badge>
+                </div>
                 <div className="text-brand-600 mb-3">{icons[t.icon] || <Heart className="w-8 h-8" />}</div>
-                <h3 className="font-semibold text-ink group-hover:text-brand-700 transition-colors mb-2">{t.title}</h3>
-                <p className="text-body-sm text-ink-muted mb-3 line-clamp-2">{t.description}</p>
-                <div className="flex items-center gap-1 text-brand-600 text-sm font-medium">
-                  From ${t.costRange.from.toLocaleString()}
+                <h3 className="font-semibold text-ink group-hover:text-brand-700 transition-colors mb-2 pr-20">{t.title}</h3>
+                <p className="text-body-sm text-ink-muted mb-4 line-clamp-2">{t.description}</p>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-body-sm text-ink-light">From</span>
+                  <span className="text-lg font-bold text-brand-700">${t.costRange.from.toLocaleString()}</span>
+                </div>
+                <div className="flex items-center gap-1 text-brand-600 text-sm font-medium mt-1">
+                  Explore treatment
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </div>
               </Link>
@@ -239,10 +300,7 @@ export default function Home() {
 
           <StaggerReveal variant="slide-up" staggerDelay={80} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {hospitals.map((h) => (
-              <div
-                key={h.slug}
-                className="bg-surface rounded-card p-6 shadow-card border border-gray-100/50 hover:shadow-card-hover transition-all duration-200"
-              >
+              <Card key={h.slug} surface="white" hover padding="md">
                 <h3 className="font-semibold text-ink mb-1">{h.name}</h3>
                 <p className="text-body-sm text-ink-muted mb-3">{h.location}</p>
                 <div className="flex flex-wrap gap-2 mb-3">
@@ -252,7 +310,7 @@ export default function Home() {
                 </div>
                 <p className="text-body-sm text-ink-muted mb-3">{h.description}</p>
                 <span className="text-body-sm text-ink-light">{h.beds} beds</span>
-              </div>
+              </Card>
             ))}
           </StaggerReveal>
         </Container>
@@ -273,18 +331,15 @@ export default function Home() {
 
           <StaggerReveal variant="slide-up" staggerDelay={80} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {testimonials.map((t) => (
-              <div
-                key={t.name}
-                className="bg-surface-soft rounded-card p-6 border border-gray-100/50 hover:shadow-card-hover transition-all duration-200"
-              >
+              <Card key={t.name} surface="soft" padding="md" className="flex flex-col">
                 <div className="flex items-center gap-1 mb-3">
                   {Array.from({ length: t.rating }).map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <p className="text-body-sm text-ink-muted mb-4 leading-relaxed">&ldquo;{t.content}&rdquo;</p>
+                <p className="text-body-sm text-ink-muted mb-4 leading-relaxed flex-1">&ldquo;{t.content}&rdquo;</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 font-semibold text-sm">
+                  <div className="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-full flex items-center justify-center text-white font-semibold text-sm">
                     {t.name.charAt(0)}
                   </div>
                   <div>
@@ -292,7 +347,7 @@ export default function Home() {
                     <p className="text-body-sm text-ink-light">{t.country} &middot; {t.treatment}</p>
                   </div>
                 </div>
-              </div>
+              </Card>
             ))}
           </StaggerReveal>
         </Container>

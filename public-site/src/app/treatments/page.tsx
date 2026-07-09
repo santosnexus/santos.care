@@ -5,6 +5,7 @@ import { treatmentList } from "@/data/treatments";
 import { Reveal, StaggerReveal } from "@/components/Reveal";
 import { Section, Container } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 
 export const metadata: Metadata = {
   title: "Treatments in India | Heal India Medi Tourism",
@@ -32,17 +33,17 @@ const ICONS: Record<string, typeof Heart> = {
 export default function TreatmentsIndexPage() {
   return (
     <>
-      <section className="relative pt-32 pb-20 overflow-hidden bg-gradient-to-br from-brand-800 to-brand-900">
+      <section className="relative pt-32 pb-24 overflow-hidden bg-mesh text-white animate-gradient-pan">
         <div className="absolute inset-0 bg-grid opacity-[0.15]" />
         <Container className="relative">
           <Reveal>
             <span className="inline-flex items-center gap-2 bg-white/10 text-brand-100 px-4 py-1.5 rounded-full text-sm font-medium mb-6 backdrop-blur">
               <Stethoscope className="w-4 h-4" /> 8 Specialties · JCI-Accredited
             </span>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight max-w-4xl">
+            <h1 className="text-display-hero text-white leading-tight max-w-4xl text-balance">
               World-Class Medical Treatments in India
             </h1>
-            <p className="mt-6 text-xl text-brand-100 max-w-2xl leading-relaxed">
+            <p className="mt-6 text-body-lg text-white/75 max-w-2xl leading-relaxed">
               From life-saving cardiac surgery to transformative cosmetic care — delivered at JCI-accredited
               hospitals in Kerala, at 70-90% lower cost than the US, UK, or UAE.
             </p>
@@ -63,25 +64,28 @@ export default function TreatmentsIndexPage() {
           <StaggerReveal className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" staggerDelay={80}>
             {treatmentList.map((t) => {
               const Icon = ICONS[t.slug] || Heart;
+              const topWestern = t.costComparison[0];
+              const savingsPct = Math.round((1 - t.costRange.from / topWestern.from) * 100);
               return (
                 <Link
                   key={t.slug}
                   href={`/treatments/${t.slug}`}
-                  className="group relative bg-white rounded-card border border-gray-100 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col"
+                  className="group relative bg-surface rounded-card border border-gray-100/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col"
                 >
+                  <div className="absolute top-5 right-5">
+                    <Badge variant="savings" size="sm">Save {savingsPct}%</Badge>
+                  </div>
                   <div className="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center mb-4 group-hover:bg-brand-600 group-hover:text-white transition-colors">
                     <Icon className="w-6 h-6" />
                   </div>
-                  <h2 className="text-xl font-bold text-ink mb-2 group-hover:text-brand-700 transition-colors">
+                  <h2 className="text-display-h3 text-ink mb-2 pr-20 group-hover:text-brand-700 transition-colors">
                     {t.title}
                   </h2>
-                  <p className="text-sm text-ink-muted mb-4 flex-1">{t.tagline}</p>
+                  <p className="text-body-sm text-ink-muted mb-5 flex-1">{t.tagline}</p>
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-1.5 text-sm">
-                      <TrendingDown className="w-4 h-4 text-savings" />
-                      <span className="font-semibold text-ink">
-                        ${t.costRange.from.toLocaleString()}+
-                      </span>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-body-sm text-ink-light">From</span>
+                      <span className="text-lg font-bold text-brand-700">${t.costRange.from.toLocaleString()}</span>
                     </div>
                     <span className="inline-flex items-center gap-1 text-sm font-medium text-brand-600 group-hover:gap-2 transition-all">
                       Explore <ArrowRight className="w-4 h-4" />
@@ -97,10 +101,10 @@ export default function TreatmentsIndexPage() {
       <Section variant="brand">
         <Container className="text-center max-w-3xl">
           <Reveal>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            <h2 className="text-display-h2 text-white mb-4 text-balance">
               Not Sure Which Treatment You Need?
             </h2>
-            <p className="text-brand-100 text-lg mb-8">
+            <p className="text-white/80 text-body-lg mb-8">
               Share your medical reports and our specialists will recommend the right procedure, hospital, and
               recovery plan — with transparent pricing within 24 hours.
             </p>

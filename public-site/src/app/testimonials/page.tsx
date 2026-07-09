@@ -40,7 +40,7 @@ export default function TestimonialsPage() {
           }))
         )}
       />
-      <section className="relative pt-32 pb-20 overflow-hidden bg-gradient-to-br from-brand-800 to-brand-900">
+      <section className="relative pt-32 pb-20 overflow-hidden bg-mesh animate-gradient-pan">
         <div className="absolute inset-0 bg-grid opacity-[0.15]" />
         <Container className="relative">
           <Reveal>

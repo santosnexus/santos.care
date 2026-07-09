@@ -4,22 +4,30 @@ interface CardProps {
   children: React.ReactNode;
   className?: string;
   hover?: boolean;
+  surface?: "white" | "soft" | "warm";
   padding?: "none" | "sm" | "md" | "lg";
 }
 
 const paddings = {
   none: "",
-  sm: "p-4",
-  md: "p-6",
-  lg: "p-8",
+  sm: "p-5",
+  md: "p-7",
+  lg: "p-9",
 };
 
-export function Card({ children, className, hover = false, padding = "md" }: CardProps) {
+const surfaces = {
+  white: "bg-surface border-gray-100/60",
+  soft: "bg-surface-soft border-transparent",
+  warm: "bg-surface-warm border-transparent",
+};
+
+export function Card({ children, className, hover = false, surface = "white", padding = "md" }: CardProps) {
   return (
     <div
       className={cn(
-        "bg-surface rounded-card shadow-card border border-gray-100/50",
-        hover && "hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200",
+        "rounded-card border shadow-card",
+        surfaces[surface],
+        hover && "transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1 hover:border-brand-200",
         paddings[padding],
         className
       )}

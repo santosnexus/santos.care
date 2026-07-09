@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-type SectionVariant = "default" | "soft" | "brand" | "dark" | "accent";
+type SectionVariant = "default" | "soft" | "brand" | "dark" | "accent" | "sand" | "mesh";
 
 const variants: Record<SectionVariant, string> = {
   default: "bg-surface",
@@ -8,6 +8,8 @@ const variants: Record<SectionVariant, string> = {
   brand: "bg-brand-600",
   dark: "bg-brand-900",
   accent: "bg-accent-50",
+  sand: "bg-surface-warm",
+  mesh: "bg-mesh text-white",
 };
 
 interface SectionProps {

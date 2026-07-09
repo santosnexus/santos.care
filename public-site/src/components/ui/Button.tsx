@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 const variants = {
   primary:
-    "bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 shadow-sm hover:shadow-card-hover",
+    "bg-brand-600 text-white hover:bg-brand-700 active:bg-brand-800 shadow-sm hover:shadow-glow",
   secondary:
     "bg-surface-soft text-ink hover:bg-surface-muted active:bg-gray-200 border border-gray-200",
   outline:
@@ -15,14 +15,14 @@ const variants = {
   accent:
     "bg-accent text-white hover:bg-accent-600 active:bg-accent-700 shadow-sm hover:shadow-float",
   savings:
-    "bg-savings text-white hover:bg-green-700 active:bg-green-800 shadow-sm",
+    "bg-savings text-white hover:bg-green-700 active:bg-green-800 shadow-sm hover:shadow-float",
 };
 
 const sizes = {
-  sm: "px-3 py-1.5 text-body-sm",
-  md: "px-5 py-2.5 text-body-base",
-  lg: "px-7 py-3.5 text-body-lg",
-  xl: "px-8 py-4 text-body-lg",
+  sm: "px-4 py-2 text-body-sm",
+  md: "px-6 py-3 text-body-base",
+  lg: "px-8 py-3.5 text-body-lg",
+  xl: "px-9 py-4 text-body-lg",
 };
 
 type ButtonProps = {
@@ -37,7 +37,7 @@ type ButtonProps = {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "md", as = "button", href, target, rel, children, ...props }, ref) => {
     const classes = cn(
-      "inline-flex items-center justify-center gap-2 rounded-button font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+      "inline-flex items-center justify-center gap-2 rounded-pill font-semibold tracking-tight transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none",
       variants[variant],
       sizes[size],
       className
