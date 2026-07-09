@@ -8,7 +8,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://santos.care";
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const staticRoutes = ["", "/about", "/contact", "/blog", "/countries", "/faq", "/visa-guide", "/privacy"].map(
+  const staticRoutes = ["", "/about", "/contact", "/blog", "/countries", "/treatments", "/hospitals", "/testimonials", "/faq", "/visa-guide", "/privacy"].map(
     (path) => ({
       url: `${SITE_URL}${path}`,
       lastModified: now,

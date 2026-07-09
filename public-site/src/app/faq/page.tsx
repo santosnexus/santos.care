@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 import { faqs } from "@/data/faqs";
 import { getWhatsAppUrl } from "@/lib/utils";
+import { JsonLd, faqSchema } from "@/components/json-ld";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,6 +15,14 @@ const categories = [...new Set(faqs.map((f) => f.category))];
 export default function FAQPage() {
   return (
     <>
+      <JsonLd
+        data={faqSchema(
+          faqs.map((f) => ({
+            question: f.question,
+            answer: f.answer,
+          }))
+        )}
+      />
       <section className="bg-gradient-to-br from-brand-800 to-brand-900 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">Frequently Asked Questions</h1>

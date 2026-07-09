@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle, Clock, Hospital, TrendingDown, Star, MessageCircle } from "lucide-react";
 import { treatments, treatmentList } from "@/data/treatments";
 import { getWhatsAppUrl } from "@/lib/utils";
+import LeadForm from "@/components/LeadForm";
 
 export function generateStaticParams() {
   return treatmentList.map((t) => ({ slug: t.slug }));
@@ -30,7 +31,7 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
       <section className="bg-gradient-to-br from-brand-800 to-brand-900 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
-            href="/#treatments"
+            href="/treatments"
             className="inline-flex items-center gap-1 text-brand-300 hover:text-white text-sm mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> All Treatments
@@ -99,14 +100,7 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
                 <p className="text-sm text-gray-600 mb-4">
                   Share your medical reports and receive a personalized plan within 24 hours.
                 </p>
-                <div className="space-y-3">
-                  <input type="text" placeholder="Your Name" className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" />
-                  <input type="tel" placeholder="Phone Number" className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" />
-                  <input type="email" placeholder="Email" className="w-full px-4 py-2.5 rounded-lg border border-gray-300 text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none" />
-                  <button className="w-full bg-brand-600 text-white py-2.5 rounded-lg font-medium hover:bg-brand-700 transition-colors text-sm">
-                    Get Free Plan
-                  </button>
-                </div>
+                <LeadForm treatmentInterest={t.title} source="TREATMENT_PAGE" />
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <a
                     href={getWhatsAppUrl(`Hi! I'm interested in ${t.title} in India.`)}

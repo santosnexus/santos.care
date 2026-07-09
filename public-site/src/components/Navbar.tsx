@@ -39,6 +39,12 @@ export default function Navbar() {
                   onMouseEnter={() => setTreatmentsOpen(true)}
                   onMouseLeave={() => setTreatmentsOpen(false)}
                 >
+                  <Link
+                    href="/treatments"
+                    className="block px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-50 transition-colors"
+                  >
+                    View all treatments →
+                  </Link>
                   {treatmentList.map((t) => (
                     <Link
                       key={t.slug}
