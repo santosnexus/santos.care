@@ -16,7 +16,7 @@ const paddings = {
 };
 
 const surfaces = {
-  white: "bg-surface border-gray-100/60",
+  white: "bg-surface border-surface-muted dark:border-white/10",
   soft: "bg-surface-soft border-transparent",
   warm: "bg-surface-warm border-transparent",
 };

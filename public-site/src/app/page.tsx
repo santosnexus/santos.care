@@ -6,6 +6,7 @@ import { hospitals } from "@/data/hospitals";
 import { testimonials } from "@/data/testimonials";
 import { getWhatsAppUrl } from "@/lib/utils";
 import LeadForm from "@/components/LeadForm";
+import { HealIndiaOrb } from "@/components/HealIndiaOrb";
 import { Reveal, StaggerReveal } from "@/components/Reveal";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { ScrollProgress } from "@/components/ScrollProgress";
@@ -102,12 +103,13 @@ export default function Home() {
                 JCI & NABH Accredited
               </Badge>
               <h1 className="text-display-hero text-white leading-tight mb-6 text-balance">
-                World-Class Medical Care in India,
-                <span className="block text-gradient mt-2">at 70–90% Less Cost</span>
+                Your Healing Journey,
+                <span className="block text-gradient mt-2">Handled End-to-End</span>
               </h1>
               <p className="text-body-lg text-white/75 mb-8 max-w-xl leading-relaxed">
-                JCI-accredited hospitals, internationally trained surgeons, and holistic Ayurveda recovery in
-                Kerala. Get your free, written treatment plan within 24 hours — no obligation.
+                From your first enquiry to post-treatment follow-ups back home, we handle the doctors, visas,
+                travel, and recovery — so you can focus on healing. JCI-accredited hospitals in Kerala, with a
+                dedicated care team by your side.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button as="a" href="/contact" size="xl">
@@ -126,12 +128,17 @@ export default function Home() {
             </Reveal>
 
             <Reveal variant="slide-up" delay={200} duration={800}>
-              <div className="bg-white/10 backdrop-blur-xl rounded-card p-8 border border-white/20 shadow-float">
-                <h3 className="text-white text-display-h3 mb-2">Get Your Free Treatment Plan</h3>
-                <p className="text-white/60 text-body-sm mb-6">
-                  Share your details and medical reports. We&apos;ll respond within 24 hours.
-                </p>
-                <LeadForm source="HERO" />
+              <div className="relative">
+                <div className="absolute -inset-6 -top-10 -bottom-4 -z-10 opacity-80 pointer-events-none">
+                  <HealIndiaOrb />
+                </div>
+                <div className="relative bg-white/10 backdrop-blur-xl rounded-card p-8 border border-white/20 shadow-float">
+                  <h3 className="text-white text-display-h3 mb-2">Get Your Free Treatment Plan</h3>
+                  <p className="text-white/60 text-body-sm mb-6">
+                    Share your details and medical reports. We&apos;ll respond within 24 hours.
+                  </p>
+                  <LeadForm source="HERO" />
+                </div>
               </div>
             </Reveal>
           </div>
@@ -192,6 +199,47 @@ export default function Home() {
         </Container>
       </Section>
 
+      {/* ───── CARE TEAM / FACILITATION ───── */}
+      <Section variant="soft" padding="lg">
+        <Container>
+          <Reveal variant="slide-up">
+            <div className="text-center mb-16">
+              <Badge variant="default" size="lg" className="mb-4">Human-First Care</Badge>
+              <h2 className="text-display-h2 text-ink mb-4 text-balance">You Are Never Alone</h2>
+              <p className="text-body-lg text-ink-muted max-w-2xl mx-auto">
+                Medical travel can feel overwhelming. Every patient gets a dedicated team that manages the
+                details — before you fly, while you are here, and after you return home.
+              </p>
+            </div>
+          </Reveal>
+          <StaggerReveal variant="slide-up" staggerDelay={80} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                title: "Medical Coordinator",
+                desc: "Matches you with the right hospital and surgeon, reviews your reports, and answers clinical questions.",
+              },
+              {
+                title: "Visa & Travel Specialist",
+                desc: "Prepares your medical visa invitation letter, books flights, and arranges airport pickup.",
+              },
+              {
+                title: "On-Ground Concierge",
+                desc: "Meets you at the airport, manages accommodation, and stays available 24/7 during your stay.",
+              },
+              {
+                title: "Recovery & Follow-Up Coach",
+                desc: "Coordinates Ayurveda recovery, discharge, and follow-up calls once you are back home.",
+              },
+            ].map((item) => (
+              <Card key={item.title} surface="white" hover padding="lg" className="text-center">
+                <h3 className="text-display-h3 text-ink mb-2">{item.title}</h3>
+                <p className="text-body-sm text-ink-muted leading-relaxed">{item.desc}</p>
+              </Card>
+            ))}
+          </StaggerReveal>
+        </Container>
+      </Section>
+
       {/* ───── PATIENT JOURNEY (narrative priming) ───── */}
       <Section variant="sand" padding="lg" id="journey">
         <Container>
@@ -206,10 +254,10 @@ export default function Home() {
           </Reveal>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { step: "01", title: "Free Consultation", desc: "Send your reports on WhatsApp. Get a written treatment plan with transparent pricing in 24 hours." },
-              { step: "02", title: "Plan & Travel", desc: "We arrange your visa, flights, airport pickup, and accommodation near the hospital." },
-              { step: "03", title: "World-Class Treatment", desc: "Surgery or therapy at a JCI-accredited hospital by internationally trained specialists." },
-              { step: "04", title: "Recovery & Beyond", desc: "Holistic Ayurveda recovery in Kerala, then continued follow-up once you're home." },
+              { step: "01", title: "Personal Consultation", desc: "A dedicated coordinator studies your reports, explains options, and connects you with the right specialist." },
+              { step: "02", title: "Plan & Travel", desc: "We handle your medical visa invitation, flights, airport pickup, and accommodation near the hospital." },
+              { step: "03", title: "Treatment & Daily Care", desc: "Your coordinator stays with you at the hospital, manages appointments, and keeps family updated." },
+              { step: "04", title: "Recovery & Home Follow-Up", desc: "Ayurveda recovery in Kerala, then scheduled follow-up calls and report reviews after you return home." },
             ].map((s, i) => (
               <Reveal key={s.step} variant="slide-up" delay={i * 80}>
                 <div className="relative h-full bg-surface rounded-card border border-gray-100/60 shadow-card p-7 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300">

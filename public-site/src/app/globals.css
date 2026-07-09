@@ -11,6 +11,7 @@
     --color-surface-soft: #f6f8f9;
     --color-ink: #0f1724;
     --color-ink-muted: #5b6472;
+    --color-ink-light: #9aa3b2;
     --radius-card: 18px;
     --radius-button: 12px;
     --radius-pill: 9999px;
@@ -25,9 +26,48 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
+  html.dark body {
+    @apply bg-brand-950;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
   ::selection {
     @apply bg-brand-200 text-brand-900;
   }
+}
+
+/* ───── Dark mode semantic token overrides ───── */
+html.dark .text-ink {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+html.dark .text-ink-muted {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+html.dark .text-ink-light {
+  color: rgba(255, 255, 255, 0.52);
+}
+
+html.dark .bg-surface {
+  background-color: #021c1e;
+}
+
+html.dark .bg-surface-soft {
+  background-color: #032e30;
+}
+
+html.dark .bg-surface-warm {
+  background-color: #042c2e;
+}
+
+html.dark .bg-surface-muted {
+  background-color: #064446;
+}
+
+html.dark .glass {
+  background: rgba(3, 46, 48, 0.78);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 @layer utilities {

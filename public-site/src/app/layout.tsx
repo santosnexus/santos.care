@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import ScrollToTop from "@/components/ScrollToTop";
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { JsonLd, siteSchema, websiteSchema } from "@/components/json-ld";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
@@ -56,23 +58,27 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-brand-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg"
-        >
-          Skip to content
-        </a>
-        <JsonLd data={siteSchema()} />
-        <JsonLd data={websiteSchema()} />
-        <Navbar />
-        <main id="main-content" className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
-        <WhatsAppButton />
-        <ScrollToTop />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <SmoothScroll>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-brand-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg"
+            >
+              Skip to content
+            </a>
+            <JsonLd data={siteSchema()} />
+            <JsonLd data={websiteSchema()} />
+            <Navbar />
+            <main id="main-content" className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+            <WhatsAppButton />
+            <ScrollToTop />
+          </SmoothScroll>
+        </ThemeProvider>
       </body>
     </html>
   );

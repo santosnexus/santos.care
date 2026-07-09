@@ -7,7 +7,7 @@ const variants: Record<SectionVariant, string> = {
   soft: "bg-surface-soft",
   brand: "bg-brand-600",
   dark: "bg-brand-900",
-  accent: "bg-accent-50",
+  accent: "bg-accent-50 dark:bg-accent-900/20",
   sand: "bg-surface-warm",
   mesh: "bg-mesh text-white",
 };

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Menu, X, Phone, ChevronDown, ShieldCheck } from "lucide-react";
 import { cn, getWhatsAppUrl, WHATSAPP_NUMBER } from "@/lib/utils";
 import { treatmentList } from "@/data/treatments";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -34,7 +35,7 @@ export default function Navbar() {
               <span className="text-white font-bold text-sm">HC</span>
             </div>
             <div className="leading-tight">
-              <span className={cn("font-bold text-lg tracking-tight transition-colors", scrolled ? "text-brand-800" : "text-white")}>
+              <span className={cn("font-bold text-lg tracking-tight transition-colors", scrolled ? "text-brand-600 dark:text-brand-400" : "text-white")}>
                 Heal India
               </span>
               <span className={cn("text-[11px] block leading-tight transition-colors", scrolled ? "text-ink-light" : "text-white/60")}>
@@ -94,6 +95,7 @@ export default function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center gap-4">
+            <ThemeToggle scrolled={scrolled} />
             <a
               href={getWhatsAppUrl()}
               target="_blank"
