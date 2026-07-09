@@ -122,9 +122,8 @@ const procedures: Record<string, ProcedureCost[]> = {
   ],
 };
 
-function CostBar({ country, cost, flag, maxCost }: CostData & { maxCost: number }) {
+function CostBar({ country, cost, flag, maxCost, isCheapest }: CostData & { maxCost: number; isCheapest?: boolean }) {
   const width = (cost / maxCost) * 100;
-  const isCheapest = cost === 0 ? false : cost <= Math.min(...procedures.cardiac.flatMap(p => p.countries.map(c => c.cost))); // simplified
 
   return (
     <div className="flex items-center gap-3 group">
@@ -136,7 +135,7 @@ function CostBar({ country, cost, flag, maxCost }: CostData & { maxCost: number 
             "h-full rounded-pill transition-all duration-1000 ease-out",
             isCheapest ? "bg-savings" : "bg-brand-200"
           )}
-          style={{ width: `${100 - width + 10}%` }}
+          style={{ width: `${Math.max(width, 5)}%` }}
         />
       </div>
       <span className="w-24 text-right text-sm font-semibold text-ink tabular-nums">
@@ -186,7 +185,12 @@ export function InteractiveCostComparison() {
                 </div>
                 <div className="space-y-2">
                   {proc.countries.map((c) => (
-                    <CostBar key={c.country} {...c} maxCost={maxCost} />
+                    <CostBar
+                      key={c.country}
+                      {...c}
+                      maxCost={maxCost}
+                      isCheapest={c.country === cheapest.country}
+                    />
                   ))}
                 </div>
                 <div className="mt-4 pt-3 border-t border-gray-100 text-xs text-ink-muted">

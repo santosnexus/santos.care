@@ -90,7 +90,7 @@ export const treatments: Record<string, Treatment> = {
       "India has become a global hub for fertility tourism, offering advanced reproductive treatments at accessible costs. Our partner fertility centres in Kochi combine state-of-the-art embryology labs with compassionate care.",
       "Success rates at our partner clinics compare favourably with global averages, while costs are 75-90% lower than in the US, UK, or Australia. We provide end-to-end support including legal assistance for surrogacy and egg donation arrangements where permitted.",
     ],
-    icon: "Heart",
+    icon: "Sparkles",
     procedures: [
       "In-Vitro Fertilisation (IVF)",
       "Intra-Cytoplasmic Sperm Injection (ICSI)",
@@ -122,7 +122,7 @@ export const treatments: Record<string, Treatment> = {
       "Cancer treatment in India has advanced significantly, with JCI-accredited cancer centres offering the full spectrum of oncology services. Our partner hospitals in Kochi provide multidisciplinary care coordinated by tumour boards comprising surgeons, medical oncologists, radiation oncologists, and pathologists.",
       "Treatment costs are typically 70-85% lower than in Western countries, with comparable outcomes. We also offer integrative support including nutritional counselling, psychological support, and Ayurveda-based recovery therapies.",
     ],
-    icon: "Heart",
+    icon: "Activity",
     procedures: [
       "Cancer Surgery",
       "Chemotherapy",
@@ -154,7 +154,7 @@ export const treatments: Record<string, Treatment> = {
       "India's cosmetic surgery sector has grown exponentially, with Kerala attracting patients seeking natural-looking results combined with a peaceful recovery environment. Our partner surgeons are board-certified members of the Indian Association of Plastic Surgeons.",
       "From facial procedures to body contouring, costs are 70-85% lower than in Western countries. Our unique advantage: combine your procedure with a recuperative stay in Kerala's backwaters — healing for body and mind.",
     ],
-    icon: "Heart",
+    icon: "Smile",
     procedures: [
       "Facelift & Neck Lift",
       "Rhinoplasty",
@@ -186,7 +186,7 @@ export const treatments: Record<string, Treatment> = {
       "Dental tourism to India has become hugely popular, with patients saving 70-85% on complex dental procedures while receiving care at clinics equipped with the latest technology. Our partner dental centres in Kochi use digital smile design, 3D imaging, and CAD/CAM technology.",
       "For full-mouth rehabilitation or dental implant procedures, the cost advantage is substantial. Combine your dental vacation with Kerala's renowned hospitality and natural beauty.",
     ],
-    icon: "Heart",
+    icon: "Snowflake",
     procedures: [
       "Dental Implants (Single & Full Mouth)",
       "Porcelain Veneers",
@@ -218,7 +218,7 @@ export const treatments: Record<string, Treatment> = {
       "Obesity is a global health crisis, and bariatric surgery offers the most effective long-term solution. Our partner hospitals in Kochi include centres of excellence with dedicated bariatric teams, specialised operating rooms, and comprehensive aftercare programmes.",
       "Patients achieve 60-80% of excess weight loss within 12-18 months, with significant improvement or resolution of obesity-related conditions like diabetes, hypertension, and sleep apnoea. All at 75-85% less cost than Western countries.",
     ],
-    icon: "Heart",
+    icon: "TrendingDown",
     procedures: [
       "Gastric Sleeve (Sleeve Gastrectomy)",
       "Gastric Bypass",
@@ -248,7 +248,7 @@ export const treatments: Record<string, Treatment> = {
       "India's neuroscience centres offer world-class care for complex neurological conditions. Our partner hospitals in Kochi feature dedicated neuroscience units with experienced neurosurgeons, interventional neuroradiologists, and rehabilitation teams.",
       "From brain tumour surgery to stroke treatment, costs are 70-85% lower than in Western countries. Post-surgical rehabilitation integrates physiotherapy and Ayurveda for optimal recovery outcomes.",
     ],
-    icon: "Heart",
+    icon: "Brain",
     procedures: [
       "Brain Tumour Surgery",
       "Spine Surgery",

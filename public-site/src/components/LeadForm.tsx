@@ -76,11 +76,11 @@ export default function LeadForm({ treatmentInterest, source = "WEBSITE", classN
       if (res.ok) {
         setSubmitted(true);
       } else {
+        setError("We couldn't submit your request. Please message us on WhatsApp instead.");
         window.open(
           getWhatsAppUrl(`Hi! My name is ${form.name} and I'm interested in ${form.treatment || "treatment"} in India.`),
           "_blank"
         );
-        setSubmitted(true);
       }
     } catch {
       setError("Unable to submit. Opening WhatsApp instead...");

@@ -398,3 +398,18 @@
   color: #5b6472;
   font-style: normal;
 }
+
+/* ───── Reduced motion: respect user preference, never hide content ───── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .opacity-0 {
+    opacity: 1 !important;
+  }
+}

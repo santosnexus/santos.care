@@ -112,7 +112,7 @@ function buildPriceBars(table: Element): Element {
       el("span", { className: "price-flag" }, txt(c.flag)),
       el("span", { className: "price-country" }, txt(c.country)),
       el("div", { className: "price-track" },
-        el("div", { className: barClass, style: `width:${Math.max(100 - pct + 5, 5)}%` })
+        el("div", { className: barClass, style: `width:${Math.max(pct, 5)}%` })
       ),
       el("span", { className: "price-value" }, txt(c.costText)),
     ];

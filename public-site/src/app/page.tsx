@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, CheckCircle, Heart, Shield, DollarSign, Star, MessageCircle, Activity, Stethoscope, Microscope, Syringe, Bone } from "lucide-react";
+import { ArrowRight, CheckCircle, Heart, Shield, DollarSign, Star, MessageCircle, Activity, Stethoscope, Microscope, Syringe, Bone, Sparkles, Smile, Snowflake, TrendingDown, Brain } from "lucide-react";
 import { treatmentList } from "@/data/treatments";
 import { hospitals } from "@/data/hospitals";
 import { testimonials } from "@/data/testimonials";
@@ -19,6 +19,11 @@ const icons: Record<string, React.ReactNode> = {
   Heart: <Heart className="w-8 h-8" />,
   Bone: <Bone className="w-8 h-8" />,
   Activity: <Activity className="w-8 h-8" />,
+  Sparkles: <Sparkles className="w-8 h-8" />,
+  Smile: <Smile className="w-8 h-8" />,
+  Snowflake: <Snowflake className="w-8 h-8" />,
+  TrendingDown: <TrendingDown className="w-8 h-8" />,
+  Brain: <Brain className="w-8 h-8" />,
 };
 
 const whyChooseUs = [
