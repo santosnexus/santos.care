@@ -5,6 +5,7 @@ import { getBlogPost, getAllBlogPosts, getRelatedPosts, precompileMdxToHtml } fr
 import { getWhatsAppUrl } from "@/lib/utils";
 import { JsonLd, articleSchema, breadcrumbSchema } from "@/components/json-ld";
 import TableOfContents from "@/components/TableOfContents";
+import AuthorBio from "@/components/AuthorBio";
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const post = getBlogPost(params.slug);
@@ -96,6 +97,7 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
                 className="prose prose-gray max-w-none blog-content"
                 dangerouslySetInnerHTML={{ __html: htmlContent }}
               />
+              <AuthorBio author={frontmatter.author} />
             </div>
           </div>
         </div>

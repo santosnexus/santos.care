@@ -4,6 +4,7 @@ import { testimonials } from "@/data/testimonials";
 import { Reveal, StaggerReveal } from "@/components/Reveal";
 import { Section, Container } from "@/components/ui/Section";
 import { Button } from "@/components/ui/Button";
+import { JsonLd, reviewSchema } from "@/components/json-ld";
 
 export const metadata: Metadata = {
   title: "Patient Stories | Heal India Medi Tourism",
@@ -29,6 +30,16 @@ const FLAGS: Record<string, string> = {
 export default function TestimonialsPage() {
   return (
     <>
+      <JsonLd
+        data={reviewSchema(
+          testimonials.map((t) => ({
+            author: t.name,
+            rating: t.rating,
+            body: t.content,
+            treatment: t.treatment,
+          }))
+        )}
+      />
       <section className="relative pt-32 pb-20 overflow-hidden bg-gradient-to-br from-brand-800 to-brand-900">
         <div className="absolute inset-0 bg-grid opacity-[0.15]" />
         <Container className="relative">

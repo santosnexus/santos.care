@@ -100,3 +100,75 @@ export function faqSchema(questions: { question: string; answer: string }[]) {
     })),
   };
 }
+
+export function productSchema(product: {
+  name: string;
+  description: string;
+  url: string;
+  minPrice: number;
+  maxPrice: number;
+  currency?: string;
+}) {
+  const currency = product.currency || "USD";
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    url: product.url,
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: currency,
+      lowPrice: product.minPrice,
+      highPrice: product.maxPrice,
+      availability: "https://schema.org/InStock",
+      seller: {
+        "@type": "MedicalOrganization",
+        name: "Heal India Medi Tourism",
+        url: "https://santos.care",
+      },
+    },
+  };
+}
+
+export function reviewSchema(reviews: {
+  author: string;
+  rating: number;
+  body: string;
+  treatment: string;
+}[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: reviews.map((r, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Review",
+        reviewRating: {
+          "@type": "Rating",
+          ratingValue: r.rating,
+          bestRating: 5,
+        },
+        author: { "@type": "Person", name: r.author },
+        itemReviewed: { "@type": "MedicalProcedure", name: r.treatment },
+        reviewBody: r.body,
+        publisher: { "@type": "Organization", name: "Heal India Medi Tourism" },
+      },
+    })),
+  };
+}
+
+export function websiteSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Heal India Medi Tourism",
+    url: "https://santos.care",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://santos.care/blog?q={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
+  };
+}

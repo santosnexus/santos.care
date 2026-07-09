@@ -1,0 +1,17 @@
+{
+  "name": "Heal India Medi Tourism",
+  "short_name": "Heal India",
+  "description": "World-class medical treatment in India at 70-90% less cost. JCI-accredited hospitals, expert surgeons, and Ayurveda recovery in Kerala.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d7377",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import { ArrowLeft, CheckCircle, Clock, Hospital, TrendingDown, Star, MessageCir
 import { treatments, treatmentList } from "@/data/treatments";
 import { getWhatsAppUrl } from "@/lib/utils";
 import LeadForm from "@/components/LeadForm";
+import { JsonLd, productSchema } from "@/components/json-ld";
 
 export function generateStaticParams() {
   return treatmentList.map((t) => ({ slug: t.slug }));
@@ -28,6 +29,15 @@ export default function TreatmentPage({ params }: { params: { slug: string } }) 
 
   return (
     <>
+      <JsonLd
+        data={productSchema({
+          name: `${t.title} in India`,
+          description: t.description,
+          url: `https://santos.care/treatments/${t.slug}`,
+          minPrice: t.costRange.from,
+          maxPrice: t.costRange.to,
+        })}
+      />
       <section className="bg-gradient-to-br from-brand-800 to-brand-900 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link

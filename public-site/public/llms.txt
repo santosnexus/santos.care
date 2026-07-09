@@ -34,6 +34,9 @@ Medical tourism facilitator based in Aluva, Kochi, Kerala. Specializes in cardia
 - Phone: +91 999 576 8668
 - Address: Aluva, Kochi, Kerala, India
 
+## Full content
+- Read the complete site content (all pages + blog articles) at: https://santos.care/llms-full.txt
+
 ## Structured data
 - MedicalOrganization schema on all pages
 - Article schema on all blog posts

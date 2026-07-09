@@ -54,6 +54,7 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2.5 text-sm">
               <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+              <li><Link href="/medical-tourism-india" className="hover:text-white transition-colors">What Is Medical Tourism</Link></li>
               <li><Link href="/treatments" className="hover:text-white transition-colors">All Treatments</Link></li>
               <li><Link href="/hospitals" className="hover:text-white transition-colors">Hospitals</Link></li>
               <li><Link href="/testimonials" className="hover:text-white transition-colors">Patient Stories</Link></li>
