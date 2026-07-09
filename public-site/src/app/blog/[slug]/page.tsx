@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Calendar, Clock, MessageCircle, Share2 } from "lucide-react";
 import { getBlogPost, getAllBlogPosts, getRelatedPosts, precompileMdxToHtml } from "@/lib/mdx";
@@ -52,10 +53,13 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
 
       <section className="relative pt-32 pb-16 overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          <Image
             src={frontmatter.image}
             alt={frontmatter.title}
-            className="w-full h-full object-cover"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-800/90 to-brand-700/80" />
         </div>

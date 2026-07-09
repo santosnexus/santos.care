@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, CheckCircle, Heart, Shield, DollarSign, Star, MessageCircle, Activity, Stethoscope, Microscope, Syringe, Bone } from "lucide-react";
 import { treatmentList } from "@/data/treatments";
 import { hospitals } from "@/data/hospitals";
@@ -60,10 +61,13 @@ export default function Home() {
       {/* ───── HERO ───── */}
       <Section variant="dark" padding="none" className="relative min-h-screen flex items-center overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1600&q=80"
             alt="Modern hospital operating room"
-            className="w-full h-full object-cover scale-105 animate-scale-in"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover scale-105 animate-scale-in"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-800/90 to-brand-700/80" />
           <div className="absolute inset-0 bg-grid opacity-30" />

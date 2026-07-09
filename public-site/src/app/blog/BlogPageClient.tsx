@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useMemo } from "react";
 import { Search, Calendar, Clock, ArrowRight } from "lucide-react";
 import type { BlogFrontmatter } from "@/lib/mdx";
@@ -56,10 +57,13 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
     <>
       <section className="relative pt-32 pb-20 overflow-hidden">
         <div className="absolute inset-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1551076805-e1869033e561?w=1600&q=80"
             alt="Medical professional reviewing documents"
-            className="w-full h-full object-cover"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-brand-900/95 via-brand-800/90 to-brand-700/80" />
         </div>
@@ -138,12 +142,14 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                   className="group block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all mb-10"
                 >
                   <div className="grid md:grid-cols-2">
-                    <div className="relative min-h-[280px] overflow-hidden">
-                      <img
-                        src={featured.image}
-                        alt={featured.title}
-                        className="w-full h-full absolute inset-0 object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
+                       <div className="relative min-h-[280px] overflow-hidden">
+                       <Image
+                         src={featured.image}
+                         alt={featured.title}
+                         fill
+                         sizes="(max-width: 768px) 100vw, 50vw"
+                         className="object-cover group-hover:scale-105 transition-transform duration-500"
+                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                       <div className="absolute bottom-4 left-4">
                         <span className="inline-block bg-brand-600 text-white text-sm px-3 py-1 rounded-full">
@@ -185,13 +191,15 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                       href={`/blog/${post.slug}`}
                       className="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all flex flex-col"
                     >
-                      <div className="relative h-44 overflow-hidden">
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          loading="lazy"
-                        />
+                       <div className="relative h-44 overflow-hidden">
+                         <Image
+                           src={post.image}
+                           alt={post.title}
+                           fill
+                           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                           className="object-cover group-hover:scale-105 transition-transform duration-300"
+                           loading="lazy"
+                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                         <span className="absolute top-3 left-3 bg-white/90 text-gray-800 text-xs px-2 py-0.5 rounded-full font-medium backdrop-blur shadow-sm">
                           {post.category}
