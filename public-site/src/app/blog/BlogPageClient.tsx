@@ -139,7 +139,7 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
               {featured && activeCategory === "All" && searchQuery === "" && (
                 <Link
                   href={`/blog/${featured.slug}`}
-                  className="group block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all mb-10"
+                  className="group block bg-white rounded-card overflow-hidden border border-gray-100/60 shadow-card hover:shadow-card-hover transition-all mb-10"
                 >
                   <div className="grid md:grid-cols-2">
                        <div className="relative min-h-[280px] overflow-hidden">
@@ -189,7 +189,7 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
                     <Link
                       key={post.slug}
                       href={`/blog/${post.slug}`}
-                      className="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-all flex flex-col"
+                      className="group bg-white rounded-card overflow-hidden border border-gray-100/60 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 flex flex-col"
                     >
                        <div className="relative h-44 overflow-hidden">
                          <Image
@@ -233,16 +233,43 @@ export default function BlogPageClient({ posts }: { posts: BlogFrontmatter[] }) 
 
               {hasMore && (
                 <div className="text-center mt-10">
-                  <button
-                    onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
-                    className="bg-white border border-gray-200 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 hover:border-brand-300 transition-all"
-                  >
-                    Load More Articles ({filtered.length - visibleCount} remaining)
-                  </button>
+                <button
+                  onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
+                  className="bg-white border border-gray-200 text-gray-700 px-7 py-3.5 rounded-pill font-medium hover:bg-surface-soft hover:border-brand-300 transition-all"
+                >
+                  Load More Articles ({filtered.length - visibleCount} remaining)
+                </button>
                 </div>
               )}
             </>
           )}
+        </div>
+      </section>
+
+      {/* Closing CTA band */}
+      <section className="relative overflow-hidden bg-mesh animate-gradient-pan text-white">
+        <div className="absolute inset-0 bg-grid opacity-15" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative text-center">
+          <h2 className="text-display-h2 text-white mb-4 text-balance">
+            Ready to plan your treatment in India?
+          </h2>
+          <p className="text-white/75 text-body-lg mb-8 max-w-2xl mx-auto">
+            Explore our guides, then get a free, written treatment plan with transparent pricing — within 24 hours.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/contact"
+              className="bg-white text-brand-700 px-8 py-4 rounded-pill font-semibold hover:bg-brand-50 transition-all active:scale-95 inline-flex items-center justify-center gap-2"
+            >
+              Get Free Consultation <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              href="/treatments"
+              className="bg-white/10 text-white px-8 py-4 rounded-pill font-semibold hover:bg-white/20 transition-all active:scale-95 inline-flex items-center justify-center gap-2 border border-white/30"
+            >
+              Browse Treatments
+            </Link>
+          </div>
         </div>
       </section>
     </>
